@@ -2,8 +2,6 @@ package codingTest;
 
 import java.util.*;
 
-import codingTest.Solution.Point;
-
 public class Test {
 	int solution050801(String s) {
 		StringBuilder answer = new StringBuilder();

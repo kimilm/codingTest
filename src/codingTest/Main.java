@@ -8,27 +8,15 @@ public class Main {
 	public static void main(String[] args) {
 		Solution solution = new Solution();
 
-		int[] arr = { 1, 2, 3, 4, 5 };
-
-		// for(int i = 0; i < 20; ++i)
-		// System.out.println(i + ": " + solution.solution020902(i));
-
-//		System.out.println(solution.solution021501(new int[] { 1, 2, 3, 9, 10, 12 }, 7));
-//		System.out.println(solution.solution040601(new int[][] {{1,2,3,5},{5,6,7,8},{4,3,2,1}}));
-//		System.out.println(solution.solution050401(new String[] { "1195524421", "97674223", "119" }));
-//		System.out.println(solution.solution050801("one4seveneight"));
 //		System.out.println(Arrays.toString(solution.solution050802(new String[][] {{"POOOP", "OXXOX", "OPXPX", "OOXOX", "POXXP"}, {"POOPX", "OXPXP", "PXXXO", "OXXXO", "OOOPP"}, {"PXOPX", "OXOXP", "OXPXX", "OXXXP", "POOXX"},{"OOOXX", "XOOOX", "OOOXX", "OXOOX", "OOOOO"},{"PXPX0P", "XPXPX", "PXPXP", "XPXPX", "PXPXP"}})));
 //		System.out.println(solution.solution0508032(8, 2, new String [] {"D 2","C","U 3","C","D 4","C","U 2"}));
 //		System.out.println(solution.solution0508032(8, 0, new String [] {"C", "C", "D 1", "C", "D 1", "C", "C"}));
-		System.out.println(solution.solution0508032(8, 0, new String [] {"C", "C", "D 1", "C", "U 1", "C", "C"}));
-
 //		System.out.println(solution.solution020801(new int [] {1, 1, 9, 1, 1, 1}, 1));
-//		System.out.println(solution.solution020801(new int [] {1, 1, 9, 1, 1, 1}, 2));
-//		System.out.println(solution.solution020801(new int [] {1, 1, 9, 1, 1, 1}, 3));
-//		System.out.println(solution.solution020801(new int [] {1, 1, 9, 1, 1, 1}, 4));
-//		System.out.println(solution.solution020801(new int [] {1, 1, 9, 1, 1, 1}, 5));
-
-//		System.out.println(Arrays.toString());
+		System.out.println(solution.solution070402("abcxyasdfasdfxyabc"));
+		System.out.println(solution.solution070402("abcabcabcabc"	));
+		System.out.println(solution.solution070402("abcxyqwertyxyabc"	));
+		System.out.println(solution.solution070402("llttaattll"	));
+		System.out.println(solution.solution070402("abcdef"	));
 	}
 }
 
@@ -251,7 +239,7 @@ class Solution {
         	prefix = phone_book[i - 1];
         	
         	if (prefix.length() < phone_book[i].length()) {
-        		if (phone_book[i].substring(0, prefix.length()).equals(prefix)) {	// String.startWith()
+        		if (phone_book[i].substring(0, prefix.length()).equals(prefix)) {	// String.startsWith()
         			answer = false;
         		} else {
         			++i;
@@ -262,341 +250,107 @@ class Solution {
         return answer;
     }
 	
-	int solution050601(String name) {
-		boolean [] done = new boolean[name.length()];
-		int curIdx = 0;
-		int cnt = 0;
+	int solution051001(String[][] clothes) {	// 위장
+        int count = clothes.length;
+        Map<String, Integer> wears = new HashMap<>();
+        
+        String key;
+        for(int i = 0; i < count; ++i) {
+        	key = clothes[i][1];
+        	
+        	if (wears.containsKey(key))
+        		wears.put(key, wears.get(key) + 1);
+        	else
+        		wears.put(key, 1);
+        }
+        
+        int answer = 0;
+        return answer;
+	}
+	
+	public int solution070401(int[] prices, int[] discounts) {
+		Integer[] WrapperPrices = Arrays.stream( prices ).boxed().toArray( Integer[]::new );
+		Integer[] WrapperDiscounts = Arrays.stream( discounts ).boxed().toArray( Integer[]::new );
+		
+		Arrays.sort(WrapperPrices, Collections.reverseOrder());
+		Arrays.sort(WrapperDiscounts, Collections.reverseOrder());
+		
+		for (int i = 0; i < WrapperDiscounts.length; ++i) {
+			WrapperPrices[i] = (int) (WrapperPrices[i] * (100.0 - WrapperDiscounts[i]) / 100);
+		}
+		
 		int answer = 0;
 		
-		for(int i = 0; i < name.length(); ++i) {
-			if (name.charAt(i) == 'A') {
-				done[i] = true;
-				++cnt;
+		for (int i = 0; i < WrapperPrices.length; ++i) {
+			answer += WrapperPrices[i];
+		}
+		
+		return answer;
+    }
+	
+	public String[] solution070402(String s) {
+		int half = s.length() / 2;
+		StringBuffer sbf = new StringBuffer(s.substring(0, half));
+		StringBuffer sbb = new StringBuffer(s.substring(half));
+		
+		System.out.println(sbf.toString() + sbb.toString());
+		
+		
+		int fIndex = 0;
+		int bIndex = 0;
+		int tokenLength = 1;
+		String token;
+		
+		List<String> tokenList = new ArrayList<>();
+		List<String> answerList = new ArrayList<>();
+		
+		while((fIndex + tokenLength) != sbf.length()) {
+			token = sbf.substring(fIndex, fIndex + tokenLength);
+			bIndex = sbf.length() - tokenLength;
+			
+			if (sbf.substring(fIndex, fIndex + tokenLength).equals(sbb.substring(bIndex, bIndex + tokenLength))) {
+				sbf.delete(fIndex, fIndex + tokenLength);
+				sbb.delete(bIndex, bIndex + tokenLength);
+				tokenList.add(token);
+				tokenLength = 1;
+			} else {
+				++tokenLength;
 			}
 		}
 		
-		while (cnt != name.length()) {
-			
+		for (int i = 0; i < tokenList.size(); ++i) {
+			answerList.add(tokenList.get(i));
+		}
+		
+		if (sbf.toString().equals(sbb.toString())) {
+			answerList.add(sbf.toString());
+			answerList.add(sbb.toString());
+		} else {
+			sbf.append(sbb);
+			answerList.add(sbf.toString());
+		};
+		
+		for (int i = tokenList.size() - 1; i > -1; --i) {
+			answerList.add(tokenList.get(i));
+		}
+		
+		
+        String[] answer = answerList.toArray(new String [answerList.size()]);
+        return answer;
+    }
+	
+	public int solution070403(String s, String t) {
+		StringBuffer sb = new StringBuffer(s);
+		int idx = sb.indexOf(t);
+		int length = t.length();
+		int answer = 0;
+		
+		while(idx != -1) {
+			sb.delete(idx, idx + length);
+			idx = sb.indexOf(t);
+			++answer;
 		}
 		
 		return answer;
 	}
-	
-	int solution050801(String s) {
-		StringBuilder answer = new StringBuilder();
-        int index = 0;
-        String token;
-        
-        while (index != s.length()) {
-            if (s.charAt(index) > 47 && s.charAt(index) < 58) {
-                answer.append(s.charAt(index));
-                index += 1;
-            } else {
-                token = s.substring(index, index + 2);
-                switch (token) {
-                    case "ze":
-                        answer.append('0');
-                        index += 4;
-                        break;
-                    case "on":
-                        answer.append('1');
-                        index += 3;
-                        break;
-                    case "tw":
-                        answer.append('2');
-                        index += 3;
-                        break;
-                    case "th":
-                        answer.append('3');
-                        index += 5;
-                        break;
-                    case "fo":
-                        answer.append('4');
-                        index += 4;
-                        break;
-                    case "fi":
-                        answer.append('5');
-                        index += 4;
-                        break;
-                    case "si":
-                        answer.append('6');
-                        index += 3;
-                        break;
-                    case "se":
-                        answer.append('7');
-                        index += 5;
-                        break;
-                    case "ei":
-                        answer.append('8');
-                        index += 5;
-                        break;
-                    case "ni":
-                        answer.append('9');
-                        index += 4;
-                        break;
-                }
-            }
-        }
-        
-        return Integer.parseInt(answer.toString());
-	}
-	
-	class Point {
-		private int x;
-		private int y;
-		
-		Point(int x, int y) {
-			this.x = x;
-			this.y = y;
-		}
-		public int getX() {
-			return x;
-		}
-
-		public void setX(int x) {
-			this.x = x;
-		}
-
-		public int getY() {
-			return y;
-		}
-
-		public void setY(int y) {
-			this.y = y;
-		}
-	}
-	
-	int [] solution050802(String [][] places) {
-		int[] answer = new int[5];
-		char[] place = new char[5];
-		List<Point> points = new ArrayList<>();
-        
-		int x;
-    	int y;
-    	int dist;
-    	boolean flg = true;
-        
-        for(int i = 0; i < 5; ++i) {
-        	for (int j = 0; j < 5; ++j) {
-        		place = places[i][j].toCharArray();
-        		
-        		for (int k = 0; k < 5; ++k) {
-        			if (place[k] == 'P') {
-        				points.add(new Point(j, k));
-        			}
-        		}
-        	}
-        	
-        	
-        	for(int l = 0; l < points.size() - 1 && flg; ++l) {
-        		for(int m = l + 1;  m < points.size() && flg; ++m) {
-        			x = points.get(m).getX() - points.get(l).getX();
-        			y = points.get(m).getY() - points.get(l).getY();
-        			dist = Math.abs(x) + Math.abs(y);
-
-        			switch(dist) {
-        			case 1:
-        				flg = false;
-        				break;
-        			case 2:
-        				if (x == 0) {
-        					if (places[i][points.get(m).getX()].charAt(points.get(m).getY() - 1) == 'O')
-        						flg = false;
-        				} else if (y == 0) {
-        					if (places[i][points.get(m).getX() - 1].charAt(points.get(m).getY()) == 'O')
-        						flg = false;
-        				} else if (y > 0) {
-        					if (places[i][points.get(m).getX() - 1].charAt(points.get(m).getY()) == 'O' || places[i][points.get(m).getX()].charAt(points.get(m).getY() - 1) == 'O')
-        						flg = false;
-        				} else {
-        					if (places[i][points.get(m).getX() - 1].charAt(points.get(m).getY()) == 'O' || places[i][points.get(m).getX()].charAt(points.get(m).getY() + 1) == 'O')
-        						flg = false;
-        				}
-        				break;
-        			}
-        		}
-        	}
-        	
-        	if (flg) {
-        		answer[i] = 1;
-        	} else {
-        		answer[i] = 0;
-        	}
-        	
-        	points.clear();
-        	flg = true;
-        }
-        
-        return answer;
-	}
-	
-	public String solution050803(int n, int k, String[] cmd) {
-		Stack<Integer> stack = new Stack<>();
-		List<Integer> lList = new LinkedList<>();
-		StringBuilder answer = new StringBuilder();
-		
-		for (int i = 0; i < n; ++i) {
-			answer.append('O');
-			lList.add(i);
-		}
-		
-		char [] token;
-		for (String str : cmd) {
-			token = str.toCharArray();
-			
-			switch(token[0]) {
-			case 'U':
-				k -= token[2] - 48;
-				break;
-			case 'D':
-				k += token[2] - 48;
-				break;
-			case 'C':
-				stack.add(lList.remove(k));
-				--n;
-				if (k == n)
-					--k;
-				break;
-			case 'Z':
-				lList.add(stack.peek() - 1, stack.peek());
-				if (k >= stack.pop())
-					++k;
-				++n;
-				break;
-			}
-		}
-		
-		while(!stack.isEmpty())
-			answer.replace(stack.peek(), stack.pop() + 1, "X");
-
-        return answer.toString();
-    }
-	
-	public String solution0508032(int n, int k, String[] cmd) {
-		Stack<Integer> stack = new Stack<>();
-		StringBuilder answer = new StringBuilder();
-		
-		for (int i = 0; i < n; ++i) {
-			answer.append('O');
-		}
-		
-		char [] token;
-		for (String str : cmd) {
-			token = str.toCharArray();
-			
-			switch(token[0]) {
-			case 'U':
-				k -= token[2] - 48;
-				break;
-			case 'D':
-				k += token[2] - 48;
-				break;
-			case 'C':
-				stack.add(k);
-				--n;
-				if (k == n)
-					--k;
-				break;
-			case 'Z':
-				if (k >= stack.pop())
-					++k;
-				++n;
-				break;
-			}
-		}
-		
-		Object [] array = stack.toArray();
-		int [] replaceArray = new int[stack.size()];
-		int prev = (int)array[0];
-		int add;
-		
-		for (int i = 0; i < array.length; ++i) {
-			replaceArray[i] = (int)array[0];
-		}
-		
-		for (int i = 1; i < array.length; ++i) {
-			add = (int)array[i] - prev;
-			if (add > 0) {
-				++add; 
-			} else if (add == 0) {
-				add = 1;
-			}
-			
-			for (int j = i; j < array.length; ++j) {
-				replaceArray[j] += add;
-			}
-			
-			prev = (int)array[i];
-		}
-		
-		for (int replace : replaceArray)
-			answer.replace(replace, replace + 1, "X");
-
-        return answer.toString();
-    }
-	
-	public String solution0508033(int n, int k, String[] cmd) {
-		Stack<Integer> stack = new Stack<>();
-		TreeSet<Integer> set = new TreeSet<>();
-		StringBuilder answer = new StringBuilder();
-		
-		for (int i = 0; i < n; ++i) {
-			answer.append('O');
-			set.add(i);
-		}
-		
-		char [] token;
-		for (String str : cmd) {
-			token = str.toCharArray();
-			
-			switch(token[0]) {
-			case 'U':
-				k -= token[2] - 48;
-				break;
-			case 'D':
-				k += token[2] - 48;
-				break;
-			case 'C':
-				stack.add(k);
-				--n;
-				if (k == n)
-					--k;
-				break;
-			case 'Z':
-				if (k >= stack.pop())
-					++k;
-				++n;
-				break;
-			}
-		}
-		
-		Object [] array = stack.toArray();
-		int [] replaceArray = new int[stack.size()];
-		int prev = (int)array[0];
-		int add;
-		
-		for (int i = 0; i < array.length; ++i) {
-			replaceArray[i] = (int)array[0];
-		}
-		
-		for (int i = 1; i < array.length; ++i) {
-			add = (int)array[i] - prev;
-			if (add > 0) {
-				++add; 
-			} else if (add == 0) {
-				add = 1;
-			}
-			
-			for (int j = i; j < array.length; ++j) {
-				replaceArray[j] += add;
-			}
-			
-			prev = (int)array[i];
-		}
-		
-		for (int replace : replaceArray)
-			answer.replace(replace, replace + 1, "X");
-
-        return answer.toString();
-    }
 }
