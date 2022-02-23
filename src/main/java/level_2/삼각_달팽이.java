@@ -46,7 +46,7 @@ public class 삼각_달팽이 {
         return --direction;
     }
 
-    class Move {
+    static class Move {
         private int i;
         private int j;
 

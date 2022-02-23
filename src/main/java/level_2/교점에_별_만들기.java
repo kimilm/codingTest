@@ -81,7 +81,7 @@ public class 교점에_별_만들기 {
         return dividend % divisor != 0;
     }
 
-    class Point {
+    static class Point {
         private int x;
         private int y;
 
