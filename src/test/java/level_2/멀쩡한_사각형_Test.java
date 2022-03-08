@@ -9,6 +9,5 @@ class 멀쩡한_사각형_Test {
     @Test
     void solutionTest() {
         System.out.println(square.solution(8, 12));
-//        System.out.println(square.solution(4, 6));
     }
 }

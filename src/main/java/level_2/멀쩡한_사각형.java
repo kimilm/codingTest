@@ -1,6 +1,8 @@
 package level_2;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.Objects;
+import java.util.Set;
 
 /**
  * https://programmers.co.kr/learn/courses/30/lessons/62048
@@ -10,26 +12,25 @@ public class 멀쩡한_사각형 {
     public long solution(int w, int h) {
         Set<Point> pointSet = new HashSet<>();
 
-        int[] mm = new int[]{w, h};
-        Arrays.sort(mm);
+        int big = Integer.max(w, h);
+        int small = Integer.min(w, h);
 
-        int horizontal = mm[0]; // 짧은쪽
-        int vertical = mm[1];   // 긴쪽
+        int gcd = GCD(big, small);
+
+        big /= gcd;
+        small /= gcd;
 
         // x를 기준으로 점 찾기
-        for (int i = 0; i < horizontal; ++i) {
-            addPoint(pointSet, i, equationForY(horizontal, vertical, i));
+        for (int x = 0; x < big; ++x) {
+            addPoint(pointSet, x, equationForY(big, small, x));
         }
 
         // y를 기준으로 점 찾기
-        for (int i = 0; i < vertical; ++i) {
-            addPoint(pointSet, i, equationForX(horizontal, vertical, i));
+        for (int y = 0; y < small; ++y) {
+            addPoint(pointSet, equationForX(big, small, y), y);
         }
 
-        //log
-        pointSet.forEach(System.out::println);
-
-        long answer = (long)w * h - pointSet.size();
+        long answer = (long) w * h - (long) pointSet.size() * gcd;
 
         return answer;
     }
@@ -44,22 +45,32 @@ public class 멀쩡한_사각형 {
         return ((double) a / b) * y;
     }
 
-    void addPoint(Set pointSet, double x, double y) {
-        if ((y + 0.5) % 2 == 0) {
-            pointSet.add(new Point(x, y + 0.5));
-            pointSet.add(new Point(x, y - 0.5));
-        } else {
-            pointSet.add(new Point(x, y));
+    public int GCD(int a, int b) {
+        int r = a % b;
+
+        while (r != 0) {
+            a = b;
+            b = r;
+            r = a % b;
         }
+
+        return b;
+    }
+
+    void addPoint(Set<Point> pointSet, double x, double y) {
+        int pointX = (int) Math.floor(x);
+        int pointY = (int) Math.floor(y);
+
+        pointSet.add(new Point(pointX, pointY));
     }
 
     static class Point {
         int x;
         int y;
 
-        Point(double x, double y) {
-            this.x = (int)x;
-            this.y = (int)y;
+        Point(int x, int y) {
+            this.x = x;
+            this.y = y;
         }
 
         @Override
@@ -73,16 +84,6 @@ public class 멀쩡한_사각형 {
         @Override
         public int hashCode() {
             return Objects.hash(x, y);
-        }
-
-        //log
-
-        @Override
-        public String toString() {
-            return "Point{" +
-                    "x=" + x +
-                    ", y=" + y +
-                    '}';
         }
     }
 }
