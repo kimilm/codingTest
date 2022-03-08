@@ -1,8 +1,6 @@
 package level_2;
 
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
+import java.math.BigInteger;
 
 /**
  * https://programmers.co.kr/learn/courses/30/lessons/62048
@@ -10,39 +8,34 @@ import java.util.Set;
  */
 public class 멀쩡한_사각형 {
     public long solution(int w, int h) {
-        Set<Point> pointSet = new HashSet<>();
-
         int big = Integer.max(w, h);
         int small = Integer.min(w, h);
 
+        // 최대공약수 연산
         int gcd = GCD(big, small);
 
         big /= gcd;
         small /= gcd;
 
-        // x를 기준으로 점 찾기
-        for (int x = 0; x < big; ++x) {
-            addPoint(pointSet, x, equationForY(big, small, x));
+        long notSquare = big;
+
+        // 직선이 지나가는 위치중 겹치지 않는 부분 구하기
+        for (int x = 1; x < small; ++x) {
+            double result = equation(big, small, x);
+
+            if (result - (int) result != 0) {
+                ++notSquare;
+            }
         }
 
-        // y를 기준으로 점 찾기
-        for (int y = 0; y < small; ++y) {
-            addPoint(pointSet, equationForX(big, small, y), y);
-        }
-
-        long answer = (long) w * h - (long) pointSet.size() * gcd;
+        long answer = (long) w * h - notSquare * gcd;
 
         return answer;
     }
 
     // y = (b / a) * x
-    public double equationForY(int a, int b, int x) {
+    public double equation(int a, int b, int x) {
         return ((double) b / a) * x;
-    }
-
-    // x = (a / b) * y
-    public double equationForX(int a, int b, int y) {
-        return ((double) a / b) * y;
     }
 
     public int GCD(int a, int b) {
@@ -57,33 +50,21 @@ public class 멀쩡한_사각형 {
         return b;
     }
 
-    void addPoint(Set<Point> pointSet, double x, double y) {
-        int pointX = (int) Math.floor(x);
-        int pointY = (int) Math.floor(y);
+    /**
+     * 이렇게 푸는거였다
+     * java.math.BigInteger 에 gcd 함수가 존재한다.
+     * 단 BigInteger 는 큰 수를 다루는 대신 성능이 떨어지는 문제가 있어서
+     * 빠른 연산을 위해 다양한 비트 조작 메서드를 제공한다.
+     */
+    public long solutionVer2(int w, int h) {
+        BigInteger width = BigInteger.valueOf(w);
+        BigInteger height = BigInteger.valueOf(h);
 
-        pointSet.add(new Point(pointX, pointY));
-    }
+        // 사용되지 않는 사각형 = width + height - 최대공약수
+        BigInteger notUse = width.add(height).subtract(width.gcd(height));
+        // long notUse = (long) w + (long) h - width.gcd(height).longValue();
 
-    static class Point {
-        int x;
-        int y;
-
-        Point(int x, int y) {
-            this.x = x;
-            this.y = y;
-        }
-
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
-            Point point = (Point) o;
-            return x == point.x && y == point.y;
-        }
-
-        @Override
-        public int hashCode() {
-            return Objects.hash(x, y);
-        }
+        // BigInteger 의 성능저하를 최소화 하기 위해 곱셈부분은 long 으로 선언하여 따로 연산하는게 좋아보인다.
+        return width.multiply(height).subtract(notUse).longValue();
     }
 }
