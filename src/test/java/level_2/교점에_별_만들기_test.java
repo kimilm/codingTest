@@ -24,14 +24,14 @@ class 교점에_별_만들기_test {
     void setUp() {
         Random random = new Random(System.currentTimeMillis());
         monkey = FixtureMonkey.create();
-        lineFixtures = monkey.giveMe(교점에_별_만들기_fixture .class, random.nextInt(1000) + 2);
+        lineFixtures = monkey.giveMe(교점에_별_만들기_fixture.class, random.nextInt(1000) + 2);
     }
 
     @DisplayName("별 찍기")
     @RepeatedTest(100)
     void test() {
         System.out.println("line Size: " + lineFixtures.size());
-        List<교점에_별_만들기_fixture > testInput = lineFixtures.stream()
+        List<교점에_별_만들기_fixture> testInput = lineFixtures.stream()
                 .filter(line -> (line.getA() != 0) || (line.getB() != 0))
                 .collect(Collectors.toList());
 
@@ -40,12 +40,12 @@ class 교점에_별_만들기_test {
             return;
         }
 
-        int [][] lines = new int [testInput.size()][3];
+        int[][] lines = new int[testInput.size()][3];
         IntStream.range(0, testInput.size()).forEach(index -> {
             lines[index] = testInput.get(index).toArray();
         });
 
-        String [] result = star.solution(lines);
+        String[] result = star.solution(lines);
         Arrays.stream(result).forEach(System.out::println);
     }
 }
