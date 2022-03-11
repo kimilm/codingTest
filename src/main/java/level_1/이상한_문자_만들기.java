@@ -6,8 +6,22 @@ package level_1;
  */
 public class 이상한_문자_만들기 {
     public String solution(String s) {
-        String answer = "";
+        char[] answer = s.toCharArray();
+        boolean flag = true;
 
-        return answer;
+        for (int i = 0; i < answer.length; ++i) {
+            if (answer[i] != ' ') {
+                if (flag) {
+                    answer[i] = Character.toUpperCase(answer[i]);
+                } else {
+                    answer[i] = Character.toLowerCase(answer[i]);
+                }
+                flag = !flag;
+            } else {
+                flag = true;
+            }
+        }
+
+        return new String(answer);
     }
 }
