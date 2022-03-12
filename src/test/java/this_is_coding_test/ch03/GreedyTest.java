@@ -15,5 +15,8 @@ class GreedyTest {
     void 큰_수의_법칙_test() {
         int result = greedy.큰_수의_법칙(5, 8, 3, new int[]{2, 4, 5, 4, 6});
         Assertions.assertThat(result).isEqualTo(46);
+
+        result = greedy.큰_수의_법칙_2(5, 8, 3, new int[]{2, 4, 5, 4, 6});
+        Assertions.assertThat(result).isEqualTo(46);
     }
 }

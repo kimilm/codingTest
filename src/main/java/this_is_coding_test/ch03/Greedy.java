@@ -50,4 +50,22 @@ public class Greedy {
 
         return answer;
     }
+    /**
+     * 이 문제는 가장 큰 수가 K번, 두 번쨰로 큰 수가 1번 더하는 부분이 반복된다
+     * 전체를 반복할 필요 없이 해당 부분을 곱해버리면 됨
+     */
+    public int 큰_수의_법칙_2(int n, int m, int k, int[] numbers) {
+        Arrays.sort(numbers);
+        int first = numbers[n - 1];
+        int second = numbers[n - 2];
+
+        // 큰 수가 더해지는 횟수: 전체 크기 / 반복되는 부분의 크기 * 큰 수의 반복 횟수 + 나머지
+        int count = m / (k + 1) * k;    // 전체 크기 / 반복되는 부분의 크기 * 큰 수의 반복 횟수
+        count += m % (k + 1);   // 나머지
+
+        int answer = count * first;
+        answer += (m - count) * second;
+
+        return answer;
+    }
 }
