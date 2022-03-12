@@ -91,7 +91,7 @@ public class Greedy {
     public int 일이_될_때까지(int n, int k) {
         int answer = 0;
 
-        while(n != 1) {
+        while (n != 1) {
             if (n % k != 0) {
                 --n;
             } else {
@@ -100,6 +100,31 @@ public class Greedy {
             ++answer;
         }
 
+        return answer;
+    }
+
+    /**
+     * 숫자가 커지면 1씩 빼는게 시간이 오래 걸릴 수 있다.
+     * 한 번에 빼는 방법을 사용하면 반복 횟수를 줄일 수 있다.
+     */
+    public int 일이_될_때까지_2(int n, int k) {
+        int answer = 0;
+        int target;
+
+        while (true) {
+            target = n / k * k;
+            answer += (n - target);
+            n = target;
+
+            if (n < k) {
+                break;
+            }
+
+            ++answer;
+            n /= k;
+        }
+
+        answer += --n;
         return answer;
     }
 }

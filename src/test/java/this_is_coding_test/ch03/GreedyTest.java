@@ -1,8 +1,10 @@
 package this_is_coding_test.ch03;
 
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
+@Disabled
 class GreedyTest {
     private final Greedy greedy = new Greedy();
 
@@ -35,6 +37,12 @@ class GreedyTest {
         Assertions.assertThat(result).isEqualTo(3);
 
         result = greedy.일이_될_때까지(25, 5);
+        Assertions.assertThat(result).isEqualTo(2);
+
+        result = greedy.일이_될_때까지_2(17, 4);
+        Assertions.assertThat(result).isEqualTo(3);
+
+        result = greedy.일이_될_때까지_2(25, 5);
         Assertions.assertThat(result).isEqualTo(2);
     }
 }
