@@ -1,5 +1,7 @@
 package this_is_coding_test.ch03;
 
+import java.util.Arrays;
+
 public class Greedy {
 
     /**
@@ -14,6 +16,36 @@ public class Greedy {
         for (int coin : coins) {
             answer += money / coin;
             money %= coin;
+        }
+
+        return answer;
+    }
+
+    /**
+     * 2 <= N <= 1_000
+     * 1 <= M <= 10_000
+     * 1 <= K <= 10_000
+     * 1 <= number <= 10_000
+     * 시간제한 1초, 메모리제한 128MB
+     */
+    public int 큰_수의_법칙(int n, int m, int k, int[] numbers) {
+        Arrays.sort(numbers);
+        int bigFirst = numbers[n - 1];
+        int bigSecond = numbers[n - 2];
+
+        int repeat = k;
+        int count = 0;
+        int answer = 0;
+
+        while (count != m) {
+            if (repeat != 0) {
+                answer += bigFirst;
+                --repeat;
+            } else {
+                answer += bigSecond;
+                repeat = k;
+            }
+            ++count;
         }
 
         return answer;
