@@ -28,4 +28,13 @@ class GreedyTest {
         result = greedy.숫자_카드_게임(2, 4, new int[][]{{7, 3, 1, 8}, {3, 3, 3, 4}});
         Assertions.assertThat(result).isEqualTo(3);
     }
+
+    @Test
+    void 일이_될_때까지_test() {
+        int result = greedy.일이_될_때까지(17, 4);
+        Assertions.assertThat(result).isEqualTo(3);
+
+        result = greedy.일이_될_때까지(25, 5);
+        Assertions.assertThat(result).isEqualTo(2);
+    }
 }

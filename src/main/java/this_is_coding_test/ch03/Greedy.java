@@ -81,4 +81,25 @@ public class Greedy {
                         .min().orElseThrow())
                 .max().orElseThrow();
     }
+
+    /**
+     * 2 <= N <= 100_000
+     * 2 <= K <= 100_000
+     * N >= K
+     * 시간제한 1초, 메모리제한 128MB
+     */
+    public int 일이_될_때까지(int n, int k) {
+        int answer = 0;
+
+        while(n != 1) {
+            if (n % k != 0) {
+                --n;
+            } else {
+                n /= k;
+            }
+            ++answer;
+        }
+
+        return answer;
+    }
 }
