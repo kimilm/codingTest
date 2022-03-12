@@ -19,4 +19,13 @@ class GreedyTest {
         result = greedy.큰_수의_법칙_2(5, 8, 3, new int[]{2, 4, 5, 4, 6});
         Assertions.assertThat(result).isEqualTo(46);
     }
+
+    @Test
+    void 숫자_카드_게임_test() {
+        int result = greedy.숫자_카드_게임(3, 3, new int[][]{{3, 1, 2}, {4, 1, 4}, {2, 2, 2}});
+        Assertions.assertThat(result).isEqualTo(2);
+
+        result = greedy.숫자_카드_게임(2, 4, new int[][]{{7, 3, 1, 8}, {3, 3, 3, 4}});
+        Assertions.assertThat(result).isEqualTo(3);
+    }
 }
