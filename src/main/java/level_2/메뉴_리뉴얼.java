@@ -54,7 +54,7 @@ public class 메뉴_리뉴얼 {
         }
 
         // 조건을 만족하는 세트 문자열 배열로 저장
-        String[] answer = courseMap.entrySet().stream()
+        String[] answer = filteredList.stream()
                 .filter(entry -> maxValueMap.get(entry.getKey().length()) == entry.getValue())
                 .map(entry -> entry.getKey())
                 .sorted()
