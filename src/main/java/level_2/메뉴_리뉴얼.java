@@ -1,6 +1,7 @@
 package level_2;
 
 import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
@@ -87,5 +88,155 @@ public class 메뉴_리뉴얼 {
             }
         }
         return sb.toString();
+    }
+
+    /**
+     * 보고 공부할 다른 사용자 풀이 01
+     */
+    static HashMap<String, Integer> map;
+    static int m;
+
+    public String[] solution_use_PriorityQueue(String[] orders, int[] course) {
+        PriorityQueue<String> pq = new PriorityQueue<>();
+        for (int i = 0; i < course.length; i++) {
+            map = new HashMap<>();
+            m = 0;
+            for (int j = 0; j < orders.length; j++) {
+                find(0, "", course[i], 0, orders[j]);
+            }
+            for (String s : map.keySet()) {
+                if (map.get(s) == m && m > 1) {
+                    pq.offer(s);
+                }
+            }
+        }
+        String ans[] = new String[pq.size()];
+        int k = 0;
+        while (!pq.isEmpty()) {
+            ans[k++] = pq.poll();
+        }
+        return ans;
+    }
+
+    static void find(int cnt, String str, int targetNum, int idx, String word) {
+        if (cnt == targetNum) {
+            char[] c = str.toCharArray();
+            Arrays.sort(c);
+            String temps = "";
+            for (int i = 0; i < c.length; i++) temps += c[i];
+            map.put(temps, map.getOrDefault(temps, 0) + 1);
+            m = Math.max(m, map.get(temps));
+            return;
+        }
+        for (int i = idx; i < word.length(); i++) {
+            char now = word.charAt(i);
+            find(cnt + 1, str + now, targetNum, i + 1, word);
+        }
+    }
+
+    /**
+     * 보고 공부할 다른 사용자 풀이 02
+     */
+    public String[] solution_use_Menu_Class(String[] orders, int[] course) {
+        Menus menus = Arrays.stream(orders)
+                .collect(Collectors.collectingAndThen(Collectors.toList(), Menus::new));
+
+        List<Integer> courses = Arrays.stream(course)
+                .boxed()
+                .collect(Collectors.toList());
+
+        return menus.getMenusByCourses(courses).stream()
+                .map(Menu::getMenu)
+                .toArray(String[]::new);
+    }
+
+    private static class Menus {
+        private final List<Menu> menusOfConsumers;
+
+        public Menus(List<String> menus) {
+            this.menusOfConsumers = menus.stream()
+                    .sorted()
+                    .map(Menu::new)
+                    .collect(Collectors.toList());
+        }
+
+        public List<Menu> getMenusByCourses(List<Integer> courses) {
+            Map<Integer, Map<Menu, Long>> menus = menusOfConsumers.stream()
+                    .map(menu -> getCombinations(menu, courses))
+                    .flatMap(Collection::stream)
+                    .collect(Collectors.groupingBy(Menu::length, Collectors.groupingBy(Function.identity(), Collectors.counting())));
+
+            return menus.entrySet().stream()
+                    .map(entry -> new AbstractMap.SimpleEntry<>(entry.getKey(),
+                            entry.getValue().entrySet().stream()
+                                    .max(Map.Entry.comparingByValue())
+                                    .map(Map.Entry::getValue)
+                                    .map(Long::intValue)
+                                    .orElse(0)))
+                    .filter(entry -> entry.getValue() > 1)
+                    .flatMap(entry -> menus.get(entry.getKey()).entrySet().stream()
+                            .filter(innerEntry -> innerEntry.getValue().intValue() == entry.getValue())
+                            .map(Map.Entry::getKey))
+                    .sorted()
+                    .collect(Collectors.toList());
+        }
+
+        private Set<Menu> getCombinations(Menu menu, List<Integer> courses) {
+            Set<Menu> menus = new HashSet<>();
+            courses.forEach(i -> getCombination(menu, i, 0, new HashSet<>(), menus));
+            return menus;
+        }
+
+        private void getCombination(Menu menu, int course, int index, Set<Character> menuRepository, Set<Menu> menus) {
+            if (course == 0) {
+                menus.add(menuRepository.stream()
+                        .map(String::valueOf)
+                        .sorted()
+                        .collect(Collectors.collectingAndThen(Collectors.joining(), Menu::new)));
+                return;
+            }
+
+            String menuName = menu.getMenu();
+
+            for (int i = index, length = menuName.length(); i < length; i++) {
+                menuRepository.add(menuName.charAt(i));
+                getCombination(menu, course - 1, i + 1, menuRepository, menus);
+                menuRepository.remove(menuName.charAt(i));
+            }
+        }
+    }
+
+    public static class Menu implements Comparable<Menu> {
+        private final String menu;
+
+        public Menu(String menu) {
+            this.menu = menu;
+        }
+
+        public String getMenu() {
+            return menu;
+        }
+
+        public int length() {
+            return menu.length();
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            Menu menu1 = (Menu) o;
+            return Objects.equals(menu, menu1.menu);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(menu);
+        }
+
+        @Override
+        public int compareTo(Menu other) {
+            return this.menu.compareTo(other.menu);
+        }
     }
 }
