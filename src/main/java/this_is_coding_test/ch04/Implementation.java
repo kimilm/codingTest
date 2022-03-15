@@ -1,6 +1,7 @@
 package this_is_coding_test.ch04;
 
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 
 public class Implementation {
 
@@ -165,5 +166,81 @@ public class Implementation {
         }
 
         return answer;
+    }
+
+    /**
+     * 3 <= N, M <= 50
+     * maps 0: 북, 1: 동, 2: 남, 3:서
+     * fields 0: 육지, 1: 바다
+     */
+    public int 게임_개발(int n, int m, String location, String[] fields) {
+        int[][] steps = {{-1, 0}, {0, 1}, {1, 0}, {0, -1}};
+        int[][] map = Arrays.stream(fields)
+                .map(value -> Arrays.stream(value.split(" "))
+                        .mapToInt(Integer::parseInt)
+                        .toArray())
+                .toArray(int[][]::new);
+
+        int[] character = Arrays.stream(location.split(" "))
+                .mapToInt(Integer::parseInt)
+                .toArray();
+
+        map[character[0]][character[1]] = 2;
+
+        boolean moveFlag = true;
+        int rotateCount = 0;
+        int moveCount = 0;
+
+        int col = character[0];
+        int row = character[1];
+        int direction = character[2];
+
+        while (moveFlag) {
+            direction = changeDirection(direction);
+            ++rotateCount;
+
+            int dx = col + steps[direction][0];
+            int dy = row + steps[direction][1];
+
+            if (map[dx][dy] == 0) {
+                col = dx;
+                row = dy;
+                ++moveCount;
+                rotateCount = 0;
+                map[dx][dy] = 2;
+            }
+
+            if (rotateCount == 4) {
+                dx = col + steps[switchDirection(direction)][0];
+                dy = row + steps[switchDirection(direction)][1];
+                if (map[dx][dy] == 1) {
+                    moveFlag = false;
+                } else if (map[dx][dy] == 2) {
+                    col = dx;
+                    row = dy;
+
+                    ++moveCount;
+                    rotateCount = 0;
+                }
+            }
+        }
+
+        return moveCount;
+    }
+
+    public int changeDirection(int direction) {
+        if (direction != 0) {
+            return --direction;
+        } else {
+            return 3;
+        }
+    }
+
+    public int switchDirection(int direction) {
+        if (direction > 1) {
+            return direction - 2;
+        } else {
+            return direction + 2;
+        }
     }
 }
