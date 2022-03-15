@@ -85,8 +85,8 @@ public class Implementation {
     public int 왕실의_나이트(String move) {
         byte[] moves = move.getBytes(StandardCharsets.UTF_8);
         int[] rotates = {-2, 2, 2, -2};
-        int x = moves[0] - 97;
-        int y = moves[1] - 49;
+        int x = moves[0] - 'a';
+        int y = moves[1] - '1';
         int body = x;
         int tail = y;
         int answer = 8;
@@ -106,6 +106,30 @@ public class Implementation {
             body = tail;
             tail = tmp;
         }
+        return answer;
+    }
+
+    /**
+     * 쓸데없는 고민을 너무 많이 했다.
+     * 애초에 나이트가 갈 수 있는 위치는 8개
+     */
+    public int 왕실의_나이트_2(String move) {
+        byte[] moves = move.getBytes(StandardCharsets.UTF_8);
+        int row = moves[0] - 'a';
+        int col = moves[1] - '1';
+
+        int[][] steps = {{-2, -1}, {-2, 1}, {2, -1}, {2, 1}, {-1, -2}, {1, -2}, {-1, 2}, {1, 2}};
+        int answer = 0;
+
+        for (int[] step : steps) {
+            int nextCol = col + step[0];
+            int nextRow = row + step[1];
+
+            if (nextCol >= 0 && nextCol <= 7 && nextRow >= 0 && nextRow <= 7) {
+                ++answer;
+            }
+        }
+
         return answer;
     }
 }
