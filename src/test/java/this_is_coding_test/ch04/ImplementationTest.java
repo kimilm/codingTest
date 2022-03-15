@@ -15,6 +15,14 @@ class ImplementationTest {
     }
 
     @Test
+    void 상하좌우_2_test() {
+        String result = imp.상하좌우_2(5, "R R R U D D");
+        String answer = "3 4";
+
+        Assertions.assertThat(result).isEqualTo(answer);
+    }
+
+    @Test
     void 시각_test() {
         int result = imp.시각(5);
         int answer = 11475;

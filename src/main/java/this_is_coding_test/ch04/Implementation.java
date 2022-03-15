@@ -33,6 +33,39 @@ public class Implementation {
     }
 
     /**
+     * dx dy 배열을 이용해서 이동 방향을 기록하는 방식이 자주 사용되니 알아두자
+     */
+    public String 상하좌우_2(int N, String plans) {
+        int[] dx = {0, 0, -1, 1};
+        int[] dy = {-1, 1, 0, 0};
+        String[] move_types = {"L", "R", "U", "D"};
+
+        int x = 1;
+        int y = 1;
+
+        int nx = 0;
+        int ny = 0;
+
+        for (String plan : plans.split(" ")) {
+            for (int i = 0; i < move_types.length; i++) {
+                if (plan.equals(move_types[i])) {
+                    nx = x + dx[i];
+                    ny = y + dy[i];
+                }
+            }
+
+            if (nx < 1 || ny < 1 || nx > N || ny > N) {
+                continue;
+            }
+
+            x = nx;
+            y = ny;
+        }
+
+        return x + " " + y;
+    }
+
+    /**
      * 0 <= N <= 23
      * 00시 00분 00초 ~ N시 59분 59초 모든 시각중 3이 하나라도 포함되는 모든 경우의 수 출력
      */
