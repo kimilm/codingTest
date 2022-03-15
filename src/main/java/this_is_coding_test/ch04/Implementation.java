@@ -1,5 +1,7 @@
 package this_is_coding_test.ch04;
 
+import java.nio.charset.StandardCharsets;
+
 public class Implementation {
 
     /**
@@ -70,6 +72,40 @@ public class Implementation {
             }
         }
 
+        return answer;
+    }
+
+    /**
+     * 난이도 하
+     * 시간제한 1초
+     * 메모리제한 128MB
+     * 현재 나이트의 위치를 열과 행으로 a1과 같이 입력
+     * 나이트가 이동할 수 있는 경우의 수를 출력
+     */
+    public int 왕실의_나이트(String move) {
+        byte[] moves = move.getBytes(StandardCharsets.UTF_8);
+        int[] rotates = {-2, 2, 2, -2};
+        int x = moves[0] - 97;
+        int y = moves[1] - 49;
+        int body = x;
+        int tail = y;
+        int answer = 8;
+
+        for (int rotate : rotates) {
+            int straight = body + rotate;
+            int left = tail - 1;
+            int right = tail + 1;
+
+            if (straight < 0 || straight > 8) {
+                answer -= 2;
+            } else if (left < 0 || left > 8 || right < 0 || right > 8) {
+                --answer;
+            }
+
+            int tmp = body;
+            body = tail;
+            tail = tmp;
+        }
         return answer;
     }
 }

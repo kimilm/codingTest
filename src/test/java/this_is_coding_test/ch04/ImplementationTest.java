@@ -26,4 +26,22 @@ class ImplementationTest {
 
         Assertions.assertThat(result).isEqualTo(answer);
     }
+
+    @Test
+    void 왕실의_나이트() {
+        int result = imp.왕실의_나이트("a1");
+        int answer = 2;
+
+        Assertions.assertThat(result).isEqualTo(answer);
+
+        result = imp.왕실의_나이트("c3");
+        answer = 8;
+
+        Assertions.assertThat(result).isEqualTo(answer);
+
+        result = imp.왕실의_나이트("b3");
+        answer = 6;
+
+        Assertions.assertThat(result).isEqualTo(answer);
+    }
 }
