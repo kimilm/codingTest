@@ -21,5 +21,9 @@ class ImplementationTest {
 
         Assertions.assertThat(result).isEqualTo(answer);
 
+        result = imp.시각_2(5);
+        answer = 11475;
+
+        Assertions.assertThat(result).isEqualTo(answer);
     }
 }

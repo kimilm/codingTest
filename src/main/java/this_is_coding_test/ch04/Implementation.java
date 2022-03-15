@@ -52,4 +52,24 @@ public class Implementation {
         return answer;
     }
 
+    /**
+     * 하루는 86_400초, 모든 경우의 수가 86_400개
+     * 100_000개도 되지 않는 경우의 수를 가진다 -> 큰 고민 할 것 없이 그냥 for문 돌려도 된다
+     */
+    public int 시각_2(int N) {
+        int answer = 0;
+
+        for (int h = 0; h < (N + 1); ++h) {
+            for (int m = 0; m < 60; ++m) {
+                for (int s = 0; s < 60; ++s) {
+                    String str = String.valueOf(h) + m + s;
+                    if (str.contains("3")) {
+                        ++answer;
+                    }
+                }
+            }
+        }
+
+        return answer;
+    }
 }
