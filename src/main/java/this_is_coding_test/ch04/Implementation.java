@@ -145,6 +145,7 @@ public class Implementation {
     /**
      * 쓸데없는 고민을 너무 많이 했다.
      * 애초에 나이트가 갈 수 있는 위치는 8개
+     * steps 변수로 상하좌우_2의 dx dy를 대신함
      */
     public int 왕실의_나이트_2(String move) {
         byte[] moves = move.getBytes(StandardCharsets.UTF_8);
