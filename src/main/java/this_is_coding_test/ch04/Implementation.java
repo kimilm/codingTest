@@ -205,14 +205,16 @@ public class Implementation {
             if (map[dx][dy] == 0) {
                 col = dx;
                 row = dy;
+
                 ++moveCount;
                 rotateCount = 0;
+
                 map[dx][dy] = 2;
             }
 
             if (rotateCount == 4) {
-                dx = col + steps[switchDirection(direction)][0];
-                dy = row + steps[switchDirection(direction)][1];
+                dx = col - steps[direction][0];
+                dy = row - steps[direction][1];
                 if (map[dx][dy] == 1) {
                     moveFlag = false;
                 } else if (map[dx][dy] == 2) {
@@ -236,25 +238,17 @@ public class Implementation {
         }
     }
 
-    public int switchDirection(int direction) {
-        if (direction > 1) {
-            return direction - 2;
-        } else {
-            return direction + 2;
-        }
-    }
-
     /**
      * dx와 dy를 이렇게 이용할 수도 있다
      */
     public int 게임_개발_2(int n, int m, String location, String[] fields) {
-        boolean[][] visit = new boolean [n][m];
+        boolean[][] visit = new boolean[n][m];
         int[][] map = parseFields(fields);
         int[] character = parseCharacter(location);
 
         // 북 동 남 서
-        int [] dx = {-1, 0, 1, 0};
-        int [] dy = {0, 1, 0, -1};
+        int[] dx = {-1, 0, 1, 0};
+        int[] dy = {0, 1, 0, -1};
 
         int x = character[0];
         int y = character[1];
@@ -264,7 +258,7 @@ public class Implementation {
 
         int count = 0;
         int turnTime = 0;
-        while(true) {
+        while (true) {
             // 회전
             direction = turnLeft(direction);
 
