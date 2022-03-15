@@ -13,4 +13,13 @@ class ImplementationTest {
 
         Assertions.assertThat(result).isEqualTo(answer);
     }
+
+    @Test
+    void 시각() {
+        int result = imp.시각(5);
+        int answer = 11475;
+
+        Assertions.assertThat(result).isEqualTo(answer);
+
+    }
 }

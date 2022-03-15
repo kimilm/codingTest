@@ -30,5 +30,26 @@ public class Implementation {
         return x + " " + y;
     }
 
+    /**
+     * 0 <= N <= 23
+     * 00시 00분 00초 ~ N시 59분 59초 모든 시각중 3이 하나라도 포함되는 모든 경우의 수 출력
+     */
+    public int 시각(int N) {
+        int hourHasThree = 60 * 60;
+        int minuteHasThree = 15 * 60;
+        int secondHasThree = 45 * 15;
+
+        int answer = 0;
+
+        for (int i = 0; i <= N; i++) {
+            if (String.valueOf(i).contains("3"))
+                answer += hourHasThree;
+            else {
+                answer += minuteHasThree + secondHasThree;
+            }
+        }
+
+        return answer;
+    }
 
 }
