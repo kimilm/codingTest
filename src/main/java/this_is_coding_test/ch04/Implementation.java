@@ -243,4 +243,91 @@ public class Implementation {
             return direction + 2;
         }
     }
+
+    /**
+     * dx와 dy를 이렇게 이용할 수도 있다
+     */
+    public int 게임_개발_2(int n, int m, String location, String[] fields) {
+        boolean[][] visit = new boolean [n][m];
+        int[][] map = parseFields(fields);
+        int[] character = parseCharacter(location);
+
+        // 북 동 남 서
+        int [] dx = {-1, 0, 1, 0};
+        int [] dy = {0, 1, 0, -1};
+
+        int x = character[0];
+        int y = character[1];
+        int direction = character[2];
+
+        visit[x][y] = true;
+
+        int count = 0;
+        int turnTime = 0;
+        while(true) {
+            // 회전
+            direction = turnLeft(direction);
+
+            int nx = x + dx[direction];
+            int ny = y + dy[direction];
+
+            // 정면에 방문하지 않은 칸이 존재할 경우
+            if (!visit[nx][ny] && map[nx][ny] == 0) {
+                visit[nx][ny] = true;
+                x = nx;
+                y = ny;
+
+                ++count;
+                turnTime = 0;
+
+                continue;
+            }
+            // 정면에 가보지 않은 칸이 없거나 바다인 경우
+            else {
+                ++turnTime;
+            }
+
+            // 네 방향 모두 갈 수 없는 경우
+            if (turnTime == 4) {
+                nx = x - dx[direction];
+                ny = y - dy[direction];
+                // 뒤로 갈 수 있다면
+                if (map[nx][ny] == 0) {
+                    x = nx;
+                    y = ny;
+
+                    ++count;
+                    turnTime = 0;
+                }
+                // 뒤가 바다라면
+                else {
+                    break;
+                }
+            }
+        }
+
+        return count;
+    }
+
+    private int[][] parseFields(String[] fields) {
+        return Arrays.stream(fields)
+                .map(value -> Arrays.stream(value.split(" "))
+                        .mapToInt(Integer::parseInt)
+                        .toArray())
+                .toArray(int[][]::new);
+    }
+
+    private int[] parseCharacter(String location) {
+        return Arrays.stream(location.split(" "))
+                .mapToInt(Integer::parseInt)
+                .toArray();
+    }
+
+    public int turnLeft(int direction) {
+        if (direction != 0) {
+            return --direction;
+        } else {
+            return 3;
+        }
+    }
 }

@@ -78,4 +78,11 @@ class ImplementationTest {
 
         Assertions.assertThat(result).isEqualTo(answer);
     }
+    @Test
+    void 게임_개발_2_test() {
+        int result = imp.게임_개발_2(4, 4, "1 1 0", new String[] {"1 1 1 1", "1 0 0 1", "1 1 0 1", "1 1 1 1"});
+        int answer = 3;
+
+        Assertions.assertThat(result).isEqualTo(answer);
+    }
 }
