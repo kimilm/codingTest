@@ -1,8 +1,10 @@
 package this_is_coding_test.ch04;
 
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
+@Disabled
 class ImplementationTest {
     private final Implementation imp = new Implementation();
 
