@@ -60,7 +60,7 @@ class DFS_BFS_Test {
                 "11100011111111",
                 "11100011111111"
         };
-        int result = db.음료수_얼려_먹기_2(15, 14, tray);
+        int result = db.음료수_얼려_먹기(15, 14, tray);
         int answer = 8;
 
         Assertions.assertThat(result).isEqualTo(answer);

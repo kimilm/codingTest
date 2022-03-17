@@ -51,57 +51,37 @@ public class DFS_BFS {
      * 제한) 시간: 1초, 메모리: 128MB
      */
     public int 음료수_얼려_먹기(int n, int m, String[] trays) {
-        Stack<int[]> stack = new Stack<>();
-
-        char[][] trayArray = Arrays.stream(trays)
+        char[][] graph = Arrays.stream(trays)
                 .map(String::toCharArray)
                 .toArray(char[][]::new);
 
-        boolean[][] visited = new boolean[n][m];
+        Stack<int[]> stack = new Stack<>();
 
         int answer = 0;
 
         for (int i = 0; i < n; ++i) {
             for (int j = 0; j < m; ++j) {
-                if (visited[i][j]) {
-                    continue;
-                }
-                if (trayArray[i][j] == '1') {
-                    visited[i][j] = true;
+                if (graph[i][j] == '1') {
                     continue;
                 }
 
-                visited[i][j] = true;
                 stack.push(new int[]{i, j});
 
                 while (!stack.isEmpty()) {
-                    int x = stack.peek()[0];
-                    int y = stack.peek()[1];
+                    int[] entity = stack.pop();
+                    int x = entity[0];
+                    int y = entity[1];
 
-                    boolean isRangeInN = x < n - 1;
-                    boolean isRangeInM = y < m - 1;
-
-                    if (isRangeInN && isRangeInM && !visited[x + 1][y] && !visited[x][y + 1]) {
-                        visited[x + 1][y] = true;
-                        visited[x][y + 1] = true;
-                        if (trayArray[x + 1][y] != '1') {
+                    if (x > -1 && x < n && y > -1 && y < m) {
+                        if (graph[x][y] != '1') {
+                            graph[x][y] = '1';
+                            // 상하좌우를 다 봐야 요철을 확인할 수 있다.
+                            // 오른쪽, 아래 2개 방향만 확인하면 놓치는 부분이 생김
                             stack.push(new int[]{x + 1, y});
-                        }
-                        if (trayArray[x][y + 1] != '1') {
+                            stack.push(new int[]{x - 1, y});
                             stack.push(new int[]{x, y + 1});
+                            stack.push(new int[]{x, y - 1});
                         }
-                    } else if (isRangeInN && !visited[x + 1][y]) {
-                        visited[x + 1][y] = true;
-                        if (trayArray[x + 1][y] != '1') {
-                            stack.push(new int[]{x + 1, y});
-                        }
-                    } else if (isRangeInM && !visited[x][y + 1]) {
-                        visited[x][y + 1] = true;
-                        if (trayArray[x][y + 1] != '1') {
-                            stack.push(new int[]{x, y + 1});
-                        }
-                    } else {
-                        stack.pop();
                     }
                 }
 
