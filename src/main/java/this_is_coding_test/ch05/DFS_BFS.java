@@ -180,4 +180,55 @@ public class DFS_BFS {
 
         return answer;
     }
+
+    /**
+     * BFS 를 이용한 풀이
+     * 시작점의 거리가 변하는 이슈가 있지만 요구하는 해답이 도착지의 정보이기에 상관없다.
+     */
+    public int 미로_탈출_2(int n, int m, String[] maze) {
+        int[][] graph = Arrays.stream(maze)
+                .map(str -> str.chars()
+                        .map(value -> value - '0')
+                        .toArray())
+                .toArray(int[][]::new);
+
+        Queue<int[]> queue = new LinkedList<>();
+
+        // 이동할 네 방향
+        int[] dx = {-1, 1, 0, 0};
+        int[] dy = {0, 0, -1, 1};
+
+        //시작 지점 입력
+        queue.add(new int[]{0, 0});
+
+        // 큐가 빌 때까지 반복, BFS
+        while (!queue.isEmpty()) {
+            int[] location = queue.poll();
+            int x = location[0];
+            int y = location[1];
+
+            // 이동할 네 방향
+            for (int i = 0; i < 4; ++i) {
+                int nx = x + dx[i];
+                int ny = y + dy[i];
+
+                // 미로 공간을 벗어난 경우 무시
+                if (nx < 0 || ny < 0 || nx >= n || ny >= m) {
+                    continue;
+                }
+                // 괴물인 경우 무시
+                if (graph[nx][ny] == 0) {
+                    continue;
+                }
+                // 해당 노드를 처음 방문한다면 최단거리 기록
+                if (graph[nx][ny] == 1) {
+                    int dist = graph[x][y] + 1;
+                    graph[nx][ny] = dist;
+                    queue.add(new int[]{nx, ny});
+                }
+            }
+        }
+
+        return graph[n - 1][m - 1];
+    }
 }

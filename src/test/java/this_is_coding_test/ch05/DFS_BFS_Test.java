@@ -1,8 +1,10 @@
 package this_is_coding_test.ch05;
 
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
+@Disabled
 class DFS_BFS_Test {
 
     private final DFS_BFS db = new DFS_BFS();
@@ -77,6 +79,19 @@ class DFS_BFS_Test {
         };
         int result = db.미로_탈출(5, 6, maze);
         int answer = 10;
+
+        Assertions.assertThat(result).isEqualTo(answer);
+    }
+
+    @Test
+    void 미로_탈출_2_test() {
+        String[] maze = {
+                "110",
+                "010",
+                "011",
+        };
+        int result = db.미로_탈출_2(3, 3, maze);
+        int answer = 5;
 
         Assertions.assertThat(result).isEqualTo(answer);
     }
