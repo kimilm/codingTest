@@ -2,7 +2,7 @@ package this_is_coding_test.ch05;
 
 import org.junit.jupiter.api.Test;
 
-class DFS_BFSTest {
+class DFS_BFS_Test {
 
     private final DFS_BFS db = new DFS_BFS();
 
@@ -23,5 +23,12 @@ class DFS_BFSTest {
         boolean[] visited = new boolean[9];
 
         db.dfs(graph, 1, visited);
+    }
+
+    @Test
+    void bfsTest() {
+        boolean[] visited = new boolean[9];
+
+        db.bfs(graph, 1, visited);
     }
 }

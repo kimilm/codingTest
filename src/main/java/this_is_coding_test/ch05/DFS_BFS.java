@@ -1,5 +1,8 @@
 package this_is_coding_test.ch05;
 
+import java.util.LinkedList;
+import java.util.Queue;
+
 public class DFS_BFS {
 
     /**
@@ -16,5 +19,28 @@ public class DFS_BFS {
                 dfs(graph, i, visited);
             }
         }
+    }
+
+    /**
+     * BFS queue
+     */
+    public void bfs(int[][] graph, int v, boolean[] visited) {
+        Queue<Integer> queue = new LinkedList<>();
+
+        visited[v] = true;
+        queue.add(v);
+
+        while (!queue.isEmpty()) {
+            v = queue.poll();
+            System.out.print(v + " ");
+
+            for (int i : graph[v]) {
+                if (!visited[i]) {
+                    visited[i] = true;
+                    queue.add(i);
+                }
+            }
+        }
+
     }
 }
