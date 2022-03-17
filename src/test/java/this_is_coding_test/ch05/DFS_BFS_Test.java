@@ -1,5 +1,6 @@
 package this_is_coding_test.ch05;
 
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 class DFS_BFS_Test {
@@ -30,5 +31,13 @@ class DFS_BFS_Test {
         boolean[] visited = new boolean[9];
 
         db.bfs(graph, 1, visited);
+    }
+
+    @Test
+    void 음료수_얼려_먹기_test() {
+        int result = db.음료수_얼려_먹기(4, 5, new String[]{"00110", "00011", "11111", "00000"});
+        int answer = 3;
+
+        Assertions.assertThat(result).isEqualTo(answer);
     }
 }
