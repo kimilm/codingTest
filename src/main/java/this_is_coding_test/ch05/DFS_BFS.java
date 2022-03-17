@@ -111,4 +111,48 @@ public class DFS_BFS {
 
         return answer;
     }
+
+    /**
+     * DFS 를 사용하여 해결하는 방법
+     */
+    public int 음료수_얼려_먹기_2(int n, int m, String[] trays) {
+        char[][] graph = Arrays.stream(trays)
+                .map(String::toCharArray)
+                .toArray(char[][]::new);
+
+        int answer = 0;
+
+        for (int i = 0; i < n; ++i) {
+            for (int j = 0; j < m; ++j) {
+                if (dfs_for_음료수_얼려_먹기(graph, i, j, n, m)) {
+                    ++answer;
+                }
+            }
+        }
+
+        return answer;
+    }
+
+    public boolean dfs_for_음료수_얼려_먹기(char[][] graph, int x, int y, int n, int m) {
+        // 범위 초과시 false
+        if (x <= -1 || x >= n || y <= -1 || y >= m) {
+            return false;
+        }
+
+        // 해당 노드를 방문하지 않았다면
+        if (graph[x][y] != '1') {
+            // 방문 처리
+            graph[x][y] = '1';
+
+            // 상 하 좌 우 위치 재귀적 호출
+            dfs_for_음료수_얼려_먹기(graph, x - 1, y, n, m);
+            dfs_for_음료수_얼려_먹기(graph, x + 1, y, n, m);
+            dfs_for_음료수_얼려_먹기(graph, x, y - 1, n, m);
+            dfs_for_음료수_얼려_먹기(graph, x, y + 1, n, m);
+
+            return true;
+        }
+
+        return false;
+    }
 }
