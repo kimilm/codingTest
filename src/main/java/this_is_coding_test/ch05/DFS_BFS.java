@@ -135,4 +135,49 @@ public class DFS_BFS {
 
         return false;
     }
+
+    /**
+     * 난이도 중하
+     * 4 <= n, m <= 200
+     * 제한) 시간: 1초, 메모리: 128MB
+     */
+    public int 미로_탈출(int n, int m, String[] maze) {
+        char[][] graph = Arrays.stream(maze)
+                .map(String::toCharArray)
+                .toArray(char[][]::new);
+
+        Queue<int[]> queue = new LinkedList<>();
+
+        int arriveX = n - 1;
+        int arriveY = m - 1;
+
+        queue.add(new int[]{0, 0, 1});
+
+        int answer = 0;
+
+        while (!queue.isEmpty()) {
+            int[] entity = queue.poll();
+            int x = entity[0];
+            int y = entity[1];
+            int dist = entity[2];
+
+            if (x == arriveX && y == arriveY) {
+                answer = dist;
+                break;
+            }
+
+            if (x > -1 && x < n && y > -1 && y < m) {
+                if (graph[x][y] != 0) {
+                    graph[x][y] = 0;
+
+                    queue.add(new int[]{x + 1, y, dist + 1});
+                    queue.add(new int[]{x - 1, y, dist + 1});
+                    queue.add(new int[]{x, y + 1, dist + 1});
+                    queue.add(new int[]{x, y - 1, dist + 1});
+                }
+            }
+        }
+
+        return answer;
+    }
 }

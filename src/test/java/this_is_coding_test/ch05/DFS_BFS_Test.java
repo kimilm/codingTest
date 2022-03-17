@@ -60,8 +60,23 @@ class DFS_BFS_Test {
                 "11100011111111",
                 "11100011111111"
         };
-        int result = db.음료수_얼려_먹기(15, 14, tray);
+        int result = db.음료수_얼려_먹기_2(15, 14, tray);
         int answer = 8;
+
+        Assertions.assertThat(result).isEqualTo(answer);
+    }
+
+    @Test
+    void 미로_탈출_test() {
+        String[] maze = {
+                "101010",
+                "111111",
+                "000001",
+                "111111",
+                "111111"
+        };
+        int result = db.미로_탈출(5, 6, maze);
+        int answer = 10;
 
         Assertions.assertThat(result).isEqualTo(answer);
     }
