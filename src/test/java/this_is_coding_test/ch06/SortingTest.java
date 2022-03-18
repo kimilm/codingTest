@@ -13,4 +13,12 @@ class SortingTest {
 
         Assertions.assertThat(result).containsExactly(answer);
     }
+
+    @Test
+    void 성적이_낮은_순서로_학생_출력하기_test() {
+        String result = s.성적이_낮은_순서로_학생_출력하기(2, new String[]{"홍길동 95", "이순신 77"});
+        String answer = "이순신 홍길동";
+
+        Assertions.assertThat(result).isEqualTo(answer);
+    }
 }
