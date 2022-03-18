@@ -36,4 +36,33 @@ public class Sorting {
                 .map(str -> str[0])
                 .collect(Collectors.joining(" "));
     }
+
+    /**
+     * 난이도 하
+     * 제한) 시간: 1초, 메모리: 128MB
+     * 1 <= N <= 100_000
+     * 0 <= K <= N
+     * 모든 배열의 원소는 10_000_000보다 작은 자연수
+     */
+    public int 두_배열의_원소_교체(int n, int k, int[] aArray, int[] bArray) {
+        Integer[] sumArray = Arrays.stream(aArray).boxed()
+                .sorted()
+                .toArray(Integer[]::new);
+
+        Integer[] spareArray = Arrays.stream(bArray).boxed()
+                .sorted(Collections.reverseOrder())
+                .toArray(Integer[]::new);
+
+        for (int i = 0; i < k; ++i) {
+            if (spareArray[i] > sumArray[i]) {
+                int temp = sumArray[i];
+                sumArray[i] = spareArray[i];
+                spareArray[i] = temp;
+            }
+        }
+
+        return Arrays.stream(sumArray)
+                .reduce(Integer::sum)
+                .orElseThrow();
+    }
 }

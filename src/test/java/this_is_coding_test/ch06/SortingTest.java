@@ -21,4 +21,12 @@ class SortingTest {
 
         Assertions.assertThat(result).isEqualTo(answer);
     }
+
+    @Test
+    void 두_배열의_원소_교체_test() {
+        int result = s.두_배열의_원소_교체(5, 3, new int[]{1, 2, 5, 4, 3}, new int[]{5, 5, 6, 6, 5});
+        int answer = 26;
+
+        Assertions.assertThat(result).isEqualTo(answer);
+    }
 }
