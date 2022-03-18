@@ -30,4 +30,12 @@ class SearchTest {
 
         Assertions.assertThat(result).isEqualTo(answer);
     }
+
+    @Test
+    void 떡볶이_떡_만들기_test() {
+        int result = search.떡볶이_떡_만들기(4, 6, "19 15 10 17");
+        int answer = 15;
+
+        Assertions.assertThat(result).isEqualTo(answer);
+    }
 }

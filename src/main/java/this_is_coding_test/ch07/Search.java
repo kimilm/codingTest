@@ -2,7 +2,9 @@ package this_is_coding_test.ch07;
 
 import java.io.StringBufferInputStream;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Set;
+import java.util.TreeSet;
 import java.util.stream.Collectors;
 
 public class Search {
@@ -99,5 +101,33 @@ public class Search {
         }
 
         return sb.deleteCharAt(sb.length() - 1).toString();
+    }
+
+    /**
+     * 난이도 중
+     * 제한) 시간: 2초, 메모리: 128MB
+     * 1 <= N <= 1_000_000
+     * 1 <= M <= 2_000_000_000
+     */
+    public int 떡볶이_떡_만들기(int n, int m, String tteoks) {
+        TreeSet<Integer> set = Arrays.stream(tteoks.split(" "))
+                .map(Integer::parseInt)
+                .collect(Collectors.toCollection(TreeSet::new));
+
+        int sum = 0;
+        int height = set.last();
+        int cutH = height;
+        int cut = 1;
+
+        while(sum < m) {
+            int temp = set.higher(--height);
+            if (temp != cutH) {
+                cutH = temp;
+                ++cut;
+            }
+            sum += cut;
+        }
+
+        return height;
     }
 }
