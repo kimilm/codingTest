@@ -20,14 +20,12 @@ public class Search {
                 .map(Integer::parseInt)
                 .collect(Collectors.toSet());
 
-        int[] array = Arrays.stream(mArray.split(" "))
-                .mapToInt(Integer::parseInt)
-                .toArray();
+        int[] targets = parseIntArray(mArray);
 
         StringBuilder sb = new StringBuilder();
 
-        for (int value : array) {
-            if (set.contains(value)) {
+        for (int target : targets) {
+            if (set.contains(target)) {
                 sb.append("yes ");
             } else {
                 sb.append("no ");
@@ -37,17 +35,18 @@ public class Search {
         return sb.deleteCharAt(sb.length() - 1).toString();
     }
 
+    public int[] parseIntArray(String str) {
+        return Arrays.stream(str.split(" "))
+                .mapToInt(Integer::parseInt)
+                .toArray();
+    }
+
     /**
      * 이진 탐색을 이용한 풀이
      */
     public String 부품_찾기_2(int n, String nArray, int m, String mArray) {
-        int[] array = Arrays.stream(nArray.split(" "))
-                .mapToInt(Integer::parseInt)
-                .toArray();
-
-        int[] targets = Arrays.stream(mArray.split(" "))
-                .mapToInt(Integer::parseInt)
-                .toArray();
+        int[] array = parseIntArray(nArray);
+        int[] targets = parseIntArray(mArray);
 
         StringBuilder sb = new StringBuilder();
 
@@ -74,5 +73,31 @@ public class Search {
             }
         }
         return Integer.MIN_VALUE;
+    }
+
+    /**
+     * 계수정렬을 이용한 풀이
+     */
+    public String 부품_찾기_3(int n, String nArray, int m, String mArray) {
+        // 계수정렬용 배열
+        int[] countSort = new int[1_000_001];
+        // 초기화
+        Arrays.stream(nArray.split(" "))
+                .map(Integer::parseInt)
+                .forEach(idx -> countSort[idx] = 1);
+
+        int[] targets = parseIntArray(mArray);
+
+        StringBuilder sb = new StringBuilder();
+
+        for (int target : targets) {
+            if (countSort[target] != 1) {
+                sb.append("no ");
+            } else {
+                sb.append("yes ");
+            }
+        }
+
+        return sb.deleteCharAt(sb.length() - 1).toString();
     }
 }
