@@ -1,8 +1,10 @@
 package this_is_coding_test.ch06;
 
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
+@Disabled
 class SortingTest {
     private final Sorting s = new Sorting();
 
