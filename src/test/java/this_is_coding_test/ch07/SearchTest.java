@@ -14,4 +14,12 @@ class SearchTest {
 
         Assertions.assertThat(result).isEqualTo(answer);
     }
+
+    @Test
+    void 부품_찾기_2_test() {
+        String result = search.부품_찾기_2(5, "8 3 7 9 2", 3, "5 7 9");
+        String answer = "no yes yes";
+
+        Assertions.assertThat(result).isEqualTo(answer);
+    }
 }

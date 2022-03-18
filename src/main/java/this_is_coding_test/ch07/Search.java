@@ -26,7 +26,7 @@ public class Search {
 
         StringBuilder sb = new StringBuilder();
 
-        for(int value : array) {
+        for (int value : array) {
             if (set.contains(value)) {
                 sb.append("yes ");
             } else {
@@ -35,5 +35,44 @@ public class Search {
         }
 
         return sb.deleteCharAt(sb.length() - 1).toString();
+    }
+
+    /**
+     * 이진 탐색을 이용한 풀이
+     */
+    public String 부품_찾기_2(int n, String nArray, int m, String mArray) {
+        int[] array = Arrays.stream(nArray.split(" "))
+                .mapToInt(Integer::parseInt)
+                .toArray();
+
+        int[] targets = Arrays.stream(mArray.split(" "))
+                .mapToInt(Integer::parseInt)
+                .toArray();
+
+        StringBuilder sb = new StringBuilder();
+
+        for (int target : targets) {
+            if (binarySearchFor부품찾기(array, target, 0, array.length - 1) != Integer.MIN_VALUE) {
+                sb.append("yes ");
+            } else {
+                sb.append("no ");
+            }
+        }
+        return sb.deleteCharAt(sb.length() - 1).toString();
+    }
+
+    public int binarySearchFor부품찾기(int[] array, int target, int start, int end) {
+        while (start <= end) {
+            int mid = (start + end) / 2;
+
+            if (array[mid] == target) {
+                return mid;
+            } else if (array[mid] > target) {
+                end = mid - 1;
+            } else {
+                start = mid + 1;
+            }
+        }
+        return Integer.MIN_VALUE;
     }
 }
