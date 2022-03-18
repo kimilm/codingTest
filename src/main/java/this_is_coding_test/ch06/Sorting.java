@@ -59,6 +59,10 @@ public class Sorting {
                 sumArray[i] = spareArray[i];
                 spareArray[i] = temp;
             }
+            // 정렬을 수행했기 때문에 값이 같아지는 지점 이후로는 체크할 필요가 없다
+            else {
+                break;
+            }
         }
 
         return Arrays.stream(sumArray)
