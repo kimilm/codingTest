@@ -10,8 +10,16 @@ class DynamicProgrammingTest {
     private final DynamicProgramming dp = new DynamicProgramming();
 
     @Test
-    void 일로_만들기() {
+    void 일로_만들기_test() {
         int result = dp.일로_만들기(26);
+        int answer = 3;
+
+        Assertions.assertThat(result).isEqualTo(answer);
+    }
+
+    @Test
+    void 일로_만들기_2_test() {
+        int result = dp.일로_만들기_2(26);
         int answer = 3;
 
         Assertions.assertThat(result).isEqualTo(answer);

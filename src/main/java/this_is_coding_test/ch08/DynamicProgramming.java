@@ -44,4 +44,30 @@ public class DynamicProgramming {
         int min = Arrays.stream(array).filter(value -> value != 0).min().orElseThrow();
         return min + 1;
     }
+
+    /**
+     * Bottom_Up 방식의 풀이
+     */
+    public int 일로_만들기_2(int x) {
+        int[] d = new int[30_001];
+
+        for (int i = 2; i < x + 1; i++) {
+            // 현재의 수에서 1을 빼는 경우
+            d[i] = d[i - 1] + 1;
+            // 현재의 수가 2로 나누어 떨어지는 경우
+            if (i % 2 == 0) {
+                d[i] = Integer.min(d[i], d[i / 2] + 1);
+            }
+            // 현재의 수가 3으로 나누어 떨어지는 경우
+            if (i % 3 == 0) {
+                d[i] = Integer.min(d[i], d[i / 3] + 1);
+            }
+            // 현재의 수가 5로 나누어 떨어지는 경우
+            if (i % 5 == 0) {
+                d[i] = Integer.min(d[i], d[i / 5] + 1);
+            }
+        }
+
+        return d[x];
+    }
 }
