@@ -70,4 +70,25 @@ public class DynamicProgramming {
 
         return d[x];
     }
+
+    /**
+     * 난이도 중
+     * 제한) 시간: 1초, 메모리: 128MB
+     * 3 <= N <= 100
+     * 0 <= K <= 1_000
+     */
+    public int 개미_전사(int n, String k) {
+        int[] foods = Arrays.stream(k.split(" ")).mapToInt(Integer::parseInt).toArray();
+        int[] d = new int[n];
+
+        d[0] = foods[0];
+        d[1] = foods[1];
+        d[2] = foods[0] + foods[2];
+
+        for(int i = 3; i < n; ++i) {
+            d[i] = foods[i] + Integer.max(d[i - 2], d[i - 3]);
+        }
+
+        return Integer.max(d[n - 1], d[n - 2]);
+    }
 }
