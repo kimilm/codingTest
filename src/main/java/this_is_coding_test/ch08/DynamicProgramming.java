@@ -116,4 +116,21 @@ public class DynamicProgramming {
 
         return d[n - 1];
     }
+
+    /**
+     * 난이도 중하
+     * 제한) 시간: 1초, 메모리: 128MB
+     * 1 <= N <= 1_000
+     */
+    public int 바닥_공사(int n) {
+        int[] d = new int[n + 1];
+        d[1] = 1;
+        d[2] = 3;
+
+        for (int i = 3; i < n + 1; ++i) {
+            d[i] = d[i - 1] + d[i - 2] + 1;
+        }
+
+        return d[n];
+    }
 }

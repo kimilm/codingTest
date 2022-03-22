@@ -50,4 +50,12 @@ class DynamicProgrammingTest {
 
         Assertions.assertThat(result).isEqualTo(answer);
     }
+
+    @Test
+    void 바닥_공사_test() {
+        int result = dp.바닥_공사(3);
+        int answer = 5;
+
+        Assertions.assertThat(result).isEqualTo(answer);
+    }
 }
