@@ -85,10 +85,35 @@ public class DynamicProgramming {
         d[1] = foods[1];
         d[2] = foods[0] + foods[2];
 
-        for(int i = 3; i < n; ++i) {
+        for (int i = 3; i < n; ++i) {
             d[i] = foods[i] + Integer.max(d[i - 2], d[i - 3]);
         }
 
         return Integer.max(d[n - 1], d[n - 2]);
+    }
+
+    /**
+     * 해당 문제의 점화식
+     * 현재 위치 a(i)에 대해서
+     * a(i-1)위치를 털면 현재 위치를 털 수 없음
+     * a(i-2)위치를 털면 현재 위치를 털 수 있음
+     * i번째 식량창고에 있는 식량의 양이 k(i)라고 했을 때
+     * a(i) = max(a(i-1), a(i-2) + k(i))
+     * (i-3)번째 이하의 식량창고에 대한 최적의 해는 고려할 필요가 없다.
+     * (i-1)과 (i-2)를 구하는 과정에서 이미 계산되었기 때문
+     */
+    public int 개미_전사_2(int n, String k) {
+        int[] array = Arrays.stream(k.split(" ")).mapToInt(Integer::parseInt).toArray();
+        int[] d = new int[100];
+
+        // Bottom-up
+        d[0] = array[0];
+        d[1] = Integer.max(array[0], array[1]);
+
+        for (int i = 2; i < n; ++i) {
+            d[i] = Integer.max(d[i - 1], d[i - 2] + array[i]);
+        }
+
+        return d[n - 1];
     }
 }

@@ -37,4 +37,17 @@ class DynamicProgrammingTest {
 
         Assertions.assertThat(result).isEqualTo(answer);
     }
+
+    @Test
+    void 개미_전사_2_test() {
+        int result = dp.개미_전사_2(4, "1 3 1 5");
+        int answer = 8;
+
+        Assertions.assertThat(result).isEqualTo(answer);
+
+        result = dp.개미_전사_2(8, "1 3 1 5 2 1 1 1");
+        answer = 10;
+
+        Assertions.assertThat(result).isEqualTo(answer);
+    }
 }
