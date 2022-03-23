@@ -1,8 +1,10 @@
 package this_is_coding_test.ch07;
 
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
+@Disabled
 class SearchTest {
 
     private final Search search = new Search();
