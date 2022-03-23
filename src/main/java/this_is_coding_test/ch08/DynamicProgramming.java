@@ -170,4 +170,34 @@ public class DynamicProgramming {
 
         return d[n];
     }
+
+    /**
+     * 난이도 중
+     * 제한) 시간: 1초, 메모리: 128MB
+     * 1 <= N <= 100
+     * 1 <= M <= 10_000
+     */
+    public int 효율적인_화폐_구성(String goal, String coins) {
+        int[] coinArray = Arrays.stream(coins.split(" ")).mapToInt(Integer::parseInt).toArray();
+        int target = Integer.parseInt(goal.split(" ")[1]);
+
+        int[] d = new int[target + 1];
+        Arrays.fill(d, Integer.MAX_VALUE - 1);
+
+        for (int j = 0; j < coinArray.length; ++j) {
+            if (target % coinArray[j] == 0) {
+                d[coinArray[j]] = 1;
+            }
+        }
+
+        for (int i = coinArray[0] + 1; i < target + 1; ++i) {
+            for (int j = 0; j < coinArray.length; ++j) {
+                if (i % coinArray[j] == 0) {
+                    d[i] = Integer.min(d[i], d[i - coinArray[j]] + 1);
+                }
+            }
+        }
+
+        return d[target] != Integer.MAX_VALUE - 1 ? d[target] : -1;
+    }
 }
