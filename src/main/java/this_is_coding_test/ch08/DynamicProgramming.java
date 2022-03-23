@@ -200,4 +200,41 @@ public class DynamicProgramming {
 
         return d[target] != Integer.MAX_VALUE - 1 ? d[target] : -1;
     }
+
+    /**
+     * 그리디의 화폐 문제와 달리 각 화폐의 단위가 배수가 아님
+     * 큰 수 부터 처리할 수 없음 -> DP 활용
+     * 금액 i를 만들 수 있는 최소한의 화폐 개수를 a(i), 화폐의 단위를 k, 금액 (i-k)를 만들 수 있는 최소한의 화폐 개수를 a(i-k)
+     * a(i-k) 가능 -> a(i) = min(a(i), a(i-k) + 1)
+     * a(i-k) 불가 -> a(i) = 10_001 (임의의 도달 불가능한 큰 수)
+     * 화폐의 크기 k 만큼의 리스트를 만든다.
+     */
+
+    public int 효율적인_화폐_구성_2(String goal, String coins) {
+        int n = Integer.parseInt(goal.split(" ")[0]);
+        int m = Integer.parseInt(goal.split(" ")[1]);
+
+        int[] array = Arrays.stream(coins.split(" ")).mapToInt(Integer::parseInt).toArray();
+
+        // dp 테이블 초기화
+        int[] d = new int[10_001];
+        Arrays.fill(d, 10_001);
+//        Collections.nCopies(10_001, 10_001).stream().mapToInt(Integer::intValue).toArray();
+
+        // 0원은 화폐의 개수가 0개
+        d[0] = 0;
+
+        // Bottom-up, 화폐의 개수만큼 반복
+        for (int i = 0; i < n; ++i) {
+            for (int j = array[i]; j < m + 1; ++j) {
+                // (i - k) 원을 만드는 방법이 존재한다면 갱신
+                // 이 if 조건은 없어도 된다. min 함수에서 10_001이 선택되기 때문
+                if (d[j - array[i]] != 10_001) {
+                    d[j] = Integer.min(d[j], d[j - array[i]] + 1);
+                }
+            }
+        }
+
+        return d[m] != 10_001 ? d[m] : -1;
+    }
 }

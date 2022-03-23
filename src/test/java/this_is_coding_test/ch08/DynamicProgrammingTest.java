@@ -1,10 +1,12 @@
 package this_is_coding_test.ch08;
 
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+@Disabled
 class DynamicProgrammingTest {
 
     private final DynamicProgramming dp = new DynamicProgramming();
@@ -85,6 +87,24 @@ class DynamicProgrammingTest {
         Assertions.assertThat(result).isEqualTo(answer);
 
         result = dp.효율적인_화폐_구성("3 4", "3 5 7");
+        answer = -1;
+
+        Assertions.assertThat(result).isEqualTo(answer);
+    }
+
+    @Test
+    void 효율적인_화폐_구성_2_test() {
+        int result = dp.효율적인_화폐_구성_2("3 8", "1 4 5");
+        int answer = 2;
+
+        Assertions.assertThat(result).isEqualTo(answer);
+
+        result = dp.효율적인_화폐_구성_2("2 15", "2 3");
+        answer = 5;
+
+        Assertions.assertThat(result).isEqualTo(answer);
+
+        result = dp.효율적인_화폐_구성_2("3 4", "3 5 7");
         answer = -1;
 
         Assertions.assertThat(result).isEqualTo(answer);
