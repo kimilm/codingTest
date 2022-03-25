@@ -22,4 +22,9 @@ class ShortestPathTest {
     void dijkstra3Test() {
         sp.dijkstra3();
     }
+
+    @Test
+    void dijkstra4Test() {
+        sp.dijkstra4();
+    }
 }

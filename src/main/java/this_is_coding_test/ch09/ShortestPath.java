@@ -139,7 +139,7 @@ public class ShortestPath {
         boolean[] visited = new boolean[7];
 
         // 보통은 앞에 있는 값을 가중치로 사용하지만 먼저 만든 그래프의 간선 정보가 뒤에 있기 때문에 인덱스 혼동을 막기 위해 설정
-        Queue<int[]> pq = new PriorityQueue<>(Comparator.comparing(edgeNode -> edgeNode[1]));
+        Queue<int[]> pq = new PriorityQueue<>(Comparator.comparing(nodeEdge -> nodeEdge[1]));
 
         Arrays.fill(distance, INF);
 
@@ -165,6 +165,54 @@ public class ShortestPath {
                     });
         }
 
+        System.out.println(Arrays.toString(distance));
+    }
+
+    /**
+     * PriorityQueue 가 getSmallestNode 함수를 대체, heap 구조를 사용해서 O(NlogN)의 시간복잡도를 가진다
+     */
+    public void dijkstra4() {
+        List<List<int[]>> graph = makeGraph();
+        Integer[] distance = Collections.nCopies(7, INF).toArray(Integer[]::new);
+
+        // edge 를 weight 로 설정, 일반적으로 먼저 오는 원소를 가중치로 설정한다 (edge, node) 형태로 저장
+        Queue<int[]> pq = new PriorityQueue<>(Comparator.comparing(edgeNode -> edgeNode[0]));
+
+        // 시작 노드
+        int start = 1;
+        distance[start] = 0;
+
+        // (edge, node) 형태로 우선순위 큐에 삽입
+        pq.add(new int[]{distance[start], start});
+
+        // 큐가 비어있지 않다면
+        while (!pq.isEmpty()) {
+            // 가장 최단 거리가 짧은 노드 정보 꺼내기
+            int[] pair = pq.poll();
+            int dist = pair[0];
+            int now = pair[1];
+
+            // 현재 노드가 이미 처리된 적이 있다면 무시
+            if (distance[now] < dist) {
+                continue;
+            }
+
+            // 현재 노드와 인접한 다른 노드들을 확인
+            graph.get(now).forEach(nodeEdge -> {
+                // 그래프에는 (node, edge) 형태로 저장됨
+                int node = nodeEdge[0];
+                int edge = nodeEdge[1];
+                int cost = distance[now] + edge;
+
+                // 현재 노드를 거쳐서 다른 노드로 가는 거리가 더 짧을 경우
+                if (cost < distance[node]) {
+                    distance[node] = cost;
+                    // 우선순위 큐에는 (edge, node) 형태로 저장됨
+                    pq.add(new int[]{cost, node});
+                }
+            });
+        }
+        // 결과 출력
         System.out.println(Arrays.toString(distance));
     }
 }
