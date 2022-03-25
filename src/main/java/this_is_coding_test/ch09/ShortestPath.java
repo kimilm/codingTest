@@ -1,7 +1,6 @@
 package this_is_coding_test.ch09;
 
-import java.util.Arrays;
-import java.util.Comparator;
+import java.util.*;
 import java.util.stream.IntStream;
 
 public class ShortestPath {
@@ -20,7 +19,7 @@ public class ShortestPath {
         }
     }
 
-    private final Node[][] graph = new Node[][] {
+    private final Node[][] graph = new Node[][]{
             {Node.of(1, 2), Node.of(2, 5), Node.of(3, 1)},
             {Node.of(2, 3), Node.of(3, 2)},
             {Node.of(1, 3), Node.of(5, 5)},
@@ -34,7 +33,7 @@ public class ShortestPath {
         int[] spList = new int[6];
         boolean[] visited = new boolean[6];
 
-        Arrays.fill(spList, (int)1e9);
+        Arrays.fill(spList, (int) 1e9);
         spList[currentNode] = 0;
 
         // 노드 개수만큼 반복
@@ -63,5 +62,70 @@ public class ShortestPath {
         }
 
         IntStream.range(0, 6).forEach(idx -> System.out.println("노드" + idx + " 까지 거리: " + spList[idx]));
+    }
+
+    private final int INF = (int) 1e9;
+
+    public void dijkstra2() {
+        List<List<int[]>> graph = makeGraph();
+        Integer[] distance = Collections.nCopies(7, INF).toArray(Integer[]::new);
+        boolean[] visited = new boolean[7];
+
+        // 시작 노드
+        int start = 1;
+
+        distance[start] = 0;
+        visited[start] = true;
+
+        // nodeEdge[0]: node, nodeEdge[1]: edge
+        graph.get(start).forEach(nodeEdge -> distance[nodeEdge[0]] = nodeEdge[1]);
+
+        // 0과 시작노드를 제외한 전체 노드(2~6)에 대해 반복
+        IntStream.range(0, 5).forEach(idx -> {
+            // 현재 최단 거리가 가장 짧은 노드를 찾아 방문 처리
+            int now = getSmallestNode(distance, visited);
+            visited[now] = true;
+
+            // 찾은 노드와 연결된 다른 노드들로 가는 거리 확인
+            graph.get(now).forEach(nodeEdge -> {
+                int cost = distance[now] + nodeEdge[1];
+
+                // 찾은 노드를 거쳐서 다른 노드로 이동하는 거리가 더 짧은 경우 갱신
+                if (cost < distance[nodeEdge[0]]) {
+                    distance[nodeEdge[0]] = cost;
+                }
+            });
+        });
+
+        // 결과 출력
+        IntStream.range(1, 7).forEach(idx -> System.out.println("노드" + idx + " 까지 거리: " + distance[idx]));
+    }
+
+    public List<List<int[]>> makeGraph() {
+        List<List<int[]>> graph = new ArrayList<>();
+        IntStream.range(0, 7).forEach((idx) -> graph.add(new ArrayList<>()));
+
+        graph.get(1).addAll(Arrays.asList(new int[]{2, 2}, new int[]{3, 5}, new int[]{4, 1}));
+        graph.get(2).addAll(Arrays.asList(new int[]{3, 3}, new int[]{4, 2}));
+        graph.get(3).addAll(Arrays.asList(new int[]{2, 3}, new int[]{6, 5}));
+        graph.get(4).addAll(Arrays.asList(new int[]{3, 3}, new int[]{5, 1}));
+        graph.get(5).addAll(Arrays.asList(new int[]{3, 1}, new int[]{6, 2}));
+
+        return graph;
+    }
+
+    // 방문하지 않은 노드 중에서, 가장 최단 거리가 짧은 노드의 번호를 반환
+    public int getSmallestNode(Integer[] distance, boolean[] visited) {
+        int minValue = INF;
+        int node = 0;  // 가장 최단 거리가 짧은 노드
+
+        for (int i = 1; i < 7; ++i) {
+            if (distance[i] < minValue && !visited[i]) {
+                minValue = distance[i];
+                node = i;
+            }
+        }
+
+        return node;
     }
 }
