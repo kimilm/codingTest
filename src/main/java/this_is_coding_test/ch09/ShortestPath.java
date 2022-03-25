@@ -64,6 +64,10 @@ public class ShortestPath {
         IntStream.range(0, 6).forEach(idx -> System.out.println("노드" + idx + " 까지 거리: " + spList[idx]));
     }
 
+
+    /**
+     * getSmallestNode 함수가 순차탐색, O(v^2)의 시간 복잡도를 가진다
+     */
     private final int INF = (int) 1e9;
 
     public void dijkstra2() {
@@ -127,5 +131,40 @@ public class ShortestPath {
         }
 
         return node;
+    }
+
+    public void dijkstra3() {
+        List<List<int[]>> graph = makeGraph();
+        int[] distance = new int[7];
+        boolean[] visited = new boolean[7];
+
+        // 보통은 앞에 있는 값을 가중치로 사용하지만 먼저 만든 그래프의 간선 정보가 뒤에 있기 때문에 인덱스 혼동을 막기 위해 설정
+        Queue<int[]> pq = new PriorityQueue<>(Comparator.comparing(edgeNode -> edgeNode[1]));
+
+        Arrays.fill(distance, INF);
+
+        int start = 1;
+        distance[start] = 0;
+
+        pq.add(new int[]{start, distance[start]});
+
+        while (!pq.isEmpty()) {
+            int[] nodeEdge = pq.poll();
+            visited[nodeEdge[0]] = true;
+
+            graph.get(nodeEdge[0]).stream()
+                    .filter(entry -> !visited[entry[0]])
+                    .forEach(entry -> {
+                        int cost = distance[nodeEdge[0]] + entry[1];
+
+                        if (cost < distance[entry[0]]) {
+                            distance[entry[0]] = cost;
+
+                            pq.add(new int[]{entry[0], cost});
+                        }
+                    });
+        }
+
+        System.out.println(Arrays.toString(distance));
     }
 }
