@@ -46,4 +46,17 @@ class ShortestPathTest {
 
         Assertions.assertThat(result).isEqualTo(answer);
     }
+
+    @Test
+    void 미래_도시_2_test() {
+        int result = sp.미래_도시_2(5, 7, new String[]{"1 2", "1 3", "1 4", "2 4", "3 4", "3 5", "4 5", "4 5"});
+        int answer = 3;
+
+        Assertions.assertThat(result).isEqualTo(answer);
+
+        result = sp.미래_도시_2(4, 2, new String[]{"1 3", "2 4", "3 4"});
+        answer = -1;
+
+        Assertions.assertThat(result).isEqualTo(answer);
+    }
 }

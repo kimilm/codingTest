@@ -325,4 +325,56 @@ public class ShortestPath {
 
         return distance[arrive];
     }
+
+    /**
+     * 이 문제는 전형적인 플로이드 워셜 알고리즘 문제다.
+     * 모든 노드에서 각각 모든 노드로 가는 최단 거리를 계산함
+     * 1번 노드부터 K 노드 까지의 최단 거리 + K 노드부터 X 노드 까지의 최단 거리
+     */
+
+    public int 미래_도시_2(int n, int m, String[] graph) {
+        // 그래프 초기화
+        int[][] citys = new int[n + 1][n + 1];
+
+        // 전체 거리를 무한으로 설정
+        for (int[] city : citys) {
+            Arrays.fill(city, INF);
+        }
+
+        // 자기 자신으로 가는 거리는 0
+        for (int i = 0; i < n + 1; ++i) {
+            citys[i][i] = 0;
+        }
+
+        // 연결된 노드는 1로 초기화
+        for (int i = 0; i < m; ++i) {
+            int[] city = Arrays.stream(graph[i].split(" "))
+                    .mapToInt(Integer::parseInt)
+                    .toArray();
+            // 양방향
+            citys[city[0]][city[1]] = 1;
+            citys[city[1]][city[0]] = 1;
+        }
+
+        // x, k 초기화
+        int[] arrives = Arrays.stream(graph[m].split(" "))
+                .mapToInt(Integer::parseInt)
+                .toArray();
+
+        int x = arrives[0];
+        int k = arrives[1];
+
+        // 플로이드-워셜
+        for (int i = 1; i < n + 1; ++i) {
+            for (int a = 1; a < n + 1; ++a) {
+                for (int b = 1; b < n + 1; ++b) {
+                    citys[a][b] = Integer.min(citys[a][b], citys[a][i] + citys[i][b]);
+                }
+            }
+        }
+
+        int distance = citys[1][k] + citys[k][x];
+
+        return distance < INF ? distance : -1;
+    }
 }
