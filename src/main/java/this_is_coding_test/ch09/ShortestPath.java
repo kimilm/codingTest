@@ -266,4 +266,63 @@ public class ShortestPath {
 
         return graph;
     }
+
+    /**
+     * 난이도 중
+     * 제한) 시간: 1초, 메모리: 128MB
+     * 1 <= N, M <= 100
+     * 1 <= K <= 100
+     */
+    public int 미래_도시(int n, int m, String[] graph) {
+        int[] xk = Arrays.stream(graph[graph.length - 1].split(" "))
+                .mapToInt(Integer::parseInt)
+                .toArray();
+        int x = xk[0];
+        int k = xk[1];
+
+        List<List<Integer>> city = new ArrayList<>();
+        IntStream.range(0, n + 1).forEach(idx -> city.add(new ArrayList<>()));
+
+        for (int i = 0; i < graph.length - 1; i++) {
+            int[] node = Arrays.stream(graph[i].split(" "))
+                    .mapToInt(Integer::parseInt)
+                    .toArray();
+            city.get(node[0]).add(node[1]);
+            city.get(node[1]).add(node[0]);
+        }
+
+        int aToK = dijkstraFor미래도시(city, 1, k);
+        int kToX = dijkstraFor미래도시(city, k, x);
+
+        int answer = aToK + kToX;
+
+        return answer < INF ? answer : -1;
+    }
+
+    public int dijkstraFor미래도시(List<List<Integer>> graph, int depart, int arrive) {
+        int n = graph.size();
+        int[] distance = new int[n];
+        Arrays.fill(distance, INF);
+        distance[depart] = 0;
+
+        // (거리, 노드), 거리 가까운 순으로 가중치 설정
+        PriorityQueue<int[]> pq = new PriorityQueue<>(Comparator.comparingInt(edgeNode -> edgeNode[0]));
+        pq.add(new int[]{distance[depart], depart});
+
+        while (!pq.isEmpty()) {
+            int[] pick = pq.poll();
+            int edge = pick[0]; // 현재 노드까지 최소 거리
+            int now = pick[1];  // 현재 노드
+
+            for (Integer node : graph.get(now)) {
+                // 현재 노드를 거쳐서 다음 노드까지 가는게 더 빠르다면
+                if (edge + 1 < distance[node]) {
+                    distance[node] = edge + 1;
+                    pq.add(new int[]{distance[node], node});
+                }
+            }
+        }
+
+        return distance[arrive];
+    }
 }
