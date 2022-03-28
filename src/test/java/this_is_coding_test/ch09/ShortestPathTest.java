@@ -27,4 +27,9 @@ class ShortestPathTest {
     void dijkstra4Test() {
         sp.dijkstra4();
     }
+
+    @Test
+    void floydWarshallTest() {
+        sp.floydWarshall();
+    }
 }

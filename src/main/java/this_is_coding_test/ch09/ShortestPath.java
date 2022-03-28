@@ -71,7 +71,7 @@ public class ShortestPath {
     private final int INF = (int) 1e9;
 
     public void dijkstra2() {
-        List<List<int[]>> graph = makeGraph();
+        List<List<int[]>> graph = makeGraphForDijkstra();
         Integer[] distance = Collections.nCopies(7, INF).toArray(Integer[]::new);
         boolean[] visited = new boolean[7];
 
@@ -105,7 +105,7 @@ public class ShortestPath {
         IntStream.range(1, 7).forEach(idx -> System.out.println("노드" + idx + " 까지 거리: " + distance[idx]));
     }
 
-    public List<List<int[]>> makeGraph() {
+    public List<List<int[]>> makeGraphForDijkstra() {
         List<List<int[]>> graph = new ArrayList<>();
         IntStream.range(0, 7).forEach((idx) -> graph.add(new ArrayList<>()));
 
@@ -134,7 +134,7 @@ public class ShortestPath {
     }
 
     public void dijkstra3() {
-        List<List<int[]>> graph = makeGraph();
+        List<List<int[]>> graph = makeGraphForDijkstra();
         int[] distance = new int[7];
         boolean[] visited = new boolean[7];
 
@@ -172,7 +172,7 @@ public class ShortestPath {
      * PriorityQueue 가 getSmallestNode 함수를 대체, heap 구조를 사용해서 O(NlogN)의 시간복잡도를 가진다
      */
     public void dijkstra4() {
-        List<List<int[]>> graph = makeGraph();
+        List<List<int[]>> graph = makeGraphForDijkstra();
         Integer[] distance = Collections.nCopies(7, INF).toArray(Integer[]::new);
 
         // edge 를 weight 로 설정, 일반적으로 먼저 오는 원소를 가중치로 설정한다 (edge, node) 형태로 저장
@@ -214,5 +214,54 @@ public class ShortestPath {
         }
         // 결과 출력
         System.out.println(Arrays.toString(distance));
+    }
+
+    public void floydWarshall() {
+        List<List<int[]>> graph = makeGraphForFloydWarshall();
+        int[][] spArray = new int[5][5];
+
+        // 최단거리 2차원 배열 초기화
+        for (int[] row : spArray) {
+            Arrays.fill(row, INF);
+        }
+
+        for (int i = 0; i < 5; ++i) {
+            spArray[i][i] = 0;
+
+            for (int[] node : graph.get(i)) {
+                spArray[i][node[0]] = node[1];
+            }
+        }
+
+        // a: 출발, b: 도착
+        // 플로이드-워셜
+        // 도달 불가능한 노드는 INF로 설정, 수열로 도달 가능한 노드만 뽑는 것은 잘못된 접근
+        for (int k = 1; k < 5; ++k) {
+            for (int a = 1; a < 5; ++a) {
+                for (int b = 1; b < 5; ++b) {
+                    spArray[a][b] = Integer.min(spArray[a][b], spArray[a][k] + spArray[k][b]);
+                }
+            }
+        }
+
+        // 결과 출력
+        for (int i = 1; i < 5; i++) {
+            for (int j = 1; j < 5; j++) {
+                System.out.print(spArray[i][j] + "\t");
+            }
+            System.out.println();
+        }
+    }
+
+    public List<List<int[]>> makeGraphForFloydWarshall() {
+        List<List<int[]>> graph = new ArrayList<>();
+        IntStream.range(0, 5).forEach((idx) -> graph.add(new ArrayList<>()));
+
+        graph.get(1).addAll(Arrays.asList(new int[]{2, 4}, new int[]{4, 6}));
+        graph.get(2).addAll(Arrays.asList(new int[]{1, 3}, new int[]{3, 7}));
+        graph.get(3).addAll(Arrays.asList(new int[]{1, 5}, new int[]{4, 4}));
+        graph.get(4).addAll(List.of(new int[]{3, 2}));
+
+        return graph;
     }
 }
