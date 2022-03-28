@@ -216,6 +216,8 @@ public class ShortestPath {
         System.out.println(Arrays.toString(distance));
     }
 
+    // 플로이드 워셜 알고리즘은 2차원 배열을 사용함
+    // 그래프를 처음부터 리스트 형태가 아닌 2차원 배열 형태로 작성하여 바로 이용해도 됨
     public void floydWarshall() {
         List<List<int[]>> graph = makeGraphForFloydWarshall();
         int[][] spArray = new int[5][5];
