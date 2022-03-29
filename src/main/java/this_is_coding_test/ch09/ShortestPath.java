@@ -1,6 +1,8 @@
 package this_is_coding_test.ch09;
 
+import javax.security.auth.PrivateCredentialPermission;
 import java.util.*;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 public class ShortestPath {
@@ -331,19 +333,18 @@ public class ShortestPath {
      * 모든 노드에서 각각 모든 노드로 가는 최단 거리를 계산함
      * 1번 노드부터 K 노드 까지의 최단 거리 + K 노드부터 X 노드 까지의 최단 거리
      */
-
     public int 미래_도시_2(int n, int m, String[] graph) {
         // 그래프 초기화
-        int[][] citys = new int[n + 1][n + 1];
+        int[][] cities = new int[n + 1][n + 1];
 
         // 전체 거리를 무한으로 설정
-        for (int[] city : citys) {
+        for (int[] city : cities) {
             Arrays.fill(city, INF);
         }
 
         // 자기 자신으로 가는 거리는 0
         for (int i = 0; i < n + 1; ++i) {
-            citys[i][i] = 0;
+            cities[i][i] = 0;
         }
 
         // 연결된 노드는 1로 초기화
@@ -352,8 +353,8 @@ public class ShortestPath {
                     .mapToInt(Integer::parseInt)
                     .toArray();
             // 양방향
-            citys[city[0]][city[1]] = 1;
-            citys[city[1]][city[0]] = 1;
+            cities[city[0]][city[1]] = 1;
+            cities[city[1]][city[0]] = 1;
         }
 
         // x, k 초기화
@@ -368,13 +369,68 @@ public class ShortestPath {
         for (int i = 1; i < n + 1; ++i) {
             for (int a = 1; a < n + 1; ++a) {
                 for (int b = 1; b < n + 1; ++b) {
-                    citys[a][b] = Integer.min(citys[a][b], citys[a][i] + citys[i][b]);
+                    cities[a][b] = Integer.min(cities[a][b], cities[a][i] + cities[i][b]);
                 }
             }
         }
 
-        int distance = citys[1][k] + citys[k][x];
+        int distance = cities[1][k] + cities[k][x];
 
         return distance < INF ? distance : -1;
+    }
+
+    /**
+     * 난이도 상
+     * 제한) 시간: 1초, 메모리: 128MB
+     * 1 <= N <= 30_000
+     * 1 <= M <= 200_000
+     * 1 <= C <= N
+     */
+    public String 전보(String nmc, String[] cities) {
+        int n = Integer.parseInt(nmc.split(" ")[0]);
+        int m = Integer.parseInt(nmc.split(" ")[1]);
+        int c = Integer.parseInt(nmc.split(" ")[2]);
+
+        List<List<int[]>> graph = new ArrayList<>();
+
+        for (int i = 0; i < n + 1; ++i) {
+            graph.add(new ArrayList<>());
+        }
+
+        Arrays.stream(cities)
+                .map(city -> Arrays.stream(city.split(" "))
+                        .mapToInt(Integer::parseInt)
+                        .toArray())
+                .forEach(city -> graph.get(city[0]).add(new int[]{city[2], city[1]}));
+
+        List<Integer> distance = new ArrayList<>();
+        for (int i = 0; i < n + 1; ++i) {
+            distance.add(INF);
+        }
+
+        distance.set(c, 0);
+
+        PriorityQueue<int[]> pq = new PriorityQueue<>(Comparator.comparingInt(edgeNode -> edgeNode[0]));
+        pq.add(new int[]{distance.get(c), c});
+
+        while (!pq.isEmpty()) {
+            int[] entity = pq.poll();
+            int edge = entity[0];
+            int now = entity[1];
+
+            for (int[] city : graph.get(now)) {
+                if (edge + city[0] < distance.get(city[1])) {
+                    distance.set(city[1], edge + city[0]);
+                    pq.add(new int[]{distance.get(city[1]), city[1]});
+                }
+            }
+        }
+
+        distance.remove(c);
+        distance.remove(0);
+
+        distance = distance.stream().filter(dist -> dist < INF).collect(Collectors.toList());
+
+        return distance.size() + " " + Collections.max(distance);
     }
 }

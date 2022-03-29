@@ -59,4 +59,12 @@ class ShortestPathTest {
 
         Assertions.assertThat(result).isEqualTo(answer);
     }
+
+    @Test
+    void 전보() {
+        String result = sp.전보("3 2 1", new String[]{"1 2 4", "1 3 2"});
+        String answer = "2 4";
+
+        Assertions.assertThat(result).isEqualTo(answer);
+    }
 }
