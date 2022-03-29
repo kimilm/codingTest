@@ -418,9 +418,15 @@ public class ShortestPath {
             int edge = entity[0];
             int now = entity[1];
 
+            // 이미 처리되었다면 하단의 루프를 타지 않도록 설정 <- 이 부분을 깜빡했다.
+            if (distance.get(now) < edge) {
+                continue;
+            }
+
             for (int[] city : graph.get(now)) {
-                if (edge + city[0] < distance.get(city[1])) {
-                    distance.set(city[1], edge + city[0]);
+                int cost = edge + city[0];
+                if (cost < distance.get(city[1])) {
+                    distance.set(city[1], cost);
                     pq.add(new int[]{distance.get(city[1]), city[1]});
                 }
             }
