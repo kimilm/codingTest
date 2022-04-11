@@ -6,6 +6,7 @@ import java.util.List;
 public class GraphTheory {
 
     public void 서로소_집합() {
+        // 노드는 1 2 3 4 5 6
         List<int[]> edges = List.of(
                 new int[]{1, 4},
                 new int[]{2, 3},
@@ -65,6 +66,45 @@ public class GraphTheory {
             parent[b] = a;
         } else {
             parent[a] = b;
+        }
+    }
+
+    public void 무방향_그래프의_사이클_판별() {
+        // 노드는 1 2 3
+        List<int[]> edges = List.of(
+                new int[]{1, 2},
+                new int[]{1, 3},
+                new int[]{2, 3}
+        );
+
+        int[] parent = new int[4];
+        for (int i = 0; i < 4; ++i) {
+            parent[i] = i;
+        }
+
+        // 그래프 내 사이클 여부
+        boolean cycle = false;
+
+        // 모든 간선에 대해서 수행
+        for (int[] edge : edges) {
+            int a = find_parent_2(parent, edge[0]);
+            int b = find_parent_2(parent, edge[1]);
+
+            // 사이클이 발생했다면 종료
+            if (a == b) {
+                cycle = true;
+                break;
+            }
+            // 아니라면 union 수행
+            else {
+                union_parent(parent, a, b);
+            }
+        }
+
+        if (cycle) {
+            System.out.println("사이클이 발생했습니다.");
+        } else {
+            System.out.println("사이클이 발생하지 않았습니다.");
         }
     }
 }

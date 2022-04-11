@@ -12,4 +12,9 @@ class GraphTheoryTest {
     void 서로소_집합() {
         gt.서로소_집합();
     }
+
+    @Test
+    void 무방향_그래프의_사이클_판별() {
+        gt.무방향_그래프의_사이클_판별();
+    }
 }
