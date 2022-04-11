@@ -17,4 +17,9 @@ class GraphTheoryTest {
     void 무방향_그래프의_사이클_판별() {
         gt.무방향_그래프의_사이클_판별();
     }
+
+    @Test
+    void kruskal() {
+        System.out.println(gt.kruskal());
+    }
 }
