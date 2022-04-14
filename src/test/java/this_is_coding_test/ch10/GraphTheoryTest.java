@@ -22,4 +22,9 @@ class GraphTheoryTest {
     void kruskal() {
         System.out.println(gt.kruskal());
     }
+
+    @Test
+    void topologySort() {
+        gt.topologySort();
+    }
 }

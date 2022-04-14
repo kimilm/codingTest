@@ -1,8 +1,7 @@
 package this_is_coding_test.ch10;
 
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class GraphTheory {
 
@@ -151,5 +150,69 @@ public class GraphTheory {
         }
 
         return result;
+    }
+
+    public void topologySort() {
+        // 노드는 1 ~ 7
+        List<int[]> edges = List.of(
+                new int[]{1, 2},
+                new int[]{1, 5},
+                new int[]{2, 3},
+                new int[]{2, 6},
+                new int[]{3, 4},
+                new int[]{4, 7},
+                new int[]{5, 6},
+                new int[]{6, 4}
+        );
+
+        // 각 노드의 진입차수
+        int[] indegree = new int[8];
+
+        // 그래프 초기화
+        List<List<Integer>> graph = new ArrayList<>();
+        for (int i = 0; i < 8; ++i) {
+            graph.add(new ArrayList<>());
+        }
+
+        // 그래프 생성 및 진입차수 증가
+        for (int[] edge : edges) {
+            graph.get(edge[0]).add(edge[1]);
+            ++indegree[edge[1]];
+        }
+
+        // 위상정렬
+        List<Integer> result = new ArrayList<>();
+        Queue<Integer> queue = new LinkedList<>();
+
+        // 진입차수가 0인 노드를 큐에 삽입
+        for (int i = 1; i < 8; ++i) {
+            if (indegree[i] == 0) {
+                queue.add(i);
+            }
+        }
+
+        // 큐가 빌 때까지
+        while(!queue.isEmpty()) {
+            // 큐에서 원소 제거
+            Integer now = queue.poll();
+            result.add(now);
+
+            for(int node : graph.get(now)) {
+                // 진입차수 제거
+                --indegree[node];
+
+                // 새롭게 진입차수가 0이 된 노드 큐에 삽입
+                if (indegree[node] == 0) {
+                    queue.add(node);
+                }
+            }
+        }
+
+        // 결과
+        for(int value : result) {
+            System.out.print(value + " ");
+        }
+
+        System.out.println();
     }
 }
