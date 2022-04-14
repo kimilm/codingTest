@@ -247,7 +247,7 @@ public class GraphTheory {
                 }
             }
         }
-        return answer.stream().collect(Collectors.joining("\n"));
+        return String.join("\n", answer);
     }
 
     public void union(int[] team, int a, int b) {
