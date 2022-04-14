@@ -231,16 +231,16 @@ public class GraphTheory {
 
         List<String> answer = new ArrayList<>();
 
-        for (String str : args) {
-            int[] arg = Arrays.stream(str.split(" ")).mapToInt(Integer::parseInt).toArray();
+        for (String arg : args) {
+            int[] operation = Arrays.stream(arg.split(" ")).mapToInt(Integer::parseInt).toArray();
 
             // union
-            if (arg[0] == 0) {
-                union(teams, arg[1], arg[2]);
+            if (operation[0] == 0) {
+                union(teams, operation[1], operation[2]);
             }
             // find
             else {
-                if (find(teams, arg[1]) != find(teams, arg[2])) {
+                if (find(teams, operation[1]) != find(teams, operation[2])) {
                     answer.add("NO");
                 } else {
                     answer.add("YES");
