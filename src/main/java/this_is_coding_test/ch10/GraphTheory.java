@@ -192,12 +192,12 @@ public class GraphTheory {
         }
 
         // 큐가 빌 때까지
-        while(!queue.isEmpty()) {
+        while (!queue.isEmpty()) {
             // 큐에서 원소 제거
             Integer now = queue.poll();
             result.add(now);
 
-            for(int node : graph.get(now)) {
+            for (int node : graph.get(now)) {
                 // 진입차수 제거
                 --indegree[node];
 
@@ -209,10 +209,63 @@ public class GraphTheory {
         }
 
         // 결과
-        for(int value : result) {
+        for (int value : result) {
             System.out.print(value + " ");
         }
 
         System.out.println();
+    }
+
+    /**
+     * 난이도 중
+     * 1 <= n, m <= 100_000
+     * 제한) 시간: 2초, 메모리: 128MB
+     */
+    public String 팀_결성(int n, int m, String[] args) {
+        int[] teams = new int[n + 1];
+
+        // 초기화
+        for (int i = 0; i < teams.length; i++) {
+            teams[i] = i;
+        }
+
+        List<String> answer = new ArrayList<>();
+
+        for (String str : args) {
+            int[] arg = Arrays.stream(str.split(" ")).mapToInt(Integer::parseInt).toArray();
+
+            // union
+            if (arg[0] == 0) {
+                union(teams, arg[1], arg[2]);
+            }
+            // find
+            else {
+                if (find(teams, arg[1]) != find(teams, arg[2])) {
+                    answer.add("NO");
+                } else {
+                    answer.add("YES");
+                }
+            }
+        }
+        return answer.stream().collect(Collectors.joining("\n"));
+    }
+
+    public void union(int[] team, int a, int b) {
+        int pa = find(team, a);
+        int pb = find(team, b);
+
+        if (pa < pb) {
+            team[pb] = pa;
+        } else {
+            team[pa] = pb;
+        }
+    }
+
+    public int find(int[] teams, int a) {
+        if (teams[a] != a) {
+            teams[a] = find(teams, teams[a]);
+        }
+
+        return teams[a];
     }
 }
