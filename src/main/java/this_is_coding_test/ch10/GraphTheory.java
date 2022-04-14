@@ -268,4 +268,32 @@ public class GraphTheory {
 
         return teams[a];
     }
+
+    public int 도시_분할_계획(int n, int m, String[] args) {
+        int[] parent = new int[n + 1];
+        for (int i = 0; i < parent.length; ++i) {
+            parent[i] = i;
+        }
+
+        // 비용 오름차순 정렬
+        List<int[]> edges = Arrays.stream(args)
+                .map(arg -> Arrays.stream(arg.split(" "))
+                        .mapToInt(Integer::parseInt)
+                        .toArray())
+                .sorted(Comparator.comparingInt(edge -> edge[2]))
+                .collect(Collectors.toList());
+
+        List<Integer> result = new ArrayList<>();
+        for(int[] edge : edges) {
+            // 사이클이 만들어지지 않으면
+            if (find(parent, edge[0]) != find(parent, edge[1])) {
+                union(parent, edge[0], edge[1]);
+                result.add(edge[2]);
+            }
+        }
+        // 가장 비용이 큰 도로 제거, 2개의 트리로 분리
+        result.remove(result.size() - 1);
+
+        return result.stream().mapToInt(Integer::intValue).sum();
+    }
 }

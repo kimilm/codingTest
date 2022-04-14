@@ -46,4 +46,26 @@ class GraphTheoryTest {
 
         Assertions.assertThat(result).isEqualTo(answer);
     }
+
+    @Test
+    void 도시_분할_계획_test() {
+        int result = gt.도시_분할_계획(7, 12, new String[]{
+                "1 2 3",
+                "1 3 2",
+                "3 2 1",
+                "2 5 2",
+                "3 4 4",
+                "7 3 6",
+                "5 1 5",
+                "1 6 2",
+                "6 4 1",
+                "6 5 3",
+                "4 5 3",
+                "6 7 4",
+        });
+
+        int answer = 8;
+
+        Assertions.assertThat(result).isEqualTo(answer);
+    }
 }
