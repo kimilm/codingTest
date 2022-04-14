@@ -284,6 +284,7 @@ public class GraphTheory {
                 .collect(Collectors.toList());
 
         List<Integer> result = new ArrayList<>();
+
         for(int[] edge : edges) {
             // 사이클이 만들어지지 않으면
             if (find(parent, edge[0]) != find(parent, edge[1])) {
@@ -295,5 +296,14 @@ public class GraphTheory {
         result.remove(result.size() - 1);
 
         return result.stream().mapToInt(Integer::intValue).sum();
+
+        // int result;
+        // int last;
+
+        // result += edge[2];
+        // last = edge[2];
+
+        // return result - last
+        // 처럼 구현하는 방법도 있다
     }
 }
