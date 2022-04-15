@@ -292,7 +292,7 @@ public class GraphTheory {
 
         List<Integer> result = new ArrayList<>();
 
-        for(int[] edge : edges) {
+        for (int[] edge : edges) {
             // 사이클이 만들어지지 않으면
             if (find(parent, edge[0]) != find(parent, edge[1])) {
                 union(parent, edge[0], edge[1]);
@@ -357,7 +357,7 @@ public class GraphTheory {
             }
         }
 
-        while(!queue.isEmpty()) {
+        while (!queue.isEmpty()) {
             int node = queue.poll();
             // 선수과목중 수강시간이 많은 한개만 더하기
             cost[node] += inGraph.get(node).stream()
@@ -366,7 +366,7 @@ public class GraphTheory {
                     .orElseGet(() -> 0);
 
             // 진입차수 낮추기
-            for(Integer nextNode : outGraph.get(node)) {
+            for (Integer nextNode : outGraph.get(node)) {
                 --indegree[nextNode];
 
                 // 진입차수가 0이 된 노드 큐에 추가
@@ -377,5 +377,61 @@ public class GraphTheory {
         }
 
         return Arrays.copyOfRange(cost, 1, cost.length);
+    }
+
+    public int[] 커리큘럼2(int[][] data) {
+        // 노드 개수
+        int v = data[0][0];
+
+        // 진입차수
+        int[] indegree = new int[v + 1];
+
+        // 그래프
+        List<List<Integer>> graph = new ArrayList<>();
+        for (int i = 0; i < v + 1; ++i) {
+            graph.add(new ArrayList<>());
+        }
+
+        // 각 강의시간
+        int[] time = new int[v + 1];
+
+        // 방향 그래프의 모든 간선정보 입력
+        for (int i = 1; i < v + 1; ++i) {
+            time[i] = data[i][0];
+
+            for (int x = 1; x < data[i].length - 1; ++x) {
+                indegree[i] += 1;
+                graph.get(data[i][x]).add(i);
+            }
+        }
+
+        // time 배열을 깊은복사, Arrays.copyOf()
+        int[] result = time.clone();
+
+        Queue<Integer> queue = new LinkedList<>();
+        // 진입차수가 0인 노드 큐 삽입
+        for (int i = 1; i < v + 1; ++i) {
+            if (indegree[i] == 0) {
+                queue.add(i);
+            }
+        }
+
+        // 위상정렬
+        while (!queue.isEmpty()) {
+            int now = queue.poll();
+
+            for (int i : graph.get(now)) {
+                // {1 -> 2, 3, 4}, {3 -> 4, 5} 그래프의 상태
+                result[i] = Integer.max(result[i], result[now] + time[i]);
+
+                indegree[i] -= 1;
+
+                if (indegree[i] == 0) {
+                    queue.add(i);
+                }
+            }
+        }
+
+        return Arrays.copyOfRange(result, 1, result.length);
     }
 }

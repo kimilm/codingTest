@@ -1,10 +1,10 @@
 package this_is_coding_test.ch10;
 
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
-
+@Disabled
 class GraphTheoryTest {
 
     private final GraphTheory gt = new GraphTheory();
@@ -72,6 +72,22 @@ class GraphTheoryTest {
     @Test
     void 커리큘럼_test() {
         int[] result = gt.커리큘럼(new int[][]{
+                {5},
+                {10, -1},
+                {10, 1, -1},
+                {4, 1, -1},
+                {4, 3, 1, -1},
+                {3, 3, -1}
+        });
+
+        int[] answer = {10, 20, 14, 18, 17};
+
+        Assertions.assertThat(result).containsExactly(answer);
+    }
+
+    @Test
+    void 커리큘럼_2_test() {
+        int[] result = gt.커리큘럼2(new int[][]{
                 {5},
                 {10, -1},
                 {10, 1, -1},
