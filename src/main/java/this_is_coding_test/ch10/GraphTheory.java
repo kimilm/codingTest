@@ -269,6 +269,13 @@ public class GraphTheory {
         return teams[a];
     }
 
+    /**
+     * 난이도 중
+     * 2 <= n <= 100_000
+     * 1 <= m <= 1_000_000
+     * 1 <= c <= 1_000
+     * 제한) 시간: 2초, 메모리: 256MB
+     */
     public int 도시_분할_계획(int n, int m, String[] args) {
         int[] parent = new int[n + 1];
         for (int i = 0; i < parent.length; ++i) {
@@ -305,5 +312,70 @@ public class GraphTheory {
 
         // return result - last
         // 처럼 구현하는 방법도 있다
+    }
+
+    /**
+     * 난이도 상
+     * 1 <= n <= 500
+     * 1 <= 강의시간 <= 100_000
+     * 제한) 시간: 2초, 메모리: 128MB
+     */
+    public int[] 커리큘럼(int[][] args) {
+        int n = args[0][0];
+        int[] indegree = new int[n + 1];
+        int[] cost = new int[n + 1];
+
+        List<List<Integer>> inGraph = new ArrayList<>();
+        List<List<Integer>> outGraph = new ArrayList<>();
+
+        for (int i = 0; i < n + 1; i++) {
+            inGraph.add(new ArrayList<>());
+            outGraph.add(new ArrayList<>());
+        }
+
+        // 초기화
+        for (int i = 1; i < n + 1; ++i) {
+            cost[i] = args[i][0];
+
+            for (int j = 1; j < args[i].length; ++j) {
+                if (args[i][j] == -1) {
+                    break;
+                }
+
+                inGraph.get(i).add(args[i][j]);
+                outGraph.get(args[i][j]).add(i);
+                ++indegree[i];
+            }
+        }
+
+        Queue<Integer> queue = new LinkedList<>();
+
+        // 진입차수가 0인 노드 큐에 입력
+        for (int i = 1; i < indegree.length; ++i) {
+            if (indegree[i] == 0) {
+                queue.add(i);
+            }
+        }
+
+        while(!queue.isEmpty()) {
+            int node = queue.poll();
+            // 선수과목중 수강시간이 많은 한개만 더하기
+            cost[node] += inGraph.get(node).stream()
+                    .mapToInt(edge -> cost[edge])
+                    .max()
+                    .orElseGet(() -> 0);
+
+            // 진입차수 낮추기
+            for(Integer nextNode : outGraph.get(node)) {
+                --indegree[nextNode];
+
+                // 진입차수가 0이 된 노드 큐에 추가
+                if (indegree[nextNode] == 0) {
+                    queue.add(nextNode);
+                }
+            }
+        }
+
+        return Arrays.copyOfRange(cost, 1, cost.length);
     }
 }

@@ -68,4 +68,20 @@ class GraphTheoryTest {
 
         Assertions.assertThat(result).isEqualTo(answer);
     }
+
+    @Test
+    void 커리큘럼_test() {
+        int[] result = gt.커리큘럼(new int[][]{
+                {5},
+                {10, -1},
+                {10, 1, -1},
+                {4, 1, -1},
+                {4, 3, 1, -1},
+                {3, 3, -1}
+        });
+
+        int[] answer = {10, 20, 14, 18, 17};
+
+        Assertions.assertThat(result).containsExactly(answer);
+    }
 }
