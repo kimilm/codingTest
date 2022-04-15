@@ -1,10 +1,10 @@
 package this_is_coding_test.ch09;
 
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
-
+@Disabled
 class ShortestPathTest {
 
     private final ShortestPath sp = new ShortestPath();
