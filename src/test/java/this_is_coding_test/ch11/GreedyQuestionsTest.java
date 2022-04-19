@@ -10,8 +10,16 @@ class GreedyQuestionsTest {
     private final GreedyQuestions gq = new GreedyQuestions();
 
     @Test
-    void 모험가_길드() {
+    void 모험가_길드_test() {
         int result = gq.모험가_길드(5, new int[]{2, 3, 1, 2, 2});
+        int answer = 2;
+
+        Assertions.assertThat(result).isEqualTo(answer);
+    }
+
+    @Test
+    void 모험가_길드_2_test() {
+        int result = gq.모험가_길드_2(5, new int[]{2, 3, 1, 2, 2});
         int answer = 2;
 
         Assertions.assertThat(result).isEqualTo(answer);
