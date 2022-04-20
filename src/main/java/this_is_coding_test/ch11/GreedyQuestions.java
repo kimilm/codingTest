@@ -81,7 +81,7 @@ public class GreedyQuestions {
         int result = 0;
 
         for (int number : numbers) {
-            if (result != 0) {
+            if (result > 1) {
                 if (number < 2) {
                     result += number;
                 } else {
