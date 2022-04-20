@@ -75,12 +75,12 @@ public class GreedyQuestions {
      * 1 <= S의 길이 <= 20
      * 제한) 시간: 1초, 메모리: 128MB
      */
-    public int 곱하기_혹은_더하기 (String s) {
-        int [] numbers = Arrays.stream(s.split("")).mapToInt(Integer::parseInt).toArray();
+    public int 곱하기_혹은_더하기(String s) {
+        int[] numbers = Arrays.stream(s.split("")).mapToInt(Integer::parseInt).toArray();
 
         int result = 0;
 
-        for(int number : numbers) {
+        for (int number : numbers) {
             if (result != 0) {
                 if (number < 2) {
                     result += number;
@@ -90,6 +90,13 @@ public class GreedyQuestions {
             } else {
                 result += number;
             }
+
+            // 비교 구문을 이렇게 압축할 수도 있다.
+//            if (number < 2 || result < 2) {
+//                result += number;
+//            } else {
+//                result *= number;
+//            }
         }
 
         return result;
