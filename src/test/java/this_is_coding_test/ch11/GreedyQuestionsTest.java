@@ -24,4 +24,12 @@ class GreedyQuestionsTest {
 
         Assertions.assertThat(result).isEqualTo(answer);
     }
+
+    @Test
+    void 곱하기_혹은_더하기_test() {
+        int result = gq.곱하기_혹은_더하기("02984");
+        int answer = 576;
+
+        Assertions.assertThat(result).isEqualTo(answer);
+    }
 }

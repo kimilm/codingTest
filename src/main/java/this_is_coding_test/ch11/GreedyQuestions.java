@@ -69,4 +69,29 @@ public class GreedyQuestions {
 
         return result;
     }
+
+    /**
+     * 난이도 하
+     * 1 <= S의 길이 <= 20
+     * 제한) 시간: 1초, 메모리: 128MB
+     */
+    public int 곱하기_혹은_더하기 (String s) {
+        int [] numbers = Arrays.stream(s.split("")).mapToInt(Integer::parseInt).toArray();
+
+        int result = 0;
+
+        for(int number : numbers) {
+            if (result != 0) {
+                if (number < 2) {
+                    result += number;
+                } else {
+                    result *= number;
+                }
+            } else {
+                result += number;
+            }
+        }
+
+        return result;
+    }
 }
