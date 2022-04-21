@@ -122,4 +122,45 @@ public class GreedyQuestions {
         // 전체 리스트를 하나씩 확인하며 변경되는 경우를 확인
         // 단순 무식하게 탐욕적으로 푸는 문제라서 그리디?
     }
+
+    /**
+     * 난이도 하
+     * 1 <= N <= 1_000
+     * 1 <= 화폐의 단위 <= 1_000_000
+     * 제한) 시간: 1초, 메모리: 128MB
+     */
+    public int 만들_수_없는_금액(int n, int[] coins) {
+        int[] sortedCoins = Arrays.stream(coins.clone()).sorted().toArray();
+        int coin = 0;
+        boolean flag = true;
+
+        while (flag) {
+            ++coin;
+            flag = false;
+
+            for (int i = 0; i < n; ++i) {
+                int temp = sortedCoins[i];
+
+                if (temp == coin) {
+                    flag = true;
+                    break;
+                }
+
+                for (int j = i + 1; j < n; ++j) {
+                    temp += sortedCoins[j];
+
+                    if (temp == coin) {
+                        flag = true;
+                        break;
+                    }
+                }
+
+                if (flag) {
+                    break;
+                }
+            }
+        }
+
+        return coin;
+    }
 }

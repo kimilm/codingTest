@@ -38,23 +38,40 @@ class GreedyQuestionsTest {
     }
 
     @TestFactory
-    Stream<DynamicTest> 문자열_뒤집기() {
+    Stream<DynamicTest> 문자열_뒤집기_test() {
         return Stream.of(
                 DynamicTest.dynamicTest("예제 입력 1", () -> {
                     int result = gq.문자열_뒤집기("0001100");
                     Assertions.assertThat(result).isEqualTo(1);
-                }), DynamicTest.dynamicTest("예제 입력 2", () -> {
+                }),
+                DynamicTest.dynamicTest("예제 입력 2", () -> {
                     int result = gq.문자열_뒤집기("11111");
                     Assertions.assertThat(result).isEqualTo(0);
-                }), DynamicTest.dynamicTest("예제 입력 3", () -> {
+                }),
+                DynamicTest.dynamicTest("예제 입력 3", () -> {
                     int result = gq.문자열_뒤집기("00000001");
                     Assertions.assertThat(result).isEqualTo(1);
-                }), DynamicTest.dynamicTest("예제 입력 4", () -> {
+                }),
+                DynamicTest.dynamicTest("예제 입력 4", () -> {
                     int result = gq.문자열_뒤집기("11001100110011000001");
                     Assertions.assertThat(result).isEqualTo(4);
-                }), DynamicTest.dynamicTest("예제 입력 5", () -> {
+                }),
+                DynamicTest.dynamicTest("예제 입력 5", () -> {
                     int result = gq.문자열_뒤집기("11101101");
                     Assertions.assertThat(result).isEqualTo(2);
+                }));
+    }
+
+    @TestFactory
+    Stream<DynamicTest> 만들_수_없는_금액_test() {
+        return Stream.of(
+                DynamicTest.dynamicTest("예제 입력 1", () -> {
+                    int result = gq.만들_수_없는_금액(5, new int[]{3, 2, 1, 1, 9});
+                    Assertions.assertThat(result).isEqualTo(8);
+                }),
+                DynamicTest.dynamicTest("예제 입력 2", () -> {
+                    int result = gq.만들_수_없는_금액(3, new int[]{3, 5, 7});
+                    Assertions.assertThat(result).isEqualTo(1);
                 }));
     }
 }
