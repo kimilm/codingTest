@@ -1,5 +1,6 @@
 package this_is_coding_test.ch11;
 
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -117,5 +118,8 @@ public class GreedyQuestions {
         }
 
         return Integer.min(counts[0], counts[1]);
+
+        // 전체 리스트를 하나씩 확인하며 변경되는 경우를 확인
+        // 단순 무식하게 탐욕적으로 푸는 문제라서 그리디?
     }
 }
