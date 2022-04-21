@@ -1,7 +1,11 @@
 package this_is_coding_test.ch11;
 
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestFactory;
+
+import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -31,5 +35,26 @@ class GreedyQuestionsTest {
         int answer = 576;
 
         Assertions.assertThat(result).isEqualTo(answer);
+    }
+
+    @TestFactory
+    Stream<DynamicTest> 문자열_뒤집기() {
+        return Stream.of(
+                DynamicTest.dynamicTest("예제 입력 1", () -> {
+                    int result = gq.문자열_뒤집기("0001100");
+                    Assertions.assertThat(result).isEqualTo(1);
+                }), DynamicTest.dynamicTest("예제 입력 2", () -> {
+                    int result = gq.문자열_뒤집기("11111");
+                    Assertions.assertThat(result).isEqualTo(0);
+                }), DynamicTest.dynamicTest("예제 입력 3", () -> {
+                    int result = gq.문자열_뒤집기("00000001");
+                    Assertions.assertThat(result).isEqualTo(1);
+                }), DynamicTest.dynamicTest("예제 입력 4", () -> {
+                    int result = gq.문자열_뒤집기("11001100110011000001");
+                    Assertions.assertThat(result).isEqualTo(4);
+                }), DynamicTest.dynamicTest("예제 입력 5", () -> {
+                    int result = gq.문자열_뒤집기("11101101");
+                    Assertions.assertThat(result).isEqualTo(2);
+                }));
     }
 }

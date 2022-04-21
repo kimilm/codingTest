@@ -1,9 +1,6 @@
 package this_is_coding_test.ch11;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.Queue;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class GreedyQuestions {
@@ -100,5 +97,25 @@ public class GreedyQuestions {
         }
 
         return result;
+    }
+
+    /**
+     * 난이도 하
+     * 1 <= S의 길이 <= 1_000_000
+     * 제한) 시간: 2초, 메모리: 128MB
+     * https://www.acmicpc.net/problem/1439
+     */
+    public int 문자열_뒤집기(String S) {
+        int[] counts = new int[2];
+        String before = "";
+
+        for (String token : S.split("")) {
+            if (!before.equals(token)) {
+                before = token;
+                ++counts[Integer.parseInt(token)];
+            }
+        }
+
+        return Integer.min(counts[0], counts[1]);
     }
 }
