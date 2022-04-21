@@ -163,4 +163,40 @@ public class GreedyQuestions {
 
         return coin;
     }
+
+    /**
+     * 화폐 단위가 다른 동전을 하나씩 가지고 있음, 오름차순 정렬
+     * target 금액을 만들 수 있다면 target - 1 까지의 모든 금액을 만들 수 있음
+     * 1 부터 가지고 있는 동전을 더해가며 target 금액을 증가시킴
+     *
+     * 예) target 은 1 부터 시작
+     * 가진 동전이 1 1 4
+     * 동전 1) 1 가능 target += 1 (2)
+     * 동전 1) 2 가능 target += 1 (3)
+     * 동전 4) 3 불가능
+     *
+     * 가진 동전이 1 2 3 5
+     * 동전 1) 1 가능 target += 1 (2)
+     * 동전 2) 2 가능 target += 2 (4)
+     * 동전 3) 4 가능 target += 3 (7)
+     * 동전 5) 7 가능 target += 5 (11)
+     *
+     * target 에 현재 동전 단위를 더해나감
+     * target 보다 현재 동전의 단위가 작다면 해당 금액을 만들 수 있음
+     * target 보다 현재 동전의 단위가 크다면 해당 금액을 만들 수 없음
+     */
+    public int 만들_수_없는_금액_2(int n, int[] coins) {
+        int[] datas = Arrays.stream(coins).sorted().toArray();
+
+        int target = 1;
+
+        for (int x : datas) {
+            if (target < x) {
+                break;
+            }
+            target += x;
+        }
+
+        return target;
+    }
 }
