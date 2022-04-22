@@ -87,4 +87,16 @@ class GreedyQuestionsTest {
                     Assertions.assertThat(result).isEqualTo(1);
                 }));
     }
+
+    @TestFactory
+    Stream<DynamicTest> 볼링공_고르기() {
+        return Stream.of(DynamicTest.dynamicTest("예제 입력 1", () -> {
+                    int result = gq.볼링공_고르기(5, 3, new int[]{1, 3, 2, 3, 2});
+                    Assertions.assertThat(result).isEqualTo(8);
+                }),
+                DynamicTest.dynamicTest("예제 입력 2", () -> {
+                    int result = gq.볼링공_고르기(8, 5, new int[]{1, 5, 4, 3, 2, 4, 5, 2});
+                    Assertions.assertThat(result).isEqualTo(25);
+                }));
+    }
 }

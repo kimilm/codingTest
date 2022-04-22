@@ -213,4 +213,29 @@ public class GreedyQuestions {
 
         return target;
     }
+
+    /**
+     * 난이도 하
+     * 1 <= N <= 1_000
+     * 1 <= M <= 10
+     * 1 <= K <= M
+     * 제한) 시간: 1초, 메모리: 128MB
+     */
+    public int 볼링공_고르기(int n, int m, int[] balls) {
+        int[] weights = Arrays.stream(balls.clone()).sorted().toArray();
+
+        int count = 0;
+
+        for (int i = 0; i < weights.length; i++) {
+            int currentWeight = weights[i];
+
+            for (int j = i + 1; j < weights.length; j++) {
+                if (weights[j] != currentWeight) {
+                    ++count;
+                }
+            }
+        }
+
+        return count;
+    }
 }
