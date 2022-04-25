@@ -1,14 +1,14 @@
 package this_is_coding_test.ch11;
 
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestFactory;
 
 import java.util.stream.Stream;
 
-import static org.junit.jupiter.api.Assertions.*;
-
+@Disabled
 class GreedyQuestionsTest {
 
     private final GreedyQuestions gq = new GreedyQuestions();
@@ -114,14 +114,14 @@ class GreedyQuestionsTest {
 
     @Test
     void 무지의_먹방_라이브_test() {
-        int result = gq.무지의_먹방_라이브(new int[] {3, 1, 2}, 5);
+        int result = gq.무지의_먹방_라이브(new int[]{3, 1, 2}, 5);
         int answer = 1;
         Assertions.assertThat(result).isEqualTo(answer);
     }
 
     @Test
     void 무지의_먹방_라이브_2_test() {
-        int result = gq.무지의_먹방_라이브_2(new int[] {3, 1, 2}, 5);
+        int result = gq.무지의_먹방_라이브_2(new int[]{3, 1, 2}, 5);
         int answer = 1;
         Assertions.assertThat(result).isEqualTo(answer);
     }
