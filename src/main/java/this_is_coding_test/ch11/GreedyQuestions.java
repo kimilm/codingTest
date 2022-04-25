@@ -1,8 +1,8 @@
 package this_is_coding_test.ch11;
 
-import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public class GreedyQuestions {
 
@@ -277,5 +277,62 @@ public class GreedyQuestions {
         return result;
     }
 
+    /**
+     * 난이도 하
+     * [정확성 테스트]
+     * 1 <= food_times.length <= 2_000
+     * 1 <= food_times[index] <= 1_000
+     * 1 <= k <= 2_000_000
+     * [효율성 테스트]
+     * 1 <= food_times.length <= 200_000
+     * 1 <= food_times[index] <= 100_000_000
+     * 1 <= k <= 2 * 10^13
+     * 제한) 시간: 1초, 메모리: 128MB
+     * https://programmers.co.kr/learn/courses/30/lessons/42891 (2019 카카오 신입 공채)
+     */
+    public int 무지의_먹방_라이브(int[] food_times, long k) {
+        List<Food> foods = IntStream.range(0, food_times.length)
+                .mapToObj(idx -> new Food(idx + 1, food_times[idx]))
+                .collect(Collectors.toList());
 
+        while (foods.size() < k) {
+            if (foods.size() == 0) {
+                return -1;
+            }
+
+            k -= foods.size();
+
+            foods = foods.stream()
+                    .map(Food::eat)
+                    .filter(Food::isLeft)
+                    .collect(Collectors.toList());
+        }
+
+        int idx = Long.valueOf(k).intValue();
+
+        if (idx == foods.size()) {
+            idx = 0;
+        }
+
+        return foods.get(idx).foodNumber;
+    }
+
+    static class Food {
+        private int foodNumber;
+        private int foodTime;
+
+        public Food(int foodNumber, int foodTime) {
+            this.foodNumber = foodNumber;
+            this.foodTime = foodTime;
+        }
+
+        public boolean isLeft() {
+            return foodTime != 0;
+        }
+
+        public Food eat() {
+            --foodTime;
+            return this;
+        }
+    }
 }

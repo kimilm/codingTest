@@ -89,7 +89,7 @@ class GreedyQuestionsTest {
     }
 
     @TestFactory
-    Stream<DynamicTest> 볼링공_고르기() {
+    Stream<DynamicTest> 볼링공_고르기_test() {
         return Stream.of(DynamicTest.dynamicTest("예제 입력 1", () -> {
                     int result = gq.볼링공_고르기(5, 3, new int[]{1, 3, 2, 3, 2});
                     Assertions.assertThat(result).isEqualTo(8);
@@ -101,7 +101,7 @@ class GreedyQuestionsTest {
     }
 
     @TestFactory
-    Stream<DynamicTest> 볼링공_고르기_2() {
+    Stream<DynamicTest> 볼링공_고르기_2_test() {
         return Stream.of(DynamicTest.dynamicTest("예제 입력 1", () -> {
                     int result = gq.볼링공_고르기_2(5, 3, new int[]{1, 3, 2, 3, 2});
                     Assertions.assertThat(result).isEqualTo(8);
@@ -110,5 +110,12 @@ class GreedyQuestionsTest {
                     int result = gq.볼링공_고르기_2(8, 5, new int[]{1, 5, 4, 3, 2, 4, 5, 2});
                     Assertions.assertThat(result).isEqualTo(25);
                 }));
+    }
+
+    @Test
+    void 무지의_먹방_라이브_test() {
+        int result = gq.무지의_먹방_라이브(new int[] {3, 1, 2}, 5);
+        int answer = 1;
+        Assertions.assertThat(result).isEqualTo(answer);
     }
 }
