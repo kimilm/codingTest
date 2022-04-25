@@ -12,10 +12,7 @@ public class GreedyQuestions {
      * 제한) 시간: 1초, 메모리: 128MB
      */
     public int 모험가_길드(int n, int[] fears) {
-        Queue<Integer> queue = Arrays.stream(fears)
-                .boxed()
-                .sorted(Collections.reverseOrder())
-                .collect(Collectors.toCollection(LinkedList::new));
+        Queue<Integer> queue = Arrays.stream(fears).boxed().sorted(Collections.reverseOrder()).collect(Collectors.toCollection(LinkedList::new));
 
         int group = 0;
         int fear = queue.peek();
@@ -291,9 +288,7 @@ public class GreedyQuestions {
      * https://programmers.co.kr/learn/courses/30/lessons/42891 (2019 카카오 신입 공채)
      */
     public int 무지의_먹방_라이브(int[] food_times, long k) {
-        List<Food> foods = IntStream.range(0, food_times.length)
-                .mapToObj(idx -> new Food(idx + 1, food_times[idx]))
-                .collect(Collectors.toList());
+        List<Food> foods = IntStream.range(0, food_times.length).mapToObj(idx -> new Food(idx + 1, food_times[idx])).collect(Collectors.toList());
 
         while (foods.size() < k) {
             if (foods.size() == 0) {
@@ -302,10 +297,7 @@ public class GreedyQuestions {
 
             k -= foods.size();
 
-            foods = foods.stream()
-                    .map(Food::eat)
-                    .filter(Food::isLeft)
-                    .collect(Collectors.toList());
+            foods = foods.stream().map(Food::eat).filter(Food::isLeft).collect(Collectors.toList());
         }
 
         int idx = Long.valueOf(k).intValue();
@@ -334,5 +326,66 @@ public class GreedyQuestions {
             --foodTime;
             return this;
         }
+    }
+
+    /**
+     * 남은 시간이 적은 음식부터 접근하는 탐욕적인 방법으로 해결한다
+     * 모든 음식을 시간 기준으로 정렬한 뒤에 시간이 적게 걸리는 음식부터 제거해나가면 된다
+     * 우선순위 큐를 이용하여 구현한다
+     * <p>
+     * 네트워크 오류가 발생하는 시간 k = 15
+     * <p>
+     * (음식 섭취 시간, 음식 번호) tuple
+     * 음식1 - 8초
+     * 음식2 - 6초
+     * 음식3 - 4초 라고 할 때
+     * <p>
+     * 4초가 소요되는 3번 음식이 먼저 우선순위 큐에서 제외됨
+     * 3번 음식을 모두 먹기 위해서는 [음식의 총 갯수 * 3번 음식의 섭취 시간] 만큼의 시간이 소요됨
+     * 15 - (3 * 4) = 3 (남은시간)
+     * <p>
+     * 다음 음식인 2번을 섭취하는데 걸리는 시간은 6 - 4 (지금까지 섭취한 음식의 총 합)
+     * 2번 음식을 모두 먹는데 걸리는 시간은 2 * (6 - 4) = 4
+     * <p>
+     * 남은 시간이 음식을 모두 먹는데 걸리는 시간보다 적으니 빼지 않고 네트워크 오류 이후 먹어야 할 음식을 계산한다
+     * <p>
+     * 음식 순서는 1 2 1 2 1 2 ... 이 경우 남은 시간이 3초이니 4번째 2번 음식부터 식사를 이어나가면 된다.
+     */
+    public int 무지의_먹방_라이브_2(int[] food_times, long k) {
+        // 전체 음식을 먹는 시간보다 k가 크거나 같다면
+        long total = Arrays.stream(food_times).mapToLong(Long::valueOf).sum();
+        if (total <= k) {
+            return -1;
+        }
+
+        // 시간이 적게 남은 음식부터 빼기 위해 우선순위 큐 사용
+        PriorityQueue<int[]> pq = new PriorityQueue<>(Comparator.comparingInt(entity -> entity[0]));
+        IntStream.range(0, food_times.length).forEach(idx -> pq.add(new int[]{food_times[idx], idx + 1}));
+
+        // 먹기 위해 사용한 시간
+        long sum_value = 0L;
+        // 직전에 다 먹은 음식 시간
+        long previos = 0L;
+        // 남은 음식의 개수
+        long length = food_times.length;
+
+        // 먹기 위해 사용한 시간 + (현재 음식 시간 - 이전 음식 시간) * 현재 음식 개수 <= 남은 시간
+        while (sum_value + ((pq.peek()[0] - previos) * length) <= k) {
+            long now = pq.poll()[0];
+            sum_value += (now - previos) * length;
+            // 다 먹은 음식 제외
+            length -= 1;
+            // 이전 음식 시간 재설정
+            previos = now;
+        }
+
+        // 남은 음식 중에서 몇 번째 음식인지 확인하여 출력
+        List<int[]> result = pq.stream()
+                .sorted(Comparator.comparingInt(food -> food[1]))
+                .collect(Collectors.toList());
+        // 위치
+        int idx = Long.valueOf((k - sum_value) % length).intValue();
+
+        return Long.valueOf(result.get(idx)[1]).intValue();
     }
 }

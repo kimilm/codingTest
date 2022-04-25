@@ -118,4 +118,11 @@ class GreedyQuestionsTest {
         int answer = 1;
         Assertions.assertThat(result).isEqualTo(answer);
     }
+
+    @Test
+    void 무지의_먹방_라이브_2_test() {
+        int result = gq.무지의_먹방_라이브_2(new int[] {3, 1, 2}, 5);
+        int answer = 1;
+        Assertions.assertThat(result).isEqualTo(answer);
+    }
 }
