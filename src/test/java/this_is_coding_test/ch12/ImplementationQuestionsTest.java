@@ -40,23 +40,23 @@ class ImplementationQuestionsTest {
     @TestFactory
     Stream<DynamicTest> 문자열_압축_test() {
         return Stream.of(DynamicTest.dynamicTest("예제 입력 1", () -> {
-                    int result = iq.문자열_압축("aabbaccc");
+                    int result = iq.문자열_압축_3("aabbaccc");
                     Assertions.assertThat(result).isEqualTo(7);
                 }),
                 DynamicTest.dynamicTest("예제 입력 2", () -> {
-                    int result = iq.문자열_압축("ababcdcdababcdcd");
+                    int result = iq.문자열_압축_3("ababcdcdababcdcd");
                     Assertions.assertThat(result).isEqualTo(9);
                 }),
                 DynamicTest.dynamicTest("예제 입력 3", () -> {
-                    int result = iq.문자열_압축("abcabcdede");
+                    int result = iq.문자열_압축_3("abcabcdede");
                     Assertions.assertThat(result).isEqualTo(8);
                 }),
                 DynamicTest.dynamicTest("예제 입력 4", () -> {
-                    int result = iq.문자열_압축("abcabcabcabcdededededede");
+                    int result = iq.문자열_압축_3("abcabcabcabcdededededede");
                     Assertions.assertThat(result).isEqualTo(14);
                 }),
                 DynamicTest.dynamicTest("예제 입력 5", () -> {
-                    int result = iq.문자열_압축("xababcdcdababcdcd");
+                    int result = iq.문자열_압축_3("xababcdcdababcdcd");
                     Assertions.assertThat(result).isEqualTo(17);
                 }));
     }

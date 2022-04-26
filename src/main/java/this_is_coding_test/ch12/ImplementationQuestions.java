@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Stack;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.IntStream;
 
 public class ImplementationQuestions {
 
@@ -100,8 +102,7 @@ public class ImplementationQuestions {
 
     /**
      * 이전에 프로그래머스에서 풀었던 풀이, 이게 더 빠르다
-     * 문제랑 별개로 다른 사람의 풀이에서 안 것
-     * Math.log10() + 1 자릿수 계산
+     * 문제랑 별개로 배운 것 -> Math.log10() + 1 자릿수 계산 오..
      */
     public int 문자열_압축_2(String s) {
         int compLen = 0;
@@ -155,5 +156,55 @@ public class ImplementationQuestions {
         Collections.sort(list);
 
         return list.get(0);
+    }
+
+    /**
+     * 책에 나온 풀이, 1번이랑 같은 방법인데 더 빠르다.. 1번은 delete 때문에 느린듯
+     */
+    public int 문자열_압축_3(String s) {
+        AtomicInteger answer = new AtomicInteger(s.length());
+
+        // 1개 단위(step) 부터 압축 단위를 늘려가며 확인
+        IntStream.range(1, s.length() / 2 + 1).forEach(step -> {
+            StringBuilder compressed = new StringBuilder();
+            // 앞에서부터 step 까지의 문자열 추출
+            String prev = s.substring(0, step);
+            int count = 1;
+
+            // 단위(step) 크기만큼 증가시키며 이전 문자열과 비교
+            for (int i = step; i < s.length(); i += step) {
+                String substr = "";
+                if (i + step > s.length()) {
+                    substr = s.substring(i);
+                } else {
+                    substr = s.substring(i, i + step);
+                }
+                // 이전 상태와 동일하다면 압축 횟수 증가
+                if (prev.equals(substr)) {
+                    ++count;
+                }
+                // 다른 문자열이 나왔다면 (더 이상 압축하지 못하는 경우라면)
+                else {
+                    if (count != 1) {
+                        compressed.append(count).append(prev);
+                    } else {
+                        compressed.append(prev);
+                    }
+                    prev = substr;
+                    count = 1;
+                }
+            }
+
+            // 남아있는 문자열에 대해서 처리
+            if (count != 1) {
+                compressed.append(count).append(prev);
+            } else {
+                compressed.append(prev);
+            }
+            // 만들어지는 압축 문자열이 가장 짧은 것이 정답
+            answer.set(Integer.min(answer.get(), compressed.length()));
+        });
+
+        return answer.get();
     }
 }
