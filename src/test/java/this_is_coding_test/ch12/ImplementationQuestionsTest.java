@@ -24,4 +24,16 @@ class ImplementationQuestionsTest {
                     Assertions.assertThat(result).isEqualTo("READY");
                 }));
     }
+
+    @TestFactory
+    Stream<DynamicTest> 문자열_재정렬() {
+        return Stream.of(DynamicTest.dynamicTest("예제 입력 1", () -> {
+                    String result = iq.문자열_재정렬("K1KA5CB7");
+                    Assertions.assertThat(result).isEqualTo("ABCKK13");
+                }),
+                DynamicTest.dynamicTest("예제 입력 2", () -> {
+                    String result = iq.문자열_재정렬("AJKDLSI412K4JSJ9D");
+                    Assertions.assertThat(result).isEqualTo("ADDIJJJKKLSS20");
+                }));
+    }
 }
