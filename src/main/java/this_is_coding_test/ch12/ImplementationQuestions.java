@@ -4,6 +4,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class ImplementationQuestions {
 
@@ -43,10 +44,12 @@ public class ImplementationQuestions {
         }
         Collections.sort(charList);
 
+        // String str = charList.stream().map(String::valueOf).collect(Collectors.joining());
         StringBuilder sb = new StringBuilder();
         for(Character c : charList) {
             sb.append(c);
         }
+
         sb.append(number);
 
         return sb.toString();
