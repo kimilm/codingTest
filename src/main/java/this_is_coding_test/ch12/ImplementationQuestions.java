@@ -218,14 +218,18 @@ public class ImplementationQuestions {
         int n = lock.length;
         int[][] plate = initLock(lock, m, n);
 
+        // 열쇠 4번 회전
         for (int times = 0; times < 4; ++times) {
             for (int i = 0; i < m + n - 1; i++) {
                 for (int j = 0; j < m + n - 1; ++j) {
+                    // 자물쇠 판 초기화
                     int[][] temp = new int [plate.length][];
                     initTemp(plate, temp);
 
+                    // 열쇠 체크
                     for (int k = 0; k < m; k++) {
                         for (int l = 0; l < m; l++) {
+                            // xor 연산, 1이 홀수 -> 참
                             temp[i + k][j + l] = temp[i + k][j + l] ^ key[k][l];
                         }
                     }
@@ -245,6 +249,7 @@ public class ImplementationQuestions {
         int size = n + 2 * padding;
         int[][] temp = new int[size][size];
 
+        // 자물쇠 주위로 패딩을 만들어서 중간에 값 입력
         for (int i = 0; i < n; ++i) {
             for (int j = 0; j < n; ++j) {
                 temp[i + padding][j + padding] = lock[i][j];
@@ -289,7 +294,13 @@ public class ImplementationQuestions {
                 sum += matrix[i][j];
             }
         }
-
+        // sum 을 1로 주고 비트 and 연산으로 바꿔봤는데 빨라지긴 하나 드라마틱하게 빨라지지는 않았음
         return n * n == sum;
     }
+
+    /**
+     * 자물쇠와 열쇠의 크기는 최대 20 * 20, 모든 원소에 접근하는데는 400만큼의 연산
+     * 일반적으로 1초에 2_000만 ~ 1억 정도의 연산을 처리할 수 있음 => 완전탐색으로 접근하는 것이 바람직함
+     * 고민해서 풀었는데 문제 해결 방식이 책과 동일했다 굳
+     */
 }
