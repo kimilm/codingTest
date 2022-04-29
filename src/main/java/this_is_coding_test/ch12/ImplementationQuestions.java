@@ -1,9 +1,6 @@
 package this_is_coding_test.ch12;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Stack;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.IntStream;
 
@@ -206,5 +203,93 @@ public class ImplementationQuestions {
         });
 
         return answer.get();
+    }
+
+    /**
+     * 난이도 중하
+     * key: M * M (3 <= M <= 20)
+     * lock: N * N (3 <= N <= 20)
+     * M <= N
+     * 제한) 시간: 1초, 메모리: 256MB
+     * https://programmers.co.kr/learn/courses/30/lessons/60059
+     */
+    public boolean 자물쇠와_열쇠(int[][] key, int[][] lock) {
+        int m = key.length;
+        int n = lock.length;
+        int[][] plate = initLock(lock, m, n);
+
+        for (int times = 0; times < 4; ++times) {
+            for (int i = 0; i < m + n - 1; i++) {
+                for (int j = 0; j < m + n - 1; ++j) {
+                    int[][] temp = new int [plate.length][];
+                    initTemp(plate, temp);
+
+                    for (int k = 0; k < m; k++) {
+                        for (int l = 0; l < m; l++) {
+                            temp[i + k][j + l] = temp[i + k][j + l] ^ key[k][l];
+                        }
+                    }
+
+                    if (isUnLocked(temp, m, n)) {
+                        return true;
+                    }
+                }
+            }
+            rotate(key);
+        }
+        return false;
+    }
+
+    public int[][] initLock(int[][] lock, int m, int n) {
+        int padding = m - 1;
+        int size = n + 2 * padding;
+        int[][] temp = new int[size][size];
+
+        for (int i = 0; i < n; ++i) {
+            for (int j = 0; j < n; ++j) {
+                temp[i + padding][j + padding] = lock[i][j];
+            }
+        }
+
+        return temp;
+    }
+
+    public void initTemp(int[][] plate, int[][] temp) {
+        for (int i = 0; i < plate.length; i++) {
+            temp[i] = plate[i].clone();
+        }
+    }
+
+    public void rotate(int[][] matrix) {
+        int n = matrix.length;
+
+        for (int i = 0; i < n / 2; ++i) {
+            for (int j = 0; j < n; ++j) {
+                int temp = matrix[i][j];
+                matrix[i][j] = matrix[n - i - 1][j];
+                matrix[n - i - 1][j] = temp;
+
+            }
+        }
+
+        for (int i = 0; i < n; ++i) {
+            for (int j = i; j < n; ++j) {
+                int temp = matrix[i][j];
+                matrix[i][j] = matrix[j][i];
+                matrix[j][i] = temp;
+            }
+        }
+    }
+
+    public boolean isUnLocked(int[][] matrix, int m, int n) {
+        int padding = m - 1;
+        int sum = 0;
+        for (int i = padding; i < padding + n; i++) {
+            for (int j = padding; j < padding + n; j++) {
+                sum += matrix[i][j];
+            }
+        }
+
+        return n * n == sum;
     }
 }

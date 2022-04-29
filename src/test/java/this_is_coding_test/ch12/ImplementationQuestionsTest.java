@@ -7,8 +7,6 @@ import org.junit.jupiter.api.TestFactory;
 
 import java.util.stream.Stream;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 class ImplementationQuestionsTest {
 
     private final ImplementationQuestions iq = new ImplementationQuestions();
@@ -59,5 +57,15 @@ class ImplementationQuestionsTest {
                     int result = iq.문자열_압축_3("xababcdcdababcdcd");
                     Assertions.assertThat(result).isEqualTo(17);
                 }));
+    }
+
+    @Test
+    void 자물쇠와_열쇠_test() {
+        boolean result = iq.자물쇠와_열쇠(
+                new int[][]{{0, 0, 0}, {1, 0, 0}, {0, 1, 1}},
+                new int[][]{{1, 1, 1}, {1, 1, 0}, {1, 0, 1}}
+        );
+        boolean answer = true;
+        Assertions.assertThat(result).isEqualTo(answer);
     }
 }
