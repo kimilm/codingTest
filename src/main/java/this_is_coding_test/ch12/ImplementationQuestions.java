@@ -368,8 +368,12 @@ public class ImplementationQuestions {
             // 이동
             snake.add(body);
 
-            // 아무것도 없음
-            if (!plate[row][col]) {
+            // 사과가 있다면
+            if (plate[row][col]) {
+                plate[row][col] = false;
+            }
+            // 아무것도 없다면
+            else {
                 snake.poll();
             }
 
