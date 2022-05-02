@@ -2,6 +2,7 @@ package this_is_coding_test.ch12;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 public class ImplementationQuestions {
@@ -223,7 +224,7 @@ public class ImplementationQuestions {
             for (int i = 0; i < m + n - 1; i++) {
                 for (int j = 0; j < m + n - 1; ++j) {
                     // 자물쇠 판 초기화
-                    int[][] temp = new int [plate.length][];
+                    int[][] temp = new int[plate.length][];
                     initTemp(plate, temp);
 
                     // 열쇠 체크
@@ -302,5 +303,106 @@ public class ImplementationQuestions {
      * 자물쇠와 열쇠의 크기는 최대 20 * 20, 모든 원소에 접근하는데는 400만큼의 연산
      * 일반적으로 1초에 2_000만 ~ 1억 정도의 연산을 처리할 수 있음 => 완전탐색으로 접근하는 것이 바람직함
      * 고민해서 풀었는데 문제 해결 방식이 책과 동일했다 굳
+     */
+
+    /**
+     * 난이도 중
+     * 2 <= N <= 100
+     * 0 <= K <= 100
+     * 1 <= L <= 100
+     * 1 <= X <= 10_000
+     * 제한) 시간: 1초, 메모리: 128MB
+     */
+    public int 뱀(int n, int k, String[] kList, int l, String[] lList) {
+        boolean[][] plate = new boolean[n][n];
+        int[][] apples = Arrays.stream(kList)
+                .map(list -> Arrays.stream(list.split(" "))
+                        .mapToInt(value -> Integer.parseInt(value) - 1)
+                        .toArray())
+                .toArray(int[][]::new);
+        Queue<Integer> snake = new LinkedList<>();
+        Queue<Map.Entry<Integer, Character>> directions = Arrays.stream(lList)
+                .map(list -> {
+                    String[] temp = list.split(" ");
+                    Map.Entry<Integer, Character> entry = Map.entry(Integer.parseInt(temp[0]), temp[1].charAt(0));
+                    return entry;
+                })
+                .collect(Collectors.toCollection(LinkedList::new));
+
+        // 0: 우, 1: 하, 2: 좌, 3: 상
+        int direction = 0;
+        int[] dRow = new int[]{0, 1, 0, -1};
+        int[] dCol = new int[]{1, 0, -1, 0};
+
+        // 사과
+        for (int[] apple : apples) {
+            int row = apple[0];
+            int col = apple[1];
+            plate[row][col] = true;
+        }
+        snake.add(coordinateToInt(5, 0, 0));
+
+        int time = 0;
+        int row = 0;
+        int col = 0;
+
+        while (true) {
+            ++time;
+
+            row += dRow[direction];
+            col += dCol[direction];
+
+            // 보드판을 벗어나면 종료
+            if (row < 0 || row >= n || col < 0 || col >= n) {
+                break;
+            }
+
+            // 이동 방향으로 뱀 늘리기
+            int body = coordinateToInt(n, row, col);
+
+            // 이동 방향에 뱀 몸통이 있다면 종료
+            if (snake.contains(body)) {
+                break;
+            }
+
+            // 이동
+            snake.add(body);
+
+            // 아무것도 없음
+            if (!plate[row][col]) {
+                snake.poll();
+            }
+
+            // 시간 종료시 방향 전환
+            if (!directions.isEmpty() && directions.peek().getKey().equals(time)) {
+                direction = changeDirection(direction, directions.poll().getValue());
+            }
+        }
+
+        return time;
+    }
+
+    public int coordinateToInt(int n, int row, int col) {
+        return n * row + col;
+    }
+
+    public int changeDirection(int current, char next) {
+        int nextDirection = current;
+
+        // 우측으로 90도
+        if (next == 'D') {
+            nextDirection += 1;
+        }
+        // 좌측으로 90도
+        else if (next == 'L') {
+            nextDirection += 3;
+        }
+
+        return nextDirection % 4;
+    }
+
+    /**
+     * 뱀의 위치를 따로 계산했는데 plate 상에서 2로 설정하거나 했으면 별도의 뱀 변수를 두지 않아도 될 것 같다.
+     * 괜히 코드가 복잡해보인다.
      */
 }
