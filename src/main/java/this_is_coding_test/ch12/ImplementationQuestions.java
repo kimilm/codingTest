@@ -423,13 +423,11 @@ public class ImplementationQuestions {
     // 0: 기둥, 1: 보, 2: 없음
     public static final int COLUMN = 0;
     public static final int BEAM = 1;
-    public static final int NONE = 2;
 
     public int[][] 기둥과_보_설치(int n, int[][] build_frame) {
-        int[][] build = new int[n + 1][n + 1];
-        for (int[] array : build) {
-            Arrays.fill(array, NONE);
-        }
+        int length = n + 1;
+        boolean[][] columns = new boolean[length][length];
+        boolean[][] beams = new boolean[length][length];
 
         for (int[] request : build_frame) {
             int x = request[0];
@@ -439,45 +437,59 @@ public class ImplementationQuestions {
 
             // 삭제
             if (buildType == 0) {
-                if (canDelete(build, x, y)) {
-                    build[x][y] = NONE;
+                if (canDelete(columns, beams, x, y, materialType)) {
+                    build(columns, beams, x, y, materialType, false);
                 }
             }
             // 설치
             else if (buildType == 1) {
-                if (canSet(build, x, y, materialType)) {
-                    build[x][y] = materialType;
+                if (canSet(columns, beams, x, y, materialType)) {
+                    build(columns, beams, x, y, materialType, true);
                 }
             }
         }
 
         List<int[]> answer = new ArrayList<>();
-        for (int i = 0; i < build.length; i++) {
-            for (int j = 0; j < build.length; j++) {
-                if (build[i][j] != NONE) {
-                    answer.add(new int[]{i, j, build[i][j]});
+
+        for (int i = 0; i < length; i++) {
+            for (int j = 0; j < length; j++) {
+                if (columns[i][j]) {
+                    answer.add(new int[]{i, j, COLUMN});
+                }
+                if (beams[i][j]) {
+                    answer.add(new int[]{i, j, BEAM});
                 }
             }
         }
+
+        answer.sort((o1, o2) -> {
+            if (o1[0] != o2[0]) {
+                return o1[0] - o2[0];
+            } else if (o1[1] != o2[1]) {
+                return o1[1] - o2[1];
+            } else {
+                return o1[2] - o2[2];
+            }
+        });
+
         return answer.toArray(int[][]::new);
     }
 
-    public boolean canSet(int[][] build, int x, int y, int materialType) {
+    public boolean canSet(boolean[][] columns, boolean[][] beams, int x, int y, int materialType) {
         boolean set = false;
 
         // 기둥 설치 가능 여부
         if (materialType == 0) {
             // 바닥 위 || 보의 한쪽 끝 위 || 다른 기둥 위
-            if (y == 0 || build[x][y] == BEAM || build[x - 1][y] == BEAM
-                    || build[x][y - 1] == COLUMN) {
+            if (y == 0 || beams[x][y] || beams[x - 1][y] || columns[x][y - 1]) {
                 set = true;
             }
         }
         // 보 설치 가능 여부
         else if (materialType == 1) {
             // 한쪽 끝이 기둥 위 || 양쪽 끝이 다른 보와 동시 연결
-            if (build[x][y - 1] == COLUMN || build[x + 1][y - 1] == COLUMN
-                    || build[x - 1][y] == BEAM && build[x + 1][y] == BEAM) {
+            if (columns[x][y - 1] || columns[x + 1][y - 1]
+                    || beams[x - 1][y] && beams[x + 1][y]) {
                 set = true;
             }
         }
@@ -485,22 +497,34 @@ public class ImplementationQuestions {
         return set;
     }
 
-    public boolean canDelete(int[][] build, int x, int y) {
-        int[][] tempBuild = new int[build.length][];
-        for (int i = 0; i < build.length; ++i) {
-            tempBuild[i] = build[i].clone();
+    public boolean canDelete(boolean[][] columns, boolean[][] beams, int x, int y, int materialType) {
+        int length = columns.length;
+        // 건축 상태 복사
+        boolean[][] tempColumns = new boolean[length][];
+        boolean[][] tempBeams = new boolean[length][];
+        for (int i = 0; i < length; ++i) {
+            tempColumns[i] = columns[i].clone();
+            tempBeams[i] = beams[i].clone();
         }
-        // 현재 건축 상태를 복사한 후 해당 부분 지우기
-        tempBuild[x][y] = NONE;
+
+        // 해당 부분 지우기
+        if (materialType == COLUMN) {
+            tempColumns[x][y] = false;
+        } else {
+            tempBeams[x][y] = false;
+        }
 
         // 지운 건축물의 영향을 받는 주변 건축물 저장
         List<int[]> nearList = new ArrayList<>();
         int[][] nearArray = {{x, y + 1}, {x, y - 1}, {x - 1, y}, {x + 1, y}};
 
-        for(int[] near : nearArray) {
-            if (near[0] >= 0 && near[0] < build.length && near[1] >= 0 && near[1] < build.length) {
-                if (tempBuild[near[0]][near[1]] != NONE) {
-                    nearList.add(near);
+        for (int[] near : nearArray) {
+            if (near[0] >= 0 && near[0] < length && near[1] >= 0 && near[1] < length) {
+                if (tempColumns[near[0]][near[1]]) {
+                    nearList.add(new int[]{near[0], near[1], COLUMN});
+                }
+                if (tempBeams[near[0]][near[1]]) {
+                    nearList.add(new int[]{near[0], near[1], BEAM});
                 }
             }
         }
@@ -508,10 +532,27 @@ public class ImplementationQuestions {
         boolean delete = true;
 
         // 건축물을 지워도 주변 모든 건축물이 설치 가능하다면 해당 위치를 지울 수 있음
-        for(int[] near : nearList) {
-            delete &= canSet(tempBuild, near[0], near[1], tempBuild[near[0]][near[1]]);
+        for (int[] near : nearList) {
+            delete &= canSet(tempColumns, tempBeams, near[0], near[1], near[2]);
         }
 
         return delete;
     }
+
+    public void build(boolean[][] columns, boolean[][] beams, int x, int y, int materialType, boolean build) {
+        if (materialType == COLUMN) {
+            columns[x][y] = build;
+        } else {
+            beams[x][y] = build;
+        }
+    }
+
+    /**
+     * 채점 실패 원인 분석
+     * 1. 보 위에 기둥이 바로 설치되는 경우를 고려하지 못했음
+     *      |
+     *      -----
+     *          |
+     *    이렇게 설치되는 경우 지금의 코드에서는 좌표가 겹칩
+     */
 }
