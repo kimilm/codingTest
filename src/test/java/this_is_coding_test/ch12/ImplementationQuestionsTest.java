@@ -101,4 +101,60 @@ class ImplementationQuestionsTest {
                 })
         );
     }
+
+    @TestFactory
+    Stream<DynamicTest> 기둥과_보_설치() {
+        return Stream.of(
+                DynamicTest.dynamicTest("예제 입력 1", () -> {
+                    int[][] result = iq.기둥과_보_설치(5,
+                            new int[][]{
+                                    {1, 0, 0, 1},
+                                    {1, 1, 1, 1},
+                                    {2, 1, 0, 1},
+                                    {2, 2, 1, 1},
+                                    {5, 0, 0, 1},
+                                    {5, 1, 0, 1},
+                                    {4, 2, 1, 1},
+                                    {3, 2, 1, 1}
+                            }
+                    );
+                    int[][] answer = new int[][]{
+                            {1, 0, 0},
+                            {1, 1, 1},
+                            {2, 1, 0},
+                            {2, 2, 1},
+                            {3, 2, 1},
+                            {4, 2, 1},
+                            {5, 0, 0},
+                            {5, 1, 0}
+                    };
+                    Assertions.assertThat(result).isEqualTo(answer);
+                }),
+                DynamicTest.dynamicTest("예제 입력 2", () -> {
+                    int[][] result = iq.기둥과_보_설치(5,
+                            new int[][]{
+                                    {0, 0, 0, 1},
+                                    {2, 0, 0, 1},
+                                    {4, 0, 0, 1},
+                                    {0, 1, 1, 1},
+                                    {1, 1, 1, 1},
+                                    {2, 1, 1, 1},
+                                    {3, 1, 1, 1},
+                                    {2, 0, 0, 0},
+                                    {1, 1, 1, 0},
+                                    {2, 2, 0, 1}
+                            }
+                    );
+                    int[][] answer = new int[][]{
+                            {0, 0, 0},
+                            {0, 1, 1},
+                            {1, 1, 1},
+                            {2, 1, 1},
+                            {3, 1, 1},
+                            {4, 0, 0}
+                    };
+                    Assertions.assertThat(result).isEqualTo(answer);
+                })
+        );
+    }
 }
