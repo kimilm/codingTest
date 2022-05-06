@@ -154,6 +154,22 @@ class ImplementationQuestionsTest {
                             {4, 0, 0}
                     };
                     Assertions.assertThat(result).isEqualTo(answer);
+                }),
+                DynamicTest.dynamicTest("예제 입력 3", () -> {
+                    int[][] result = iq.기둥과_보_설치(5,
+                            new int[][]{
+                                    {5, 0, 0, 1},
+                                    {4, 1, 1, 1},
+                                    {4, 1, 0, 1},
+                                    {4, 1, 0, 0},
+                                    {5, 0, 0, 0}
+                            }
+                    );
+                    int[][] answer = new int[][]{
+                            {4, 1, 1},
+                            {5, 0, 0}
+                    };
+                    Assertions.assertThat(result).isEqualTo(answer);
                 })
         );
     }

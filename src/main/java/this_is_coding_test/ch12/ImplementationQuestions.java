@@ -562,15 +562,21 @@ public class ImplementationQuestions {
 
         // 지운 건축물의 영향을 받는 주변 건축물 저장
         List<int[]> nearList = new ArrayList<>();
-        int[][] nearArray = {{x, y}, {x, y + 1}, {x, y - 1}, {x - 1, y}, {x + 1, y}};
+        int[][] nearArray;
+
+        // 기둥을 지울 경우 영향을 받는건 (x, y + 1) 위치의 기둥과 보, (x - 1, y + 1) 위치의 보
+        if (materialType == COLUMN) {
+            nearArray = new int[][]{{x, y + 1, COLUMN}, {x, y + 1, BEAM}, {x - 1, y + 1, BEAM}};
+        }
+        // 보를 지울 경우 영향을 받는건 (x, y) 위치의 기둥, (x - 1, y) (x + 1, y) 위치의 보
+        else {
+            nearArray = new int[][]{{x, y, COLUMN}, {x - 1, y, BEAM}, {x + 1, y, BEAM}};
+        }
 
         for (int[] near : nearArray) {
             if (near[0] >= 0 && near[0] < length && near[1] >= 0 && near[1] < length) {
-                if (tempColumns[near[0]][near[1]]) {
-                    nearList.add(new int[]{near[0], near[1], COLUMN});
-                }
-                if (tempBeams[near[0]][near[1]]) {
-                    nearList.add(new int[]{near[0], near[1], BEAM});
+                if (isInstalled(tempColumns, tempBeams, near[0], near[1], near[2])) {
+                    nearList.add(near);
                 }
             }
         }
@@ -583,6 +589,14 @@ public class ImplementationQuestions {
         }
 
         return delete;
+    }
+
+    public boolean isInstalled(boolean[][] columns, boolean[][] beams, int x, int y, int materialType) {
+        if (materialType == COLUMN) {
+            return columns[x][y];
+        } else {
+            return beams[x][y];
+        }
     }
 
     public void build(boolean[][] columns, boolean[][] beams, int x, int y, int materialType, boolean build) {
@@ -606,5 +620,8 @@ public class ImplementationQuestions {
      *      여기에 {x, y} (보의 왼쪽 끝에 기둥이 설치된 경우 고려) 를 추가하면 채점시 런타임 에러가 추가로 발생함 (테스트 22번)
      *
      *      -> 설치 단계에서 인덱스 - 1 하는 과정에서 발생, 설치 가능 여부를 세분화하여 런타임 에러 모두 제거함
+     *
+     * 3. 실패 케이스 분석
+     *      기둥 삭제시 보의 위치를 잘못 확인했음, 수정했으나 여전히 실패 케이스 발생
      */
 }
