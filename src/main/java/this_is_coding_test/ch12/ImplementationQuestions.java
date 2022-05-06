@@ -568,9 +568,9 @@ public class ImplementationQuestions {
         if (materialType == COLUMN) {
             nearArray = new int[][]{{x, y + 1, COLUMN}, {x, y + 1, BEAM}, {x - 1, y + 1, BEAM}};
         }
-        // 보를 지울 경우 영향을 받는건 (x, y) 위치의 기둥, (x - 1, y) (x + 1, y) 위치의 보
+        // 보를 지울 경우 영향을 받는건 (x, y) (x + 1, y) 위치의 기둥, (x - 1, y) (x + 1, y) 위치의 보
         else {
-            nearArray = new int[][]{{x, y, COLUMN}, {x - 1, y, BEAM}, {x + 1, y, BEAM}};
+            nearArray = new int[][]{{x, y, COLUMN}, {x + 1, y, COLUMN}, {x - 1, y, BEAM}, {x + 1, y, BEAM}};
         }
 
         for (int[] near : nearArray) {
@@ -622,6 +622,7 @@ public class ImplementationQuestions {
      *      -> 설치 단계에서 인덱스 - 1 하는 과정에서 발생, 설치 가능 여부를 세분화하여 런타임 에러 모두 제거함
      *
      * 3. 실패 케이스 분석
-     *      기둥 삭제시 보의 위치를 잘못 확인했음, 수정했으나 여전히 실패 케이스 발생
+     *      1) 기둥 삭제시 보의 위치를 잘못 확인했음, 수정했으나 여전히 실패 케이스 발생
+     *      2) 보 삭제시 영향 받는 기둥의 위치를 잘못 확인했음, 대부분의 실패 케이스 수정됨
      */
 }
