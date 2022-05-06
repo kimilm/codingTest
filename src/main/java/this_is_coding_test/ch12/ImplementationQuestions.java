@@ -530,7 +530,7 @@ public class ImplementationQuestions {
 
     public boolean checkBeamsForBeam(boolean[][] beams, int x, int y) {
         // 양쪽 끝이 다른 보와 동시 연결
-        boolean check = true;
+        boolean check = false;
 
         if (x != 0) {
             check = beams[x - 1][y];
@@ -624,5 +624,6 @@ public class ImplementationQuestions {
      * 3. 실패 케이스 분석
      *      1) 기둥 삭제시 보의 위치를 잘못 확인했음, 수정했으나 여전히 실패 케이스 발생
      *      2) 보 삭제시 영향 받는 기둥의 위치를 잘못 확인했음, 대부분의 실패 케이스 수정됨
+     *      3) 보 설치 조건을 잘못 확인했음, 성공
      */
 }
