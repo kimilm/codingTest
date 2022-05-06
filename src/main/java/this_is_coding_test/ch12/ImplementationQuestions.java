@@ -476,25 +476,71 @@ public class ImplementationQuestions {
     }
 
     public boolean canSet(boolean[][] columns, boolean[][] beams, int x, int y, int materialType) {
-        boolean set = false;
-
         // 기둥 설치 가능 여부
         if (materialType == 0) {
-            // 바닥 위 || 보의 한쪽 끝 위 || 다른 기둥 위
-            if (y == 0 || beams[x][y] || beams[x - 1][y] || columns[x][y - 1]) {
-                set = true;
-            }
+            // 바닥 위 || 다른 기둥 위 || 보의 한쪽 끝 위
+            return checkColumnsForColumn(columns, x, y) || checkBeamsForColumn(beams, x, y);
         }
         // 보 설치 가능 여부
         else if (materialType == 1) {
             // 한쪽 끝이 기둥 위 || 양쪽 끝이 다른 보와 동시 연결
-            if (columns[x][y - 1] || columns[x + 1][y - 1]
-                    || beams[x - 1][y] && beams[x + 1][y]) {
-                set = true;
-            }
+            return checkColumnsForBeam(columns, x, y) || checkBeamsForBeam(beams, x, y);
         }
 
-        return set;
+        return false;
+    }
+
+    public boolean checkColumnsForColumn(boolean[][] columns, int x, int y) {
+        // 바닥 바로 위
+        if (y == 0) {
+            return true;
+        }
+        // 다른 기둥 위
+        else {
+            return columns[x][y - 1];
+        }
+    }
+
+    public boolean checkBeamsForColumn(boolean[][] beams, int x, int y) {
+        // 보의 한쪽 끝 위
+        boolean check = beams[x][y];
+
+        if (x != 0) {
+            check |= beams[x - 1][y];
+        }
+
+        return check;
+    }
+
+    public boolean checkColumnsForBeam(boolean[][] columns, int x, int y) {
+        // 바닥에는 바로 설치할 수 없음
+        if (y == 0) {
+            return false;
+        }
+
+        // 한쪽 끝이 기둥 위
+        boolean check = columns[x][y - 1];
+
+        if (x != columns.length - 1) {
+            check |= columns[x + 1][y - 1];
+        }
+
+        return check;
+    }
+
+    public boolean checkBeamsForBeam(boolean[][] beams, int x, int y) {
+        // 양쪽 끝이 다른 보와 동시 연결
+        boolean check = true;
+
+        if (x != 0) {
+            check = beams[x - 1][y];
+        }
+
+        if (x != beams.length - 1) {
+            check &= beams[x + 1][y];
+        }
+
+        return check;
     }
 
     public boolean canDelete(boolean[][] columns, boolean[][] beams, int x, int y, int materialType) {
@@ -516,7 +562,7 @@ public class ImplementationQuestions {
 
         // 지운 건축물의 영향을 받는 주변 건축물 저장
         List<int[]> nearList = new ArrayList<>();
-        int[][] nearArray = {{x, y + 1}, {x, y - 1}, {x - 1, y}, {x + 1, y}};
+        int[][] nearArray = {{x, y}, {x, y + 1}, {x, y - 1}, {x - 1, y}, {x + 1, y}};
 
         for (int[] near : nearArray) {
             if (near[0] >= 0 && near[0] < length && near[1] >= 0 && near[1] < length) {
@@ -554,5 +600,11 @@ public class ImplementationQuestions {
      *      -----
      *          |
      *    이렇게 설치되는 경우 지금의 코드에서는 좌표가 겹칩
+     *
+     * 2. 런타임 에러의 발생 원인
+     *      int[][] nearArray = {{x, y + 1}, {x, y - 1}, {x - 1, y}, {x + 1, y}};
+     *      여기에 {x, y} (보의 왼쪽 끝에 기둥이 설치된 경우 고려) 를 추가하면 채점시 런타임 에러가 추가로 발생함 (테스트 22번)
+     *
+     *      -> 설치 단계에서 인덱스 - 1 하는 과정에서 발생, 설치 가능 여부를 세분화하여 런타임 에러 모두 제거함
      */
 }
