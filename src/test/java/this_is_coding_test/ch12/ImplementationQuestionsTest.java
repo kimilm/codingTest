@@ -175,4 +175,49 @@ class ImplementationQuestionsTest {
                 })
         );
     }
+
+    @TestFactory
+    Stream<DynamicTest> 치킨_배달() {
+        return Stream.of(
+                DynamicTest.dynamicTest("예제 입력 1", () -> {
+                    int result = iq.치킨_배달(5, 3,
+                            new String[]{
+                                    "0 0 1 0 0",
+                                    "0 0 2 0 1",
+                                    "0 1 2 0 0",
+                                    "0 0 1 0 0",
+                                    "0 0 0 0 2"
+                            }
+                    );
+                    int answer = 5;
+                    Assertions.assertThat(result).isEqualTo(answer);
+                }),
+                DynamicTest.dynamicTest("예제 입력 2", () -> {
+                    int result = iq.치킨_배달(5, 2,
+                            new String[]{
+                                    "0 2 0 1 0",
+                                    "1 0 1 0 0",
+                                    "0 0 0 0 0",
+                                    "2 0 0 1 1",
+                                    "2 2 0 1 2"
+                            }
+                    );
+                    int answer = 10;
+                    Assertions.assertThat(result).isEqualTo(answer);
+                }),
+                DynamicTest.dynamicTest("예제 입력 3", () -> {
+                    int result = iq.치킨_배달(5, 1,
+                            new String[]{
+                                    "1 2 0 0 0",
+                                    "1 2 0 0 0",
+                                    "1 2 0 0 0",
+                                    "1 2 0 0 0",
+                                    "1 2 0 0 0"
+                            }
+                    );
+                    int answer = 11;
+                    Assertions.assertThat(result).isEqualTo(answer);
+                })
+        );
+    }
 }

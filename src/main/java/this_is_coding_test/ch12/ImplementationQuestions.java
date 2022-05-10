@@ -742,4 +742,84 @@ public class ImplementationQuestions {
             return Integer.compare(this.x, other.x);
         }
     }
+
+    /**
+     * 난이도 중
+     * 2 <= N <= 50
+     * 1 <= M <= 13
+     * 1 <= 집 <= 2N
+     * M <= 치킨집 <= 13
+     * 제한) 시간: 1초, 메모리: 512MB
+     * https://www.acmicpc.net/problem/15686
+     */
+    public int 치킨_배달(int n, int m, String[] map) {
+        Map<int[], Integer> houses = new HashMap<>();
+        List<int[]> chickens = new ArrayList<>();
+
+        for (int i = 0; i < n; i++) {
+            String[] street = map[i].split(" ");
+
+            for (int j = 0; j < n; j++) {
+                // 집
+                if (street[j].equals("1")) {
+                    houses.put(new int[]{i, j}, Integer.MAX_VALUE);
+                }
+                // 치킨집
+                else if (street[j].equals("2")) {
+                    chickens.add(new int[]{i, j});
+                }
+            }
+        }
+
+        boolean[] visited = new boolean[chickens.size()];
+        List<int[]> leftChickens = combination(visited, 0, chickens.size(), m);
+
+        int answer = Integer.MAX_VALUE;
+
+        // 조합으로 뽑힌 남은 치킨집들의 인덱스
+        for (int[] lefts : leftChickens) {
+            // 집 복사
+            Map<int[], Integer> copiedHouses = new HashMap<>(houses);
+
+            // 각 치킨집과 집까지의 거리 저장
+            for (int idx : lefts) {
+                // 모든 집에 대해서
+                copiedHouses.entrySet()
+                        .forEach(entry -> {
+                            int dist = distance(entry.getKey(), chickens.get(idx));
+                            // 짧은 거리 저장
+                            if (dist < entry.getValue()) {
+                                entry.setValue(dist);
+                            }
+                        });
+            }
+
+            answer = Integer.min(answer, copiedHouses.values().stream().mapToInt(i -> i).sum());
+        }
+
+        // 최솟값 출력
+        return answer;
+    }
+
+    public List<int[]> combination(boolean[] visited, int start, int n, int r) {
+        List<int[]> resultList = new ArrayList<>();
+
+        if (r == 0) {
+            resultList.add(IntStream.range(0, n)
+                    .filter(idx -> visited[idx])
+                    .toArray());
+        }
+
+        for (int i = start; i < n; i++) {
+            visited[i] = true;
+            resultList.addAll(combination(visited, i + 1, n, r - 1));
+            visited[i] = false;
+        }
+
+        return resultList;
+    }
+
+    public int distance(int[] house, int[] chicken) {
+        return Math.abs(house[0] - chicken[0]) + Math.abs(house[1] - chicken[1]);
+    }
 }
