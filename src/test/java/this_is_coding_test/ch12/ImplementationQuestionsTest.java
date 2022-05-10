@@ -106,7 +106,7 @@ class ImplementationQuestionsTest {
     Stream<DynamicTest> 기둥과_보_설치() {
         return Stream.of(
                 DynamicTest.dynamicTest("예제 입력 1", () -> {
-                    int[][] result = iq.기둥과_보_설치(5,
+                    int[][] result = iq.기둥과_보_설치_2(5,
                             new int[][]{
                                     {1, 0, 0, 1},
                                     {1, 1, 1, 1},
@@ -131,7 +131,7 @@ class ImplementationQuestionsTest {
                     Assertions.assertThat(result).isEqualTo(answer);
                 }),
                 DynamicTest.dynamicTest("예제 입력 2", () -> {
-                    int[][] result = iq.기둥과_보_설치(5,
+                    int[][] result = iq.기둥과_보_설치_2(5,
                             new int[][]{
                                     {0, 0, 0, 1},
                                     {2, 0, 0, 1},
@@ -156,7 +156,7 @@ class ImplementationQuestionsTest {
                     Assertions.assertThat(result).isEqualTo(answer);
                 }),
                 DynamicTest.dynamicTest("예제 입력 3", () -> {
-                    int[][] result = iq.기둥과_보_설치(5,
+                    int[][] result = iq.기둥과_보_설치_2(5,
                             new int[][]{
                                     {5, 0, 0, 1},
                                     {4, 1, 1, 1},

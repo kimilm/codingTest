@@ -626,4 +626,120 @@ public class ImplementationQuestions {
      *      2) 보 삭제시 영향 받는 기둥의 위치를 잘못 확인했음, 대부분의 실패 케이스 수정됨
      *      3) 보 설치 조건을 잘못 확인했음, 성공
      */
+
+    /**
+     * 전체 연산이 1000개 이하, 처리시간은 5초 -> O(M^3) 연산으로도 처리가 가능하다
+     * O(M^3) 연산 : 매 연산마다 전체 구조물을 확인
+     */
+
+    public int[][] 기둥과_보_설치_2(int n, int[][] build_frame) {
+        Set<Structure> answer = new HashSet<>();
+
+        // 작업의 개수는 최대 1000개
+        for (int[] frame : build_frame) {
+            Structure structure = new Structure(frame[0], frame[1], frame[2]);
+            int operate = frame[3];
+
+            // 삭제하는 경우
+            if (operate == 0) {
+                // 일단 삭제를 수행
+                answer.remove(structure);
+                // 가능한 구조물인지 확인
+                if (!possible(answer)) {
+                    // 가능한 구조물이 아니라면 다시 설치
+                    answer.add(structure);
+                }
+            }
+            // 설치하는 경우
+            else if (operate == 1) {
+                // 일단 설치를 수행
+                answer.add(structure);
+                // 가능한 구조물인지 확인
+                if (!possible(answer)) {
+                    // 가능한 구조물이 아니라면 다시 제거
+                    answer.remove(structure);
+                }
+            }
+        }
+
+        // 정렬된 결과를 반환
+        return answer.stream()
+                .sorted()
+                .map(Structure::toArray)
+                .toArray(int[][]::new);
+    }
+
+    // 현재 설치된 구조물이 '가능한' 구조물인지 확인하는 함수
+    public boolean possible(Set<Structure> answer) {
+        for (Structure structure : answer) {
+            int x = structure.x;
+            int y = structure.y;
+            int stuff = structure.stuff;
+
+            // 설치된 것이 '기둥'인 경우
+            if (stuff == 0) {
+                // (바닥 위 || 보의 한쪽 끝부분 위 || 다른 기둥 위) 라면 정상
+                if (y == 0
+                        || answer.contains(new Structure(x - 1, y, 1)) || answer.contains(new Structure(x, y, 1))
+                        || answer.contains(new Structure(x, y - 1, 0))) {
+                    continue;
+                }
+                // 아니라면 거짓 반환
+                return false;
+            }
+            // 설치된 것이 '보'인 경우
+            else if (stuff == 1) {
+                // (한쪽 끝부분이 기둥 위 || 양쪽 끝부분이 다른 보와 동시에 연결) 라면 정상
+                if (answer.contains(new Structure(x, y - 1, 0)) || answer.contains(new Structure(x + 1, y - 1, 0))
+                        || answer.contains(new Structure(x - 1, y, 1)) && answer.contains(new Structure(x + 1, y, 1))) {
+                    continue;
+                }
+                // 아니라면 거짓 반환
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    static class Structure implements Comparable<Structure> {
+        int x;
+        int y;
+        int stuff;
+
+        public Structure(int x, int y, int stuff) {
+            this.x = x;
+            this.y = y;
+            this.stuff = stuff;
+        }
+
+        public int[] toArray() {
+            return new int[]{x, y, stuff};
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(x, y, stuff);
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            Structure structure = (Structure) obj;
+
+            return this.x == structure.x
+                    && this.y == structure.y
+                    && this.stuff == structure.stuff;
+        }
+
+        @Override
+        public int compareTo(Structure other) {
+            if (this.x == other.x && this.y == other.y) {
+                return Integer.compare(this.stuff, other.stuff);
+            }
+            if (this.x == other.x) {
+                return Integer.compare(this.y, other.y);
+            }
+            return Integer.compare(this.x, other.x);
+        }
+    }
 }
