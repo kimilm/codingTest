@@ -822,4 +822,85 @@ public class ImplementationQuestions {
     public int distance(int[] house, int[] chicken) {
         return Math.abs(house[0] - chicken[0]) + Math.abs(house[1] - chicken[1]);
     }
+
+    /**
+     * 최대 13개의 치킨집 중에서 M개를 뽑는 조합의 수는 최대 1716, 100_000만이 채 되지 않음 -> 모든 경우의 수를 다 계산해도 무리가 없다.
+     * 풀이과정은 동일한데 최소 거리를 연산하는 과정을 비효율적으로 작성한 것 같다.
+     *
+     * 먼저 푼 방식 -> 각 집에 거리를 묶어서 저장 아니 왜 이렇게 풀었지..? 어차피 매번 새로 계산해야되는건데
+     *              치킨집을 기준으로 각 집까지의 거리를 계산했음 -> 계산을 위해 억지로 돌아감
+     * 해답 풀이 방식 -> 거리 계산용 변수 temp 를 둠.
+     *              칩을 기준으로 각 치킨집까지의 거리를 계산했음, 이게 맞지
+     */
+
+    public int 치킨_배달_2(int n, int m, String[] map) {
+        List<int[]> house = new ArrayList<>();
+        List<int[]> chicken = new ArrayList<>();
+
+        for (int r = 0; r < n; r++) {
+            String[] data = map[r].split(" ");
+
+            for (int c = 0; c < n; c++) {
+                if (data[c].equals("1")) {
+                    // 집
+                    house.add(new int[]{r, c});
+                } else if (data[c].equals("2")) {
+                    // 치킨집
+                    chicken.add(new int[]{r, c});
+                }
+            }
+        }
+
+        // 모든 치킨집 중에서 m개의 치킨집을 뽑는 조합 계산
+        List<List<int[]>> candidates = combinationToChicken(chicken, m);
+
+        // 치킨 거리 합의 최소를 찾아 반환
+        int result = (int) 1e9;
+
+        for (List<int[]> candidate : candidates) {
+            result = Integer.min(result, get_sum(house, candidate));
+        }
+
+        return result;
+    }
+
+    public List<List<int[]>> combinationToChicken(List<int[]> chicken, int m) {
+        List<int[]> indexes = combination(new boolean[chicken.size()], 0, chicken.size(), m);
+
+        List<List<int[]>> candidates = new ArrayList<>();
+
+        for (int[] index : indexes) {
+            List<int[]> candidate = Arrays.stream(index)
+                    .mapToObj(chicken::get)
+                    .collect(Collectors.toList());
+
+            candidates.add(candidate);
+        }
+
+        return candidates;
+    }
+
+    // 치킨 거리의 합을 계산
+    public int get_sum(List<int[]> house, List<int[]> candidate) {
+        int result = 0;
+
+        // 모든 집에 대해
+        for (int[] h : house) {
+            int hx = h[0];
+            int hy = h[1];
+
+            // 가장 가까운 치킨집 찾기
+            int temp = (int) 1e9;
+            for (int[] c : candidate) {
+                int cx = c[0];
+                int cy = c[1];
+
+                temp = Integer.min(temp, Math.abs(hx - cx) + Math.abs(hy - cy));
+            }
+            // 가장 가까운 치킨집까지의 거리를 더하기
+            result += temp;
+        }
+        // 치킨 거리의 합 반환
+        return result;
+    }
 }
