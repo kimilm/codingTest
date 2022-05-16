@@ -826,11 +826,11 @@ public class ImplementationQuestions {
     /**
      * 최대 13개의 치킨집 중에서 M개를 뽑는 조합의 수는 최대 1716, 100_000만이 채 되지 않음 -> 모든 경우의 수를 다 계산해도 무리가 없다.
      * 풀이과정은 동일한데 최소 거리를 연산하는 과정을 비효율적으로 작성한 것 같다.
-     *
+     * <p>
      * 먼저 푼 방식 -> 각 집에 거리를 묶어서 저장 아니 왜 이렇게 풀었지..? 어차피 매번 새로 계산해야되는건데
-     *              치킨집을 기준으로 각 집까지의 거리를 계산했음 -> 계산을 위해 억지로 돌아감
+     * 치킨집을 기준으로 각 집까지의 거리를 계산했음 -> 계산을 위해 억지로 돌아감
      * 해답 풀이 방식 -> 거리 계산용 변수 temp 를 둠.
-     *              칩을 기준으로 각 치킨집까지의 거리를 계산했음, 이게 맞지
+     * 칩을 기준으로 각 치킨집까지의 거리를 계산했음, 이게 맞지
      */
 
     public int 치킨_배달_2(int n, int m, String[] map) {
@@ -903,4 +903,106 @@ public class ImplementationQuestions {
         // 치킨 거리의 합 반환
         return result;
     }
+
+    /**
+     * 1 <= n <= 200
+     * 1 <= weak.length <= 15
+     * 0 <= weak <= n - 1
+     * 1 <= dist.length <= 8
+     * 1 <= dist <= 100
+     * 제한) 시간: 1초, 메모리: 128MB
+     * https://programmers.co.kr/learn/courses/30/lessons/60062
+     */
+
+    public int 외벽_점검(int n, int[] weak, int[] dist) {
+        LinkedList<Integer> weakQueue = Arrays.stream(weak)
+                .boxed()
+                .collect(Collectors.toCollection(LinkedList::new));
+
+        LinkedList<Integer> weakList = null;
+        int weakPointDist = (int) 1e9;
+        int start = weakQueue.getLast();
+
+        do {
+            int a = weakQueue.getFirst();
+            int b = weakQueue.getLast();
+            int temp = calculateDist(a, b, n, true);
+
+            if (temp < weakPointDist) {
+                weakPointDist = temp;
+                weakList = new LinkedList<>(weakQueue);
+            }
+            weakQueue.add(weakQueue.poll());
+        }
+        while (weakQueue.getFirst() != start);
+
+        for (int i = 0; i < weakList.size(); i++) {
+            if (weakList.get(i) < weakList.getFirst()) {
+                weakList.set(i, weakList.get(i) + n);
+            }
+        }
+
+        boolean flag = true;
+        int tail = weakList.size() - 1;
+
+        LinkedList<Integer> friends = Arrays.stream(dist)
+                .boxed()
+                .sorted()
+                .collect(Collectors.toCollection(LinkedList::new));
+
+        while (true) {
+            if (tail < 0) {
+                break;
+            }
+
+            int a = weakList.getFirst();
+            int b = weakList.get(tail);
+            int temp = b - a;
+
+            if (a != b) {
+                int check = weakList.size();
+                for (int i = 0; i < friends.size(); i++) {
+                    if (temp <= friends.get(i)) {
+                        friends.remove(i);
+                        for (int j = 0; j <= tail; j++) {
+                            weakList.poll();
+                        }
+                        break;
+                    }
+                }
+                if (weakList.size() != check) {
+                    tail = weakList.size() - 1;
+                    continue;
+                }
+            } else {
+                friends.poll();
+                weakList.remove(tail);
+                tail = weakList.size() - 1;
+                continue;
+            }
+            --tail;
+        }
+
+        int answer = dist.length - friends.size();
+        if (answer == 0) {
+            answer = -1;
+        }
+        return answer;
+    }
+
+    public int calculateDist(int a, int b, int n, boolean ls) {
+        int distOne = Math.abs(a - b);
+        int distTwo = n - distOne;
+
+        // true : long distance
+        if (ls) {
+            return Integer.max(distOne, distTwo);
+        }
+        // false : short distance
+        return Integer.min(distOne, distTwo);
+    }
+
+    /**
+     * ver.01) 72.0 / 100.0
+     */
 }

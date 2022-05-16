@@ -220,4 +220,9 @@ class ImplementationQuestionsTest {
                 })
         );
     }
+
+    @Test
+    void 외벽_점검_test() {
+        int result = iq.외벽_점검(12, new int[]{1, 5, 6, 10}, new int[]{1, 2, 3, 4});
+    }
 }
