@@ -913,7 +913,6 @@ public class ImplementationQuestions {
      * 제한) 시간: 1초, 메모리: 128MB
      * https://programmers.co.kr/learn/courses/30/lessons/60062
      */
-
     public int 외벽_점검(int n, int[] weak, int[] dist) {
         LinkedList<Integer> weakQueue = Arrays.stream(weak)
                 .boxed()
@@ -923,6 +922,7 @@ public class ImplementationQuestions {
         int weakPointDist = (int) 1e9;
         int start = weakQueue.getLast();
 
+        // 최대 거리가 가장 짧게 되도록 원을 일자로 펴기
         do {
             int a = weakQueue.getFirst();
             int b = weakQueue.getLast();
@@ -936,22 +936,23 @@ public class ImplementationQuestions {
         }
         while (weakQueue.getFirst() != start);
 
+        // 계산 편하게 하기 위해서 위치 조정
         for (int i = 0; i < weakList.size(); i++) {
             if (weakList.get(i) < weakList.getFirst()) {
                 weakList.set(i, weakList.get(i) + n);
             }
         }
 
-        boolean flag = true;
         int tail = weakList.size() - 1;
 
+        // 친구들의 이동거리 오름차순 정렬
         LinkedList<Integer> friends = Arrays.stream(dist)
                 .boxed()
                 .sorted()
                 .collect(Collectors.toCollection(LinkedList::new));
 
         while (true) {
-            if (tail < 0) {
+            if (tail < 0 || friends.size() == 0) {
                 break;
             }
 
@@ -959,35 +960,41 @@ public class ImplementationQuestions {
             int b = weakList.get(tail);
             int temp = b - a;
 
+            // 두 지점이 다르다면
             if (a != b) {
                 int check = weakList.size();
                 for (int i = 0; i < friends.size(); i++) {
+                    // 친구들의 이동거리가 두 지점의 거리보다 길거나 같다면
                     if (temp <= friends.get(i)) {
+                        // 하나 지우고
                         friends.remove(i);
+                        // 위치에 속하는 지점 모두 지우기
                         for (int j = 0; j <= tail; j++) {
                             weakList.poll();
                         }
                         break;
                     }
                 }
+                // 변경이 있었다면 끝점 조정
                 if (weakList.size() != check) {
                     tail = weakList.size() - 1;
                     continue;
                 }
-            } else {
+            }
+            // 한 개의 지점밖에 갈 수 없다면
+            else {
+                // 가장 짧은 거리 제거
                 friends.poll();
+                // 해당 지점 제거
                 weakList.remove(tail);
+                // 끝점 조정
                 tail = weakList.size() - 1;
                 continue;
             }
             --tail;
         }
 
-        int answer = dist.length - friends.size();
-        if (answer == 0) {
-            answer = -1;
-        }
-        return answer;
+        return weakList.size() != 0 ? -1 : dist.length - friends.size();
     }
 
     public int calculateDist(int a, int b, int n, boolean ls) {
@@ -1004,5 +1011,8 @@ public class ImplementationQuestions {
 
     /**
      * ver.01) 72.0 / 100.0
+     *
+     * 전부 탐색하지 못한 경우 -1을 리턴하는 코드 버그 수정
+     * ver.02) 92.0 / 100.0
      */
 }
