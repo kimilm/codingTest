@@ -1,10 +1,15 @@
 package this_is_coding_test.ch12;
 
+import com.navercorp.fixturemonkey.FixtureMonkey;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestFactory;
+import this_is_coding_test.ch12.fixture.외벽_점검_fixture;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.stream.Stream;
 
 class ImplementationQuestionsTest {
@@ -238,7 +243,55 @@ class ImplementationQuestionsTest {
                     int result = iq.외벽_점검(12, new int[]{1, 10}, new int[]{1});
                     int answer = -1;
                     Assertions.assertThat(result).isEqualTo(answer);
+                }),
+                DynamicTest.dynamicTest("예제 입력 4", () -> {
+                    int result = iq.외벽_점검(12, new int[]{1, 5, 10}, new int[]{8});
+                    int answer = 1;
+                    Assertions.assertThat(result).isEqualTo(answer);
+                }),
+                DynamicTest.dynamicTest("예제 입력 5", () -> {
+                    int result = iq.외벽_점검(200, new int[]{0, 100}, new int[]{1, 1});
+                    int answer = 2;
+                    Assertions.assertThat(result).isEqualTo(answer);
+                }),
+                DynamicTest.dynamicTest("예제 입력 6", () -> {
+                    int result = iq.외벽_점검(12, new int[]{10, 0}, new int[]{1, 2});
+                    int answer = 1;
+                    Assertions.assertThat(result).isEqualTo(answer);
+                }),
+                DynamicTest.dynamicTest("예제 입력 7", () -> {
+                    int result = iq.외벽_점검(30, new int[]{0, 3, 11, 21}, new int[]{10, 4});
+                    int answer = 2;
+                    Assertions.assertThat(result).isEqualTo(answer);
+                }),
+                DynamicTest.dynamicTest("예제 입력 8", () -> {
+                    int result = iq.외벽_점검(200, new int[]{0, 10, 50, 80, 120, 160}, new int[]{1, 10, 5, 40, 30});
+                    int answer = 3;
+                    Assertions.assertThat(result).isEqualTo(answer);
+                }),
+                DynamicTest.dynamicTest("예제 입력 9", () -> {
+                    int result = iq.외벽_점검(12, new int[]{1, 3, 4, 9, 10}, new int[]{1, 3});
+                    int answer = 2;
+                    Assertions.assertThat(result).isEqualTo(answer);
                 })
         );
+    }
+
+    @Test
+    void 외벽_점검_test_with_fixtureMonkey() {
+        FixtureMonkey monkey = FixtureMonkey.create();
+        List<외벽_점검_fixture> wallFixtures = new ArrayList<>();
+
+        while (wallFixtures.size() != 10) {
+            외벽_점검_fixture fixture = monkey.giveMeOne(외벽_점검_fixture.class);
+            if (fixture.getN() > Collections.max(fixture.getWeak())) {
+                wallFixtures.add(fixture);
+            }
+        }
+
+        for (외벽_점검_fixture wallFixture : wallFixtures) {
+            int result = iq.외벽_점검(wallFixture.getN(), wallFixture.getWeakToArray(), wallFixture.getDistToArray());
+            System.out.println(wallFixture + ", result=" + result + "\n");
+        }
     }
 }

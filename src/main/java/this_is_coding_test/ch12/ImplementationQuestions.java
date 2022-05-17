@@ -926,7 +926,8 @@ public class ImplementationQuestions {
         do {
             int a = weakQueue.getFirst();
             int b = weakQueue.getLast();
-            int temp = calculateDist(a, b, n, true);
+//            int temp = calculateDist(a, b, n, true);
+            int temp = circleDist(a, b, n, true);
 
             if (temp < weakPointDist) {
                 weakPointDist = temp;
@@ -937,11 +938,11 @@ public class ImplementationQuestions {
         while (weakQueue.getFirst() != start);
 
         // 계산 편하게 하기 위해서 위치 조정
-        for (int i = 0; i < weakList.size(); i++) {
-            if (weakList.get(i) < weakList.getFirst()) {
-                weakList.set(i, weakList.get(i) + n);
-            }
-        }
+//        for (int i = 0; i < weakList.size(); i++) {
+//            if (weakList.get(i) < weakList.getFirst()) {
+//                weakList.set(i, weakList.get(i) + n);
+//            }
+//        }
 
         int tail = weakList.size() - 1;
 
@@ -958,7 +959,8 @@ public class ImplementationQuestions {
 
             int a = weakList.getFirst();
             int b = weakList.get(tail);
-            int temp = b - a;
+//            int temp = b - a;
+            int temp = circleDist(a, b, n, true);
 
             // 두 지점이 다르다면
             if (a != b) {
@@ -966,10 +968,14 @@ public class ImplementationQuestions {
                 for (int i = 0; i < friends.size(); i++) {
                     // 친구들의 이동거리가 두 지점의 거리보다 길거나 같다면
                     if (temp <= friends.get(i)) {
+                        //log
+                        System.out.println("\n" + friends.get(i) + "로");
                         // 하나 지우고
                         friends.remove(i);
                         // 위치에 속하는 지점 모두 지우기
                         for (int j = 0; j <= tail; j++) {
+                            //log
+                            System.out.println(weakList.peek() + "점검");
                             weakList.poll();
                         }
                         break;
@@ -983,8 +989,12 @@ public class ImplementationQuestions {
             }
             // 한 개의 지점밖에 갈 수 없다면
             else {
+                //log
+                System.out.println("\n" + friends.peek() + "로");
                 // 가장 짧은 거리 제거
                 friends.poll();
+                //log
+                System.out.println(weakList.get(tail) + "점검");
                 // 해당 지점 제거
                 weakList.remove(tail);
                 // 끝점 조정
@@ -1011,8 +1021,51 @@ public class ImplementationQuestions {
 
     /**
      * ver.01) 72.0 / 100.0
-     *
+     * <p>
      * 전부 탐색하지 못한 경우 -1을 리턴하는 코드 버그 수정
      * ver.02) 92.0 / 100.0
+     * <p>
+     * fixture monkey를 적용해서 여러 상황을 확인해보았으나 실패하는 케이스를 찾기가 어려웠음.
+     * 케이스 탐색 도중 다른 풀이가 생각나서 다시 풀어봄
      */
+
+    // wise true : 시계방향
+    public int nextInCircle(int a, int n, boolean wise) {
+        a = wise ? a + 1 : a - 1;
+        if (a == -1) {
+            a = n - 1;
+        } else if (a == n) {
+            a = 0;
+        }
+        return a;
+    }
+
+    // a -> b 원형 거리
+    public int circleDist(int a, int b, int n, boolean wise) {
+        int result = 0;
+        while (a != b) {
+            a = nextInCircle(a, n, wise);
+            ++result;
+        }
+        return result;
+    }
+
+    // 시계, 반시계 방향으로 진행시 node 부터 dist 까지 존재하는 다른 취약점
+    public TreeSet<Integer> circleContains(TreeSet<Integer> weak, int node, int dist, int n, boolean wise) {
+        TreeSet<Integer> contains = new TreeSet<>();
+        int endPoint = nextInCircle(node + dist, n, wise);
+
+        contains.add(node);
+        // 끝 지점을 계산, 시계방향은 -1, 반시계방향은 +1로 값 조정
+        endPoint = wise ? endPoint - 1 : endPoint + 1;
+
+        while (node != endPoint) {
+            node = nextInCircle(node, n, wise);
+            if (weak.contains(node)) {
+                contains.add(node);
+            }
+        }
+
+        return contains;
+    }
 }
