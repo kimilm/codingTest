@@ -1029,13 +1029,61 @@ public class ImplementationQuestions {
      * 케이스 탐색 도중 다른 풀이가 생각나서 다시 풀어봄
      */
 
+    public int 외벽_점검_2(int n, int[] weak, int[] dist) {
+        TreeSet<Integer> weakSet = Arrays.stream(weak)
+                .boxed()
+                .collect(Collectors.toCollection(TreeSet::new));
+        LinkedList<Integer> distQueue = Arrays.stream(dist)
+                .boxed()
+                .sorted(Collections.reverseOrder())
+                .collect(Collectors.toCollection(LinkedList::new));
+
+        int distSize = dist.length;
+
+        // distQueue 나 weakSet 둘 중 하나라도 비어있다면 종료
+        while (!distQueue.isEmpty() && !weakSet.isEmpty()) {
+            LinkedList<Integer> queue = new LinkedList<>(weakSet);
+            LinkedList<Integer> contains = new LinkedList<>();
+
+            // 모든 취약지점에 대해서
+            for (int i = 0; i < queue.size(); i++) {
+                int node = queue.peek();
+                // 일단 시계방향만 체크
+                LinkedList<Integer> tempContains = circleContains(weakSet, node, distQueue.peek(), n, true);
+
+                // 크기가 같다면 남은 지점의 거리가 짧은 조합으로 변경
+                if (contains.size() == tempContains.size()) {
+                    int distCurrent = circleDist(contains.getFirst(), contains.getLast(), n, true);
+                    int distTemp = circleDist(tempContains.getFirst(), tempContains.getLast(), n, true);
+
+                    if (distTemp < distCurrent) {
+                        contains = tempContains;
+                    }
+                }
+                // 크기가 더 크다면 변경
+                else if (contains.size() < tempContains.size()) {
+                    contains = tempContains;
+                }
+
+                queue.add(queue.poll());
+            }
+
+            // 거리 내부에 포함되는 취약지점 제거
+            contains.forEach(weakSet::remove);
+            distQueue.poll();
+        }
+
+        // weakSet 이 비어있다면 모든 지점을 탐색한 것, 아니라면 -1 리턴
+        return weakSet.isEmpty() ? distSize - distQueue.size() : -1;
+    }
+
     // wise true : 시계방향
     public int nextInCircle(int a, int n, boolean wise) {
         a = wise ? a + 1 : a - 1;
         if (a == -1) {
             a = n - 1;
-        } else if (a == n) {
-            a = 0;
+        } else if (a >= n) {
+            a %= n;
         }
         return a;
     }
@@ -1051,13 +1099,14 @@ public class ImplementationQuestions {
     }
 
     // 시계, 반시계 방향으로 진행시 node 부터 dist 까지 존재하는 다른 취약점
-    public TreeSet<Integer> circleContains(TreeSet<Integer> weak, int node, int dist, int n, boolean wise) {
-        TreeSet<Integer> contains = new TreeSet<>();
+    public LinkedList<Integer> circleContains(TreeSet<Integer> weak, int node, int dist, int n, boolean wise) {
+        LinkedList<Integer> contains = new LinkedList<>();
+
+        // 끝 지점을 계산, 시계방향은 -1, 반시계방향은 +1로 값 조정
         int endPoint = nextInCircle(node + dist, n, wise);
+        endPoint = nextInCircle(endPoint, n, !wise);
 
         contains.add(node);
-        // 끝 지점을 계산, 시계방향은 -1, 반시계방향은 +1로 값 조정
-        endPoint = wise ? endPoint - 1 : endPoint + 1;
 
         while (node != endPoint) {
             node = nextInCircle(node, n, wise);
@@ -1068,4 +1117,12 @@ public class ImplementationQuestions {
 
         return contains;
     }
+
+    /**
+     * 전반적인 수행시간이 크게 줄었음 (평균적으로 절반 이상)
+     * 먼저 풀이에서 틀렸던 6번 케이스를 통과함
+     * 하지만 21번 케이스는 여전히 통과하지 못했음
+     * 이외에도 다른 여러 케이스를 통과하지 못함
+     * ver.03) 72.0 / 100.0
+     */
 }
