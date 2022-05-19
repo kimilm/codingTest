@@ -1044,25 +1044,32 @@ public class ImplementationQuestions {
         while (!distQueue.isEmpty() && !weakSet.isEmpty()) {
             LinkedList<Integer> queue = new LinkedList<>(weakSet);
             LinkedList<Integer> contains = new LinkedList<>();
+            LinkedList<Integer> leaves = new LinkedList<>();
+
 
             // 모든 취약지점에 대해서
             for (int i = 0; i < queue.size(); i++) {
                 int node = queue.peek();
                 // 일단 시계방향만 체크
                 LinkedList<Integer> tempContains = circleContains(weakSet, node, distQueue.peek(), n, true);
+                LinkedList<Integer> tempLeaves = new LinkedList<>(queue);
+                tempLeaves.removeAll(tempContains);
 
                 // 크기가 같다면 남은 지점의 거리가 짧은 조합으로 변경
                 if (contains.size() == tempContains.size()) {
-                    int distCurrent = circleDist(contains.getFirst(), contains.getLast(), n, true);
-                    int distTemp = circleDist(tempContains.getFirst(), tempContains.getLast(), n, true);
+
+                    int distCurrent = circleDist(leaves.getFirst(), leaves.getLast(), n, true);
+                    int distTemp = circleDist(tempLeaves.getFirst(), tempLeaves.getLast(), n, true);
 
                     if (distTemp < distCurrent) {
                         contains = tempContains;
+                        leaves = tempLeaves;
                     }
                 }
                 // 크기가 더 크다면 변경
                 else if (contains.size() < tempContains.size()) {
                     contains = tempContains;
+                    leaves = tempLeaves;
                 }
 
                 queue.add(queue.poll());
@@ -1080,10 +1087,11 @@ public class ImplementationQuestions {
     // wise true : 시계방향
     public int nextInCircle(int a, int n, boolean wise) {
         a = wise ? a + 1 : a - 1;
-        if (a == -1) {
-            a = n - 1;
+        a %= n;
+        if (a < 0) {
+            a += n;
         } else if (a >= n) {
-            a %= n;
+            a -= n;
         }
         return a;
     }
@@ -1119,10 +1127,14 @@ public class ImplementationQuestions {
     }
 
     /**
+     * ver.03) 72.0 / 100.0
      * 전반적인 수행시간이 크게 줄었음 (평균적으로 절반 이상)
      * 먼저 풀이에서 틀렸던 6번 케이스를 통과함
      * 하지만 21번 케이스는 여전히 통과하지 못했음
      * 이외에도 다른 여러 케이스를 통과하지 못함
-     * ver.03) 72.0 / 100.0
+     *
+     * ver.04) 92.0 / 100.0
+     * 잘못된 코드를 수정함
+     * 21번 케이스는 여전히 통과하지 못함
      */
 }
