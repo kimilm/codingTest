@@ -1056,8 +1056,7 @@ public class ImplementationQuestions {
                 tempLeaves.removeAll(tempContains);
 
                 // 크기가 같다면 남은 지점의 거리가 짧은 조합으로 변경
-                if (contains.size() == tempContains.size()) {
-
+                if (contains.size() == tempContains.size() && !tempLeaves.isEmpty()) {
                     int distCurrent = circleDist(leaves.getFirst(), leaves.getLast(), n, true);
                     int distTemp = circleDist(tempLeaves.getFirst(), tempLeaves.getLast(), n, true);
 
