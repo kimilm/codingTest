@@ -230,47 +230,47 @@ class ImplementationQuestionsTest {
     Stream<DynamicTest> 외벽_점검_test() {
         return Stream.of(
                 DynamicTest.dynamicTest("예제 입력 1", () -> {
-                    int result = iq.외벽_점검_2(12, new int[]{1, 5, 6, 10}, new int[]{1, 2, 3, 4});
+                    int result = iq.외벽_점검_3(12, new int[]{1, 5, 6, 10}, new int[]{1, 2, 3, 4});
                     int answer = 2;
                     Assertions.assertThat(result).isEqualTo(answer);
                 }),
                 DynamicTest.dynamicTest("예제 입력 2", () -> {
-                    int result = iq.외벽_점검_2(12, new int[]{1, 3, 4, 9, 10}, new int[]{3, 5, 7});
+                    int result = iq.외벽_점검_3(12, new int[]{1, 3, 4, 9, 10}, new int[]{3, 5, 7});
                     int answer = 1;
                     Assertions.assertThat(result).isEqualTo(answer);
                 }),
                 DynamicTest.dynamicTest("예제 입력 3", () -> {
-                    int result = iq.외벽_점검_2(12, new int[]{1, 10}, new int[]{1});
+                    int result = iq.외벽_점검_3(12, new int[]{1, 10}, new int[]{1});
                     int answer = -1;
                     Assertions.assertThat(result).isEqualTo(answer);
                 }),
                 DynamicTest.dynamicTest("예제 입력 4", () -> {
-                    int result = iq.외벽_점검_2(12, new int[]{1, 5, 10}, new int[]{8});
+                    int result = iq.외벽_점검_3(12, new int[]{1, 5, 10}, new int[]{8});
                     int answer = 1;
                     Assertions.assertThat(result).isEqualTo(answer);
                 }),
                 DynamicTest.dynamicTest("예제 입력 5", () -> {
-                    int result = iq.외벽_점검_2(200, new int[]{0, 100}, new int[]{1, 1});
+                    int result = iq.외벽_점검_3(200, new int[]{0, 100}, new int[]{1, 1});
                     int answer = 2;
                     Assertions.assertThat(result).isEqualTo(answer);
                 }),
                 DynamicTest.dynamicTest("예제 입력 6", () -> {
-                    int result = iq.외벽_점검_2(12, new int[]{10, 0}, new int[]{1, 2});
+                    int result = iq.외벽_점검_3(12, new int[]{10, 0}, new int[]{1, 2});
                     int answer = 1;
                     Assertions.assertThat(result).isEqualTo(answer);
                 }),
                 DynamicTest.dynamicTest("예제 입력 7", () -> {
-                    int result = iq.외벽_점검_2(30, new int[]{0, 3, 11, 21}, new int[]{10, 4});
+                    int result = iq.외벽_점검_3(30, new int[]{0, 3, 11, 21}, new int[]{10, 4});
                     int answer = 2;
                     Assertions.assertThat(result).isEqualTo(answer);
                 }),
                 DynamicTest.dynamicTest("예제 입력 8", () -> {
-                    int result = iq.외벽_점검_2(200, new int[]{0, 10, 50, 80, 120, 160}, new int[]{1, 10, 5, 40, 30});
+                    int result = iq.외벽_점검_3(200, new int[]{0, 10, 50, 80, 120, 160}, new int[]{1, 10, 5, 40, 30});
                     int answer = 3;
                     Assertions.assertThat(result).isEqualTo(answer);
                 }),
                 DynamicTest.dynamicTest("예제 입력 9", () -> {
-                    int result = iq.외벽_점검_2(12, new int[]{1, 3, 4, 9, 10}, new int[]{1, 3});
+                    int result = iq.외벽_점검_3(12, new int[]{1, 3, 4, 9, 10}, new int[]{1, 3});
                     int answer = 2;
                     Assertions.assertThat(result).isEqualTo(answer);
                 })

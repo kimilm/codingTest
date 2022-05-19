@@ -968,14 +968,10 @@ public class ImplementationQuestions {
                 for (int i = 0; i < friends.size(); i++) {
                     // 친구들의 이동거리가 두 지점의 거리보다 길거나 같다면
                     if (temp <= friends.get(i)) {
-                        //log
-                        System.out.println("\n" + friends.get(i) + "로");
                         // 하나 지우고
                         friends.remove(i);
                         // 위치에 속하는 지점 모두 지우기
                         for (int j = 0; j <= tail; j++) {
-                            //log
-                            System.out.println(weakList.peek() + "점검");
                             weakList.poll();
                         }
                         break;
@@ -989,12 +985,8 @@ public class ImplementationQuestions {
             }
             // 한 개의 지점밖에 갈 수 없다면
             else {
-                //log
-                System.out.println("\n" + friends.peek() + "로");
                 // 가장 짧은 거리 제거
                 friends.poll();
-                //log
-                System.out.println(weakList.get(tail) + "점검");
                 // 해당 지점 제거
                 weakList.remove(tail);
                 // 끝점 조정
@@ -1005,18 +997,6 @@ public class ImplementationQuestions {
         }
 
         return weakList.size() != 0 ? -1 : dist.length - friends.size();
-    }
-
-    public int calculateDist(int a, int b, int n, boolean ls) {
-        int distOne = Math.abs(a - b);
-        int distTwo = n - distOne;
-
-        // true : long distance
-        if (ls) {
-            return Integer.max(distOne, distTwo);
-        }
-        // false : short distance
-        return Integer.min(distOne, distTwo);
     }
 
     /**
@@ -1131,9 +1111,74 @@ public class ImplementationQuestions {
      * 먼저 풀이에서 틀렸던 6번 케이스를 통과함
      * 하지만 21번 케이스는 여전히 통과하지 못했음
      * 이외에도 다른 여러 케이스를 통과하지 못함
-     *
+     * <p>
      * ver.04) 92.0 / 100.0
      * 잘못된 코드를 수정함
      * 21번 케이스는 여전히 통과하지 못함
+     */
+
+    public int 외벽_점검_3(int n, int[] weak, int[] dist) {
+        LinkedList<Integer> weakQueue = Arrays.stream(weak)
+                .boxed()
+                .collect(Collectors.toCollection(LinkedList::new));
+        LinkedList<Integer> distQueue = Arrays.stream(dist)
+                .boxed()
+                .sorted()
+                .collect(Collectors.toCollection(LinkedList::new));
+
+        List<Integer> answer = new ArrayList<>();
+
+        for (int i = 0; i < weak.length; i++) {
+            int result = circleCheck(weakQueue, distQueue, n);
+            answer.add(result);
+
+            weakQueue.add(weakQueue.poll());
+        }
+
+        return answer.stream()
+                .filter(result -> result > -1)
+                .mapToInt(i -> i)
+                .min()
+                .orElse(-1);
+    }
+
+    public int circleCheck(LinkedList<Integer> weak, LinkedList<Integer> dist, int n) {
+        LinkedList<Integer> weakQueue = new LinkedList<>(weak);
+        LinkedList<Integer> distQueue = new LinkedList<>(dist);
+        int tail = weakQueue.size();
+
+        while (tail > 0 && !distQueue.isEmpty() && !weakQueue.isEmpty()) {
+            int start = weakQueue.peek();
+            int end = weakQueue.get(--tail);
+
+            if (start != end) {
+                int cwDist = circleDist(start, end, n, true);
+                for (int i = 0; i < distQueue.size(); i++) {
+                    if (cwDist <= distQueue.get(i)) {
+                        distQueue.remove(i);
+                        while (weakQueue.peek() != end) {
+                            weakQueue.poll();
+                        }
+                        weakQueue.poll();
+                        tail = weakQueue.size();
+                        break;
+                    }
+                }
+            } else {
+                distQueue.poll();
+                weakQueue.poll();
+                tail = weakQueue.size();
+            }
+        }
+
+        return weakQueue.isEmpty() ? dist.size() - distQueue.size() : -1;
+    }
+
+    /**
+     * ver.05)
+     * 가장 먼저 짠 코드를 다시 다듬는 과정에서 테스트코드 7번을 통과하지 못하는 현상을 발견
+     * 디버그를 통해 기존의 접근법이 잘못되었음을 확인함
+     * 기존) 두 점 사이 거리가 가장 먼 지점을 탐색하고 다른 경우의 수를 배제함
+     * 수정) 각각의 취약 포인트를 시작지점으로 하여 모든 경우를 탐색함
      */
 }
