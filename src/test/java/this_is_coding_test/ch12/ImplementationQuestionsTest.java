@@ -2,6 +2,7 @@ package this_is_coding_test.ch12;
 
 import com.navercorp.fixturemonkey.FixtureMonkey;
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestFactory;
@@ -12,6 +13,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Stream;
 
+@Disabled
 class ImplementationQuestionsTest {
 
     private final ImplementationQuestions iq = new ImplementationQuestions();
