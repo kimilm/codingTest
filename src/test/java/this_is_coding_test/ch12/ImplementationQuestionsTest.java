@@ -230,12 +230,12 @@ class ImplementationQuestionsTest {
     Stream<DynamicTest> 외벽_점검_test() {
         return Stream.of(
                 DynamicTest.dynamicTest("예제 입력 1", () -> {
-                    int result = iq.외벽_점검_3(12, new int[]{1, 5, 6, 10}, new int[]{1, 2, 3, 4});
+                    int result = iq.외벽_점검_4(12, new int[]{1, 5, 6, 10}, new int[]{1, 2, 3, 4});
                     int answer = 2;
                     Assertions.assertThat(result).isEqualTo(answer);
                 }),
                 DynamicTest.dynamicTest("예제 입력 2", () -> {
-                    int result = iq.외벽_점검_3(12, new int[]{1, 3, 4, 9, 10}, new int[]{3, 5, 7});
+                    int result = iq.외벽_점검_4(12, new int[]{1, 3, 4, 9, 10}, new int[]{3, 5, 7});
                     int answer = 1;
                     Assertions.assertThat(result).isEqualTo(answer);
                 }),
@@ -294,4 +294,5 @@ class ImplementationQuestionsTest {
             System.out.println(wallFixture + ", result=" + result + "\n");
         }
     }
+
 }

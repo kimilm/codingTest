@@ -808,6 +808,8 @@ public class ImplementationQuestions {
             resultList.add(IntStream.range(0, n)
                     .filter(idx -> visited[idx])
                     .toArray());
+
+            return resultList;
         }
 
         for (int i = start; i < n; i++) {
@@ -1181,4 +1183,72 @@ public class ImplementationQuestions {
      * 기존) 두 점 사이 거리가 가장 먼 지점을 탐색하고 다른 경우의 수를 배제함
      * 수정) 각각의 취약 포인트를 시작지점으로 하여 모든 경우를 탐색함
      */
+
+    /**
+     * 이 문제의 제한 조건중 weak, dist 리스트의 길이가 매우 작음 -> 완전 탐색으로 접근
+     * 찾고자 하는 값은 '투입해야 하는 친구 수의 최솟값', 전체 친구의 수는 최대 8
+     * -> 모든 친구를 무작위로 나열하는 모든 순열 8P8 = 8! = 40_320 충분히 계산 가능
+     * 원형으로 나열된 데이터 처리시 문제 풀이를 간단히 하기 위해 길이를 2배로 늘려서 원형을 일자로 늘리면 작업이 유리해짐
+     * 취약지점: [1, 3, 4, 9, 10] --두 번 나열--> [1, 3, 4, 9, 10, 13, 15, 16, 21, 22]
+     * 친구: [3, 5, 7] --모든 경우의 수--> 3! = 6가지
+     * 일자로 나열된 취약지점중 원래 취약지점 5개를 탐색 가능한 경우를 리턴
+     * <p>
+     * 성능은 내가 풀었던게 더 좋게 나오긴 했음
+     */
+
+    public int 외벽_점검_4(int n, int[] weak, int[] dist) {
+        List<Integer> weakList = new ArrayList<>();
+        // 길이를 2배로 늘려서 원형을 일자 형태로 변형
+        Arrays.stream(weak).forEach(weakList::add);
+        Arrays.stream(weak).map(i -> i + n).forEach(weakList::add);
+
+        // 투입할 친구 수의 최솟값을 찾아야 함, dist.length + 1로 초기화
+        int answer = dist.length + 1;
+
+        // 0부터 weak.length - 1 까지의 위치를 각각 시작점으로 설정
+        for (int start = 0; start < weak.length; ++start) {
+            for (int[] friends : permutation(dist, new int[dist.length], new boolean[dist.length], 0, dist.length, dist.length)) {
+                // 투입할 친구의 수
+                int count = 1;
+                // 해당 친구가 점검할 수 있는 마지막 위치
+                int position = weakList.get(start) + friends[count - 1];
+                // 시작점부터 모든 취약 지점을 확인
+                for (int index = start; index < start + weak.length; ++index) {
+                    // 점검할 수 있는 위치를 벗어나는 경우
+                    if (position < weakList.get(index)) {
+                        // 새로운 친구 투입
+                        ++count;
+                        // 더 투입할 수 없다면 종료
+                        if (count > dist.length) {
+                            break;
+                        }
+                        position = weakList.get(index) + friends[count - 1];
+                    }
+                }
+                // 최솟값 계산
+                answer = Integer.min(answer, count);
+            }
+        }
+        return answer > dist.length ? -1 : answer;
+    }
+
+    public List<int[]> permutation(int[] arr, int[] output, boolean[] visited, int depth, int n, int r) {
+        List<int[]> list = new ArrayList<>();
+        if (depth == r) {
+            list.add(Arrays.stream(output, 0, r)
+                    .toArray());
+            return list;
+        }
+
+        for (int i = 0; i < n; i++) {
+            if (!visited[i]) {
+                visited[i] = true;
+                output[depth] = arr[i];
+                list.addAll(permutation(arr, output, visited, depth + 1, n, r));
+                visited[i] = false;
+            }
+        }
+
+        return list;
+    }
 }
