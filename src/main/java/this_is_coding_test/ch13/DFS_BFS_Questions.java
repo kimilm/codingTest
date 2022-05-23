@@ -30,11 +30,12 @@ public class DFS_BFS_Questions {
 
         int[] distArray = new int[n + 1];
         Arrays.fill(distArray, (int) 1e9);
+        distArray[x] = 0;
 
         Queue<int[]> queue = new LinkedList<>();
         queue.add(new int[]{x, 1});
 
-        for (int i = 0; i < k; ++i) {
+        while (!queue.isEmpty()) {
             int[] entity = queue.poll();
             int node = entity[0];
             int dist = entity[1];
@@ -42,8 +43,8 @@ public class DFS_BFS_Questions {
             for (int city : graph.get(node)) {
                 if (dist < distArray[city]) {
                     distArray[city] = dist;
+                    queue.add(new int[]{city, dist + 1});
                 }
-                queue.add(new int[]{city, dist + 1});
             }
         }
 
