@@ -801,7 +801,7 @@ public class ImplementationQuestions {
         return answer;
     }
 
-    public List<int[]> combination(boolean[] visited, int start, int n, int r) {
+    public static List<int[]> combination(boolean[] visited, int start, int n, int r) {
         List<int[]> resultList = new ArrayList<>();
 
         if (r == 0) {

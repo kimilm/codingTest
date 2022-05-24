@@ -1,7 +1,10 @@
 package this_is_coding_test.ch13;
 
 import java.util.*;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+
+import static this_is_coding_test.ch12.ImplementationQuestions.combination;
 
 public class DFS_BFS_Questions {
 
@@ -101,5 +104,112 @@ public class DFS_BFS_Questions {
             return new int[]{-1};
         }
         return answer;
+    }
+
+    /**
+     * 난이도: 중
+     * 3 <= N, M <= 8
+     * 3 <= 빈칸의 개수
+     * 2 <= 바이러스의 개수 <= 10
+     * 제한) 시간: 2초, 메모리: 512MB
+     * https://www.acmicpc.net/problem/14502
+     */
+    public int 연구소(int n, int m, String[] rows) {
+        int count = n * m;
+        int[][] map = Arrays.stream(rows)
+                .map(row -> Arrays.stream(row.split(" "))
+                        .mapToInt(Integer::parseInt).toArray())
+                .toArray(int[][]::new);
+        List<int[]> combinations = combination(new boolean[count], 0, count, 3).stream()
+                .filter(values -> {
+                    boolean flag = true;
+                    for (int value : values) {
+                        int[] rowcol = intToPoint(m, value);
+                        if (map[rowcol[0]][rowcol[1]] != 0) {
+                            flag = false;
+                        }
+                    }
+                    return flag;
+                }).collect(Collectors.toList());
+
+        List<int[]> virusLocation = findVirus(map);
+        int answer = Integer.MIN_VALUE;
+
+        for (int[] combination : combinations) {
+            int[][] tempMap = arrayCopy(map);
+            Arrays.stream(combination)
+                    .mapToObj(value -> intToPoint(m, value))
+                    .forEach(value -> tempMap[value[0]][value[1]] = 1);
+
+            pandemic(tempMap, virusLocation);
+
+            answer = Integer.max(answer, (int) Arrays.stream(tempMap)
+                    .flatMapToInt(Arrays::stream)
+                    .filter(x -> x == 0).count());
+        }
+
+        return answer;
+    }
+
+    public int[][] arrayCopy(int[][] map) {
+        int[][] array = new int[map.length][];
+        for (int i = 0; i < map.length; ++i) {
+            array[i] = map[i].clone();
+        }
+        return array;
+    }
+
+    public int[] intToPoint(int m, int value) {
+        int row = value / m;
+        int col = value % m;
+        return new int[]{row, col};
+    }
+
+    public List<int[]> findVirus(int[][] map) {
+        List<int[]> virus = new ArrayList<>();
+        for (int i = 0; i < map.length; i++) {
+            for (int j = 0; j < map[i].length; j++) {
+                if (map[i][j] == 2) {
+                    virus.add(new int[]{i, j});
+                }
+            }
+        }
+        return virus;
+    }
+
+    public void pandemic(int[][] map, List<int[]> virus) {
+        int n = map.length;
+        int m = map[0].length;
+        Queue<int[]> queue = new LinkedList<>();
+
+        for (int[] value : virus) {
+            queue.addAll(directions(value));
+        }
+
+        while (!queue.isEmpty()) {
+            int[] location = queue.poll();
+            if (inRange(n, m, location)) {
+                if (map[location[0]][location[1]] == 0) {
+                    map[location[0]][location[1]] = 2;
+                    queue.addAll(directions(location));
+                }
+            }
+        }
+    }
+
+    public boolean inRange(int n, int m, int[] location) {
+        return !(location[0] < 0 || location[1] < 0 || location[0] == n || location[1] == m);
+    }
+
+    public List<int[]> directions(int[] location) {
+        int[] dx = new int[]{-1, 1, 0, 0};
+        int[] dy = new int[]{0, 0, -1, 1};
+
+        return List.of(
+                new int[]{location[0] + dx[0], location[1] + dy[0]},
+                new int[]{location[0] + dx[1], location[1] + dy[1]},
+                new int[]{location[0] + dx[2], location[1] + dy[2]},
+                new int[]{location[0] + dx[3], location[1] + dy[3]}
+        );
     }
 }
