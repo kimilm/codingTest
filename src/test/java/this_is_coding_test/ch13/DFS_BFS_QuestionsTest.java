@@ -45,7 +45,7 @@ class DFS_BFS_QuestionsTest {
     Stream<DynamicTest> 연구소() {
         return Stream.of(
                 DynamicTest.dynamicTest("예제 입력 1", () -> {
-                    int result = dbq.연구소(7, 7,
+                    int result = dbq.연구소_2(7, 7,
                             new String[]{
                                     "2 0 0 0 1 1 0",
                                     "0 0 1 0 1 2 0",
@@ -59,7 +59,7 @@ class DFS_BFS_QuestionsTest {
                     Assertions.assertThat(result).isEqualTo(answer);
                 }),
                 DynamicTest.dynamicTest("예제 입력 2", () -> {
-                    int result = dbq.연구소(4, 6,
+                    int result = dbq.연구소_2(4, 6,
                             new String[]{
                                     "0 0 0 0 0 0",
                                     "1 0 0 0 0 2",
@@ -70,7 +70,7 @@ class DFS_BFS_QuestionsTest {
                     Assertions.assertThat(result).isEqualTo(answer);
                 }),
                 DynamicTest.dynamicTest("예제 입력 3", () -> {
-                    int result = dbq.연구소(8, 8,
+                    int result = dbq.연구소_2(8, 8,
                             new String[]{
                                     "2 0 0 0 0 0 0 2",
                                     "2 0 0 0 0 0 0 2",

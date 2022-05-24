@@ -212,4 +212,105 @@ public class DFS_BFS_Questions {
                 new int[]{location[0] + dx[3], location[1] + dy[3]}
         );
     }
+
+    /**
+     * 최대 크기는 8 * 8, 설치하는 벽은 3개, 64 C 3 < 100_000 모든 경우의 수를 고려해도 제한시간 내에 가능함
+     * 조합은 dfs, bfs 를 통해 구할 수 있고, 안전 영역의 크기 또한 dfs, dbf 를 이용하여 계산할 수 있다.
+     * 풀이 과정은 해답지의 접근방식과 동일했음
+     */
+
+    // 4가지 이동 방향에 대한 리스트
+    int[] dx = new int[]{-1, 0, 1, 0};
+    int[] dy = new int[]{0, 1, 0, -1};
+    // 초기 맵 리스트
+    int[][] data;
+    // 벽을 설치한 뒤의 맵 리스트
+    int[][] temp;
+    // 크기
+    int globalN, globalM;
+    // 결과
+    int result = 0;
+
+    public int 연구소_2(int n, int m, String[] rows) {
+        // 초기 맵 리스트
+        data = Arrays.stream(rows)
+                .map(row -> Arrays.stream(row.split(" "))
+                        .mapToInt(Integer::parseInt).toArray())
+                .toArray(int[][]::new);
+        // 벽을 설치한 뒤의 맵 리스트
+        temp = new int[n][m];
+        // 크기
+        globalN = n;
+        globalM = m;
+
+        result = 0;
+
+        dfs(0);
+
+        return result;
+    }
+
+    // 깊이 우선 탑색(dfs)을 이용해 각 바이러스가 사방으로 퍼지도록 하기
+    public void virus(int x, int y) {
+        for (int i = 0; i < 4; ++i) {
+            int nx = x + dx[i];
+            int ny = y + dy[i];
+            // 상, 하, 좌, 우 중에서 바이러스가 퍼질 수 있는 경우
+            if (nx >= 0 && nx < globalN && ny >= 0 && ny < globalM) {
+                if (temp[nx][ny] == 0) {
+                    // 해당 위치에 바이러스를 배치하고, 다시 재귀적으로 수행
+                    temp[nx][ny] = 2;
+                    virus(nx, ny);
+                }
+            }
+        }
+    }
+
+    // 현재 맵에서 안전 영역의 크기 계산하는 메서드
+    public int get_score() {
+        int score = 0;
+        for (int i = 0; i < globalN; i++) {
+            for (int j = 0; j < globalM; j++) {
+                if (temp[i][j] == 0) {
+                    ++score;
+                }
+            }
+        }
+        return score;
+    }
+
+    // 깊이 우선 탐색(dfs)를 이용해 울타리를 설치하면서 매번 안전 영역의 크기 계산
+    public void dfs(int count) {
+        // 울타리가 3개 설치됨
+        if (count == 3) {
+            for (int i = 0; i < globalN; i++) {
+                for (int j = 0; j < globalM; j++) {
+                    temp[i][j] = data[i][j];
+                }
+            }
+            // 각 바이러스의 위치에서 전파 진행
+            for (int i = 0; i < globalN; i++) {
+                for (int j = 0; j < globalM; j++) {
+                    if (temp[i][j] == 2) {
+                        virus(i, j);
+                    }
+                }
+            }
+            // 안전 영역의 최댓값 계산
+            result = Integer.max(result, get_score());
+            return;
+        }
+        // 빈 공간에 울타리 설치
+        for (int i = 0; i < globalN; i++) {
+            for (int j = 0; j < globalM; j++) {
+                if (data[i][j] == 0) {
+                    data[i][j] = 1;
+                    ++count;
+                    dfs(count);
+                    data[i][j] = 0;
+                    --count;
+                }
+            }
+        }
+    }
 }
