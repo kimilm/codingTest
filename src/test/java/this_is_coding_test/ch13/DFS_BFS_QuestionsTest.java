@@ -86,4 +86,30 @@ class DFS_BFS_QuestionsTest {
                 })
         );
     }
+
+    @TestFactory
+    Stream<DynamicTest> 경쟁적_전염() {
+        return Stream.of(
+                DynamicTest.dynamicTest("예제 입력 1", () -> {
+                    int result = dbq.경쟁적_전염(3, 3, new String[]{
+                            "1 0 2",
+                            "0 0 0",
+                            "3 0 0",
+                            "2 3 2"
+                    });
+                    int answer = 3;
+                    Assertions.assertThat(result).isEqualTo(answer);
+                }),
+                DynamicTest.dynamicTest("예제 입력 2", () -> {
+                    int result = dbq.경쟁적_전염(3, 3, new String[]{
+                            "1 0 2",
+                            "0 0 0",
+                            "3 0 0",
+                            "1 2 2"
+                    });
+                    int answer = 0;
+                    Assertions.assertThat(result).isEqualTo(answer);
+                })
+        );
+    }
 }

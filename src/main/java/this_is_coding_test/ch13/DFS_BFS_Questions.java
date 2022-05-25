@@ -313,4 +313,62 @@ public class DFS_BFS_Questions {
             }
         }
     }
+
+    /**
+     * 난이도: 중
+     * 1 <= N <= 200
+     * 1 <= K <= 1_000
+     * 제한) 시간: 1초, 메모리: 256MB
+     * https://www.acmicpc.net/problem/18405
+     */
+    public int 경쟁적_전염(int n, int k, String[] data) {
+        int[][] testTube = new int[n][];
+        for (int i = 0; i < n; i++) {
+            testTube[i] = Arrays.stream(data[i].split(" ")).mapToInt(Integer::parseInt).toArray();
+        }
+
+        int[] sxy = Arrays.stream(data[n].split(" ")).mapToInt(Integer::parseInt).toArray();
+
+        // [시간, 바이러스 번호, x, y]
+        PriorityQueue<int[]> pq = new PriorityQueue<>((o1, o2) -> {
+            if (o1[0] != o2[0]) {
+                return o1[0] - o2[0];
+            }
+            return o1[1] - o2[1];
+        });
+
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                if (testTube[i][j] != 0) {
+                    pq.add(new int[]{0, testTube[i][j], i, j});
+                }
+            }
+        }
+
+        int[] dx = new int[]{-1, 1, 0, 0};
+        int[] dy = new int[]{0, 0, -1, 1};
+
+        while(!pq.isEmpty() && pq.peek()[0] < sxy[0]) {
+            int[] virus = pq.poll();
+
+            int time = virus[0];
+            int type = virus[1];
+            int x = virus[2];
+            int y = virus[3];
+
+            for (int i = 0; i < 4; i++) {
+                int nx = x + dx[i];
+                int ny = y + dy[i];
+
+                if (nx >= 0 && ny >= 0 && nx < n && ny < n) {
+                    if (testTube[nx][ny] == 0) {
+                        testTube[nx][ny] = type;
+                        pq.add(new int[]{time + 1, type, nx, ny});
+                    }
+                }
+            }
+        }
+
+        return testTube[sxy[1] - 1][sxy[2] - 1];
+    }
 }
