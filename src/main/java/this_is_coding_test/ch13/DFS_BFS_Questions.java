@@ -482,4 +482,96 @@ public class DFS_BFS_Questions {
      * 해답지에서는 하나의 count 변수에서 +-를 수행하여 균형잡힌 여부와 올바른 여부를 판단했다.
      * 이외의 과정은 알고리즘이 문제에 제시되어 동일함
      */
+
+    /**
+     * 난이도: 중
+     * 2 <= N <= 11
+     * 1 <= A[i] <= 100
+     * 제한) 시간: 2초, 메모리: 512MB
+     * https://www.acmicpc.net/problem/14888
+     */
+    public int[] 연산자_끼워_넣기(int n, int[] numbers, int[] operators) {
+        List<Integer> index = new ArrayList<>();
+        for (int i = 0; i < operators.length; ++i) {
+            for (int j = 0; j < operators[i]; j++) {
+                index.add(i);
+            }
+        }
+
+        Set<Perm> operatorPermutation = permutation(index.stream().mapToInt(i -> i).toArray(), new int[index.size()], new boolean[index.size()], 0, index.size(), index.size());
+
+        int max = Integer.MIN_VALUE;
+        int min = Integer.MAX_VALUE;
+
+        for (Perm p : operatorPermutation) {
+            int result = calculate(numbers, p.array);
+            max = Integer.max(max, result);
+            min = Integer.min(min, result);
+        }
+
+        return new int[]{max, min};
+    }
+
+    public Set<Perm> permutation(int[] arr, int[] output, boolean[] visited, int depth, int n, int r) {
+        Set<Perm> set = new HashSet<>();
+        if (depth == r) {
+            set.add(new Perm(Arrays.copyOfRange(output, 0, r)));
+            return set;
+        }
+
+        for (int i = 0; i < n; i++) {
+            if (!visited[i]) {
+                visited[i] = true;
+                output[depth] = arr[i];
+                set.addAll(permutation(arr, output, visited, depth + 1, n, r));
+                visited[i] = false;
+            }
+        }
+
+        return set;
+    }
+
+    public int calculate(int[] numbers, int[] operators) {
+        int result = operation(numbers[0], numbers[1], operators[0]);
+
+        for (int i = 1; i < operators.length; i++) {
+            result = operation(result, numbers[i + 1], operators[i]);
+        }
+
+        return result;
+    }
+
+    public int operation(int a, int b, int operator) {
+        if (operator == 0) {
+            return a + b;
+        }
+        if (operator == 1) {
+            return a - b;
+        }
+        if (operator == 2) {
+            return a * b;
+        }
+        if (operator == 3) {
+            return a / b;
+        }
+        return Integer.MIN_VALUE;
+    }
+
+    static class Perm {
+        int[] array;
+
+        public Perm(int[] array) {
+            this.array = array;
+        }
+
+        @Override
+        public int hashCode() {
+            return Arrays.hashCode(array);
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            return Arrays.equals(array, ((Perm) obj).array);
+        }
+    }
 }
