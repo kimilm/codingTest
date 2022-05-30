@@ -385,4 +385,86 @@ public class DFS_BFS_Questions {
      * 2. {[2, 0, 위치], [3, 0, 위치], [1, 1, 상], [1, 1, 하], [1, 1, 좌], [1, 1, 우]}
      * 3. {[3, 0, 위치], [1, 1, 상], [1, 1, 하], [1, 1, 좌], [1, 1, 우], [2, 1, 상], [2, 1, 하], [2, 1, 좌], [2, 1, 우]}
      */
+
+    /**
+     * 난이도: 하
+     * 2 <= p.length <= 1_000
+     * 제한) 시간: 1초, 메모리: 128MB
+     * https://programmers.co.kr/learn/courses/30/lessons/60058
+     */
+    public String 괄호_변환(String p) {
+        return makeRight(p);
+    }
+
+    public String makeRight(String w) {
+        // 입력이 빈 문자열이면 그대로 리턴
+        if (w.equals("")) {
+            return w;
+        }
+
+        char[] chars = w.toCharArray();
+        String u = "";
+        String v = "";
+        int openCount = 0;
+        int closeCount = 0;
+
+        // 문자열 w를 u, v로 분리
+        for (int i = 0; i < chars.length; ++i) {
+            if (chars[i] == '(') {
+                ++openCount;
+            } else {
+                ++closeCount;
+            }
+
+            if (openCount == closeCount) {
+                u = w.substring(0, i + 1);
+                v = w.substring(i + 1);
+                break;
+            }
+        }
+
+        // u가 올바른 문자열이라면 v에 대해 1부터 다시 수행한 결과를 붙여서 리턴
+        if (isRight(u)) {
+            return u + makeRight(v);
+        }
+
+        // u가 올바른 문자열이 아니라면
+        StringBuilder sb = new StringBuilder();
+        sb.append('(').append(makeRight(v)).append(')')
+                .append(reverseBracket(u.substring(1, u.length() - 1)));
+
+        return sb.toString();
+    }
+
+    public boolean isRight(String s) {
+        Stack<Character> stack = new Stack<>();
+        char[] chars = s.toCharArray();
+
+        for (char ch : chars) {
+            if (ch == '(') {
+                stack.push(ch);
+            } else {
+                if (stack.isEmpty()) {
+                    return false;
+                }
+                stack.pop();
+            }
+        }
+
+        return true;
+    }
+
+    public String reverseBracket(String u) {
+        StringBuilder sb = new StringBuilder();
+
+        for (char ch : u.toCharArray()) {
+            if (ch == '(') {
+                sb.append(')');
+            } else {
+                sb.append('(');
+            }
+        }
+
+        return sb.toString();
+    }
 }

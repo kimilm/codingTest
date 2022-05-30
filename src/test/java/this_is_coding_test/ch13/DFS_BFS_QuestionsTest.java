@@ -2,6 +2,7 @@ package this_is_coding_test.ch13;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DynamicTest;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestFactory;
 
 import java.util.stream.Stream;
@@ -111,5 +112,19 @@ class DFS_BFS_QuestionsTest {
                     Assertions.assertThat(result).isEqualTo(answer);
                 })
         );
+    }
+
+    @Test
+    public void isRightTest() {
+        boolean result1 = dbq.isRight("(())");
+        boolean result2 = dbq.isRight("())(");
+        Assertions.assertThat(result1).isEqualTo(true);
+        Assertions.assertThat(result2).isEqualTo(false);
+    }
+
+    @Test
+    public void reverseBracketTest() {
+        String result = dbq.reverseBracket("(())");
+        Assertions.assertThat(result).isEqualTo("))((");
     }
 }
