@@ -131,7 +131,7 @@ class DFS_BFS_QuestionsTest {
 
     @Test
     void 연산자_끼워_넣기() {
-        int[] result = dbq.연산자_끼워_넣기(6, new int[]{1, 2, 3, 4, 5, 6}, new int[]{2, 1, 1, 1});
+        int[] result = dbq.연산자_끼워_넣기_2(6, new int[]{1, 2, 3, 4, 5, 6}, new int[]{2, 1, 1, 1});
         int[] answer = new int[]{54, -24};
 
         Assertions.assertThat(result).containsExactly(answer);

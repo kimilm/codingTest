@@ -574,4 +574,58 @@ public class DFS_BFS_Questions {
             return Arrays.equals(array, ((Perm) obj).array);
         }
     }
+
+    /**
+     * 모든 경우의 수를 계산하는 완전탐색 dfs 혹은 bfs를 이용하여 문제를 해결할 수 있다.
+     * 사칙연산을 중복하여 사용할 수 있기 때문에 중복 순열을 계산,
+     * n = 4 일때 중복을 허용하여 3개를 뽑아 나열하는 모든 경우의 수를 고려
+     * 파이썬의 중복순열 라이브러리를 이용해서 찾을 수 있다.
+     * 하지만 중복순열 라이브러리 말고 dfs를 이용하여 푸는 방법을 제시함
+     */
+
+    int max = -(int)1e9;
+    int min = (int)1e9;
+    int g_n = 0;
+    int[] g_numbers = null;
+    int[] g_operators = null;
+
+    public int[] 연산자_끼워_넣기_2(int n, int[] numbers, int[] operators) {
+        g_n = n;
+        g_numbers = numbers;
+        g_operators = operators;
+
+        dfs(1, numbers[0]);
+
+        return new int[]{max, min};
+    }
+
+    public void dfs(int i, int now) {
+        // 모든 연산자를 다 사용했을 경우, 최솟값과 최댓값 업데이트
+        if (i == g_n) {
+            max = Integer.max(max, now);
+            min = Integer.min(min, now);
+        } else {
+            // 각 연산자에 대해 재귀적으로 수행
+            if (g_operators[0] > 0) {
+                g_operators[0] -= 1;
+                dfs(i + 1, now + g_numbers[i]);
+                g_operators[0] += 1;
+            }
+            if (g_operators[1] > 0) {
+                g_operators[1] -= 1;
+                dfs(i + 1, now - g_numbers[i]);
+                g_operators[1] += 1;
+            }
+            if (g_operators[2] > 0) {
+                g_operators[2] -= 1;
+                dfs(i + 1, now * g_numbers[i]);
+                g_operators[2] += 1;
+            }
+            if (g_operators[3] > 0) {
+                g_operators[3] -= 1;
+                dfs(i + 1, now / g_numbers[i]);
+                g_operators[3] += 1;
+            }
+        }
+    }
 }
