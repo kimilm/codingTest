@@ -136,4 +136,18 @@ class DFS_BFS_QuestionsTest {
 
         Assertions.assertThat(result).containsExactly(answer);
     }
+
+    @Test
+    void 감시_피하기() {
+        String result = dbq.감시_피하기(5, new String[]{
+                "X S X X T",
+                "T X S X X",
+                "X X X X X",
+                "X T X X x",
+                "X X T X X"
+        });
+        String answer = "YES";
+
+        Assertions.assertThat(result).isEqualTo(answer);
+    }
 }

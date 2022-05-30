@@ -583,8 +583,8 @@ public class DFS_BFS_Questions {
      * 하지만 중복순열 라이브러리 말고 dfs를 이용하여 푸는 방법을 제시함
      */
 
-    int max = -(int)1e9;
-    int min = (int)1e9;
+    int max = -(int) 1e9;
+    int min = (int) 1e9;
     int g_n = 0;
     int[] g_numbers = null;
     int[] g_operators = null;
@@ -627,5 +627,108 @@ public class DFS_BFS_Questions {
                 g_operators[3] += 1;
             }
         }
+    }
+
+    public String 감시_피하기(int n, String[] input) {
+        Character[][] school = Arrays.stream(input)
+                .map(data -> Arrays.stream(data.split(" "))
+                        .map(str -> str.charAt(0))
+                        .toArray(Character[]::new))
+                .toArray(Character[][]::new);
+
+        List<int[]> teachers = new ArrayList<>();
+
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                if (school[i][j].equals('T')) {
+                    teachers.add(new int[]{i, j});
+                }
+            }
+        }
+
+        int size = n * n;
+        List<int[]> locationList = combination(new boolean[size], 0, size, 3);
+
+        for (int[] location : locationList) {
+            boolean flag = false;
+            for (int point : location) {
+                int[] xy = intToPoint(n, point);
+                if (!school[xy[0]][xy[1]].equals('X')) {
+                    flag = true;
+                    break;
+                }
+            }
+            if (flag) {
+                continue;
+            }
+
+            for (int point : location) {
+                int[] xy = intToPoint(n, point);
+                school[xy[0]][xy[1]] = 'B';
+            }
+
+            for (int[] teacher : teachers) {
+                int x = teacher[0];
+                int y = teacher[1];
+                //상
+                while (x-- > 0 && !flag) {
+                    if (school[x][y].equals('B')) {
+                        break;
+                    }
+
+                    if (school[x][y].equals('S')) {
+                        flag = true;
+                        break;
+                    }
+                }
+                //하
+                x = teacher[0];
+                while (x++ < n - 1 && !flag) {
+                    if (school[x][y].equals('B')) {
+                        break;
+                    }
+
+                    if (school[x][y].equals('S')) {
+                        flag = true;
+                        break;
+                    }
+                }
+                //좌
+                x = teacher[0];
+                while (y-- > 0 && !flag) {
+                    if (school[x][y].equals('B')) {
+                        break;
+                    }
+
+                    if (school[x][y].equals('S')) {
+                        flag = true;
+                        break;
+                    }
+                }
+                //우
+                y = teacher[1];
+                while (y++ < n - 1 && !flag) {
+                    if (school[x][y].equals('B')) {
+                        break;
+                    }
+
+                    if (school[x][y].equals('S')) {
+                        flag = true;
+                        break;
+                    }
+                }
+            }
+
+            if (!flag) {
+                return "YES";
+            }
+
+            for (int point : location) {
+                int[] xy = intToPoint(n, point);
+                school[xy[0]][xy[1]] = 'X';
+            }
+        }
+
+        return "NO";
     }
 }
