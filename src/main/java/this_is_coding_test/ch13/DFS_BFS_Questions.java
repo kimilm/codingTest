@@ -629,6 +629,12 @@ public class DFS_BFS_Questions {
         }
     }
 
+    /**
+     * 난이도: 중상
+     * 3 <= N <= 6
+     * 제한) 시간: 2초, 메모리: 256MB
+     * https://www.acmicpc.net/problem/14888
+     */
     public String 감시_피하기(int n, String[] input) {
         Character[][] school = Arrays.stream(input)
                 .map(data -> Arrays.stream(data.split(" "))
@@ -731,4 +737,9 @@ public class DFS_BFS_Questions {
 
         return "NO";
     }
+
+    /**
+     * n은 최대 6, 36 C 3 의 최악의 경우에도 10_000이 넘지 않음. 모든 조합을 고려하여 완전 탐색을 수행해도 문제가 없음
+     * 풀이와 해답지가 비슷했다.
+     */
 }
