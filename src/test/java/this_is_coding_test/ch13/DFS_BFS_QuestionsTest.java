@@ -150,4 +150,63 @@ class DFS_BFS_QuestionsTest {
 
         Assertions.assertThat(result).isEqualTo(answer);
     }
+
+    @TestFactory
+    Stream<DynamicTest> 인구_이동() {
+        return Stream.of(
+                DynamicTest.dynamicTest("예제 입력 1", () -> {
+                    int result = dbq.인구_이동(new String[]{
+                            "2 20 50",
+                            "50 30",
+                            "20 40"
+                    });
+                    int answer = 1;
+
+                    Assertions.assertThat(result).isEqualTo(answer);
+                }),
+                DynamicTest.dynamicTest("예제 입력 2", () -> {
+                    int result = dbq.인구_이동(new String[]{
+                            "2 40 50",
+                            "50 30",
+                            "20 40"
+                    });
+                    int answer = 0;
+
+                    Assertions.assertThat(result).isEqualTo(answer);
+                }),
+                DynamicTest.dynamicTest("예제 입력 3", () -> {
+                    int result = dbq.인구_이동(new String[]{
+                            "2 20 50",
+                            "50 30",
+                            "30 40"
+                    });
+                    int answer = 1;
+
+                    Assertions.assertThat(result).isEqualTo(answer);
+                }),
+                DynamicTest.dynamicTest("예제 입력 4", () -> {
+                    int result = dbq.인구_이동(new String[]{
+                            "3 5 10",
+                            "10 15 20",
+                            "20 30 25",
+                            "40 22 10"
+                    });
+                    int answer = 2;
+
+                    Assertions.assertThat(result).isEqualTo(answer);
+                }),
+                DynamicTest.dynamicTest("예제 입력 5", () -> {
+                    int result = dbq.인구_이동(new String[]{
+                            "4 10 50",
+                            "10 100 20 90",
+                            "80 100 60 70",
+                            "70 20 30 40",
+                            "50 20 100 10"
+                    });
+                    int answer = 3;
+
+                    Assertions.assertThat(result).isEqualTo(answer);
+                })
+        );
+    }
 }

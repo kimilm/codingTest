@@ -742,4 +742,132 @@ public class DFS_BFS_Questions {
      * n은 최대 6, 36 C 3 의 최악의 경우에도 10_000이 넘지 않음. 모든 조합을 고려하여 완전 탐색을 수행해도 문제가 없음
      * 풀이와 해답지가 비슷했다.
      */
+
+    /**
+     * 난이도: 중
+     * 1 <= N <= 50
+     * 1 <= L <= R <= 100
+     * 0 <= A[r][c] <= 100
+     * 0 <= 인구이동 횟수 <= 2_000
+     * 제한) 시간: 2초, 메모리: 512MB
+     * https://www.acmicpc.net/problem/16234
+     */
+
+    static int[][] map = null;
+
+    public int 인구_이동(String[] input) {
+        String[] nlr = input[0].split(" ");
+        int n = Integer.parseInt(nlr[0]);
+        int l = Integer.parseInt(nlr[1]);
+        int r = Integer.parseInt(nlr[2]);
+
+        int[] dx = new int[]{-1, 1, 0, 0};
+        int[] dy = new int[]{0, 0, -1, 1};
+
+        map = new int[n][];
+        for (int i = 0; i < n; i++) {
+            map[i] = Arrays.stream(input[i + 1].split(" ")).mapToInt(Integer::parseInt).toArray();
+        }
+
+        City[] cityArray = new City[n * n];
+
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                cityArray[pointToInt(n, i, j)] = new City(i, j);
+            }
+        }
+
+        int answer = 0;
+
+        while (true) {
+            List<Set<City>> unionList = new ArrayList<>();
+            // 마을 크기
+            for (int i = 0; i < n; i++) {
+                for (int j = 0; j < n; j++) {
+                    Set<City> union = new HashSet<>();
+                    City now = cityArray[pointToInt(n, i, j)];
+                    union.add(now);
+                    // 상하좌우 국경선 체크
+                    for (int k = 0; k < 4; k++) {
+                        int nx = i + dx[k];
+                        int ny = j + dy[k];
+                        if (checkBorder(n, nx, ny)) {
+                            int difference = Math.abs(map[i][j] - map[nx][ny]);
+                            if (difference >= l && difference <= r) {
+                                union.add(cityArray[pointToInt(n, nx, ny)]);
+                            }
+                        }
+                    }
+
+                    List<Set<City>> setList = unionList.stream().filter(set -> {
+                        for (City city : union) {
+                            if (set.contains(city)) {
+                                return true;
+                            }
+                        }
+                        return false;
+                    }).collect(Collectors.toList());
+
+                    if (setList.size() != 0) {
+                        setList.forEach(union::addAll);
+                        setList.forEach(unionList::remove);
+                        unionList.add(union);
+                    } else {
+                        unionList.add(union);
+                    }
+                }
+            }
+
+            if (unionList.size() == n * n) {
+                break;
+            }
+
+            for (Set<City> cities : unionList) {
+                int average = cities.stream().mapToInt(City::getPopulation).sum() / cities.size();
+
+                for (City city : cities) {
+                    map[city.x][city.y] = average;
+                }
+            }
+
+            ++answer;
+        }
+
+        return answer;
+    }
+
+    public int pointToInt(int n, int x, int y) {
+        return x * n + y;
+    }
+
+    public boolean checkBorder(int n, int x, int y) {
+        return x > -1 && y > -1 && x < n && y < n;
+    }
+
+    static class City {
+        int x;
+        int y;
+
+        public City(int x, int y) {
+            this.x = x;
+            this.y = y;
+        }
+
+        public int getPopulation() {
+            return map[x][y];
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            City city = (City) o;
+            return x == city.x && y == city.y;
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(x, y);
+        }
+    }
 }
