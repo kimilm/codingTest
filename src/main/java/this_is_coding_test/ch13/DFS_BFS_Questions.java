@@ -752,9 +752,6 @@ public class DFS_BFS_Questions {
      * 제한) 시간: 2초, 메모리: 512MB
      * https://www.acmicpc.net/problem/16234
      */
-
-    static int[][] map = null;
-
     public int 인구_이동(String[] input) {
         String[] nlr = input[0].split(" ");
         int n = Integer.parseInt(nlr[0]);
@@ -764,29 +761,25 @@ public class DFS_BFS_Questions {
         int[] dx = new int[]{-1, 1, 0, 0};
         int[] dy = new int[]{0, 0, -1, 1};
 
-        map = new int[n][];
+        int[][] map = new int[n][];
         for (int i = 0; i < n; i++) {
             map[i] = Arrays.stream(input[i + 1].split(" ")).mapToInt(Integer::parseInt).toArray();
         }
 
-        City[] cityArray = new City[n * n];
-
-        for (int i = 0; i < n; i++) {
-            for (int j = 0; j < n; j++) {
-                cityArray[pointToInt(n, i, j)] = new City(i, j);
-            }
-        }
+        int[] unionArray = new int[n * n];
+        Arrays.fill(unionArray, Integer.MAX_VALUE);
 
         int answer = 0;
 
         while (true) {
-            List<Set<City>> unionList = new ArrayList<>();
+            int[] union = Arrays.copyOf(unionArray, unionArray.length);
             // 마을 크기
             for (int i = 0; i < n; i++) {
                 for (int j = 0; j < n; j++) {
-                    Set<City> union = new HashSet<>();
-                    City now = cityArray[pointToInt(n, i, j)];
-                    union.add(now);
+                    int now = pointToInt(n, i, j);
+                    if (union[now] == Integer.MAX_VALUE) {
+                        union[now] = now;
+                    }
                     // 상하좌우 국경선 체크
                     for (int k = 0; k < 4; k++) {
                         int nx = i + dx[k];
@@ -794,39 +787,42 @@ public class DFS_BFS_Questions {
                         if (checkBorder(n, nx, ny)) {
                             int difference = Math.abs(map[i][j] - map[nx][ny]);
                             if (difference >= l && difference <= r) {
-                                union.add(cityArray[pointToInt(n, nx, ny)]);
+                                union[pointToInt(n, nx, ny)] = union[now];
                             }
                         }
-                    }
-
-                    List<Set<City>> setList = unionList.stream().filter(set -> {
-                        for (City city : union) {
-                            if (set.contains(city)) {
-                                return true;
-                            }
-                        }
-                        return false;
-                    }).collect(Collectors.toList());
-
-                    if (setList.size() != 0) {
-                        setList.forEach(union::addAll);
-                        setList.forEach(unionList::remove);
-                        unionList.add(union);
-                    } else {
-                        unionList.add(union);
                     }
                 }
             }
 
-            if (unionList.size() == n * n) {
+            for (int i = 0; i < union.length; i++) {
+                setParent(union, union[i]);
+            }
+
+            Map<Integer, List<Integer>> freq = new HashMap<>();
+            for (int i = 0; i < union.length; i++) {
+                int key = union[i];
+                if (freq.containsKey(key)) {
+                    freq.get(key).add(i);
+                } else {
+                    freq.put(key, new ArrayList<>());
+                }
+            }
+
+            if (freq.size() == n * n) {
                 break;
             }
 
-            for (Set<City> cities : unionList) {
-                int average = cities.stream().mapToInt(City::getPopulation).sum() / cities.size();
+            for (Map.Entry<Integer, List<Integer>> entry : freq.entrySet()) {
+                List<int[]> points = entry.getValue().stream()
+                        .map(value -> intToPoint(n, value))
+                        .collect(Collectors.toList());
+                points.add(intToPoint(n, entry.getKey()));
 
-                for (City city : cities) {
-                    map[city.x][city.y] = average;
+                int average = points.stream().mapToInt(point -> map[point[0]][point[1]]).sum();
+                average /= points.size();
+
+                for (int[] point : points) {
+                    map[point[0]][point[1]] = average;
                 }
             }
 
@@ -836,38 +832,19 @@ public class DFS_BFS_Questions {
         return answer;
     }
 
+    public int setParent(int[] union, int now) {
+        if (union[now] != now) {
+            union[now] = setParent(union, union[now]);
+        }
+
+        return union[now];
+    }
+
     public int pointToInt(int n, int x, int y) {
         return x * n + y;
     }
 
     public boolean checkBorder(int n, int x, int y) {
         return x > -1 && y > -1 && x < n && y < n;
-    }
-
-    static class City {
-        int x;
-        int y;
-
-        public City(int x, int y) {
-            this.x = x;
-            this.y = y;
-        }
-
-        public int getPopulation() {
-            return map[x][y];
-        }
-
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
-            City city = (City) o;
-            return x == city.x && y == city.y;
-        }
-
-        @Override
-        public int hashCode() {
-            return Objects.hash(x, y);
-        }
     }
 }
