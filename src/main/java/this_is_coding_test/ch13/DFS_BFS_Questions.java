@@ -758,86 +758,81 @@ public class DFS_BFS_Questions {
         int l = Integer.parseInt(nlr[1]);
         int r = Integer.parseInt(nlr[2]);
 
-        int[] dx = new int[]{-1, 1, 0, 0};
-        int[] dy = new int[]{0, 0, -1, 1};
-
         int[][] map = new int[n][];
         for (int i = 0; i < n; i++) {
             map[i] = Arrays.stream(input[i + 1].split(" ")).mapToInt(Integer::parseInt).toArray();
         }
 
-        int[] unionArray = new int[n * n];
-        Arrays.fill(unionArray, Integer.MAX_VALUE);
-
+        int flag = 0;
         int answer = 0;
 
-        while (true) {
-            int[] union = Arrays.copyOf(unionArray, unionArray.length);
+        while (flag != n * n) {
+            boolean[] visited = new boolean[n * n];
+            Queue<Integer> queue = new LinkedList<>();
+            flag = 0;
             // 마을 크기
             for (int i = 0; i < n; i++) {
                 for (int j = 0; j < n; j++) {
                     int now = pointToInt(n, i, j);
-                    if (union[now] == Integer.MAX_VALUE) {
-                        union[now] = now;
+                    if (visited[now]) {
+                        continue;
                     }
+                    queue.add(now);
                     // 상하좌우 국경선 체크
-                    for (int k = 0; k < 4; k++) {
-                        int nx = i + dx[k];
-                        int ny = j + dy[k];
-                        if (checkBorder(n, nx, ny)) {
-                            int difference = Math.abs(map[i][j] - map[nx][ny]);
-                            if (difference >= l && difference <= r) {
-                                union[pointToInt(n, nx, ny)] = union[now];
-                            }
-                        }
+                    List<Integer> cities = unionCities(map, l, r, visited, queue);
+
+                    if (cities.size() == 1) {
+                        ++flag;
+                        continue;
                     }
+
+                    int average = cities.stream().mapToInt(city -> {
+                        int[] point = intToPoint(n, city);
+                        return map[point[0]][point[1]];
+                    }).sum() / cities.size();
+
+                    cities.forEach(city -> {
+                        int[] point = intToPoint(n, city);
+                        map[point[0]][point[1]] = average;
+                    });
                 }
             }
-
-            for (int i = 0; i < union.length; i++) {
-                setParent(union, union[i]);
+            if (flag != n * n) {
+                ++answer;
             }
-
-            Map<Integer, List<Integer>> freq = new HashMap<>();
-            for (int i = 0; i < union.length; i++) {
-                int key = union[i];
-                if (freq.containsKey(key)) {
-                    freq.get(key).add(i);
-                } else {
-                    freq.put(key, new ArrayList<>());
-                }
-            }
-
-            if (freq.size() == n * n) {
-                break;
-            }
-
-            for (Map.Entry<Integer, List<Integer>> entry : freq.entrySet()) {
-                List<int[]> points = entry.getValue().stream()
-                        .map(value -> intToPoint(n, value))
-                        .collect(Collectors.toList());
-                points.add(intToPoint(n, entry.getKey()));
-
-                int average = points.stream().mapToInt(point -> map[point[0]][point[1]]).sum();
-                average /= points.size();
-
-                for (int[] point : points) {
-                    map[point[0]][point[1]] = average;
-                }
-            }
-
-            ++answer;
         }
-
         return answer;
     }
 
-    public int setParent(int[] union, int now) {
-        if (union[now] != now) {
-            union[now] = setParent(union, union[now]);
+    public List<Integer> unionCities(int[][] map, int l, int r, boolean[] visited, Queue<Integer> queue) {
+        List<Integer> cities = new ArrayList<>();
+        int[] dx = new int[]{-1, 1, 0, 0};
+        int[] dy = new int[]{0, 0, -1, 1};
+        int n = map.length;
+        // bfs
+        while (!queue.isEmpty()) {
+            // 방문했던 지점은 다시 탐색하지 않음
+            if (visited[queue.peek()]) {
+                queue.poll();
+                continue;
+            }
+            visited[queue.peek()] = true;
+            cities.add(queue.peek());
+            int[] xy = intToPoint(n, queue.poll());
+            // 상하좌우 지점 탐색
+            for (int k = 0; k < 4; k++) {
+                int nx = xy[0] + dx[k];
+                int ny = xy[1] + dy[k];
+                if (checkBorder(n, nx, ny)) {
+                    int difference = Math.abs(map[xy[0]][xy[1]] - map[nx][ny]);
+                    if (difference >= l && difference <= r) {
+                        // 조건에 해당하면 다음 탐색지점에 추가
+                        queue.add(pointToInt(n, nx, ny));
+                    }
+                }
+            }
         }
-
-        return union[now];
+        return cities;
     }
 
     public int pointToInt(int n, int x, int y) {
@@ -847,4 +842,10 @@ public class DFS_BFS_Questions {
     public boolean checkBorder(int n, int x, int y) {
         return x > -1 && y > -1 && x < n && y < n;
     }
+
+    /**
+     * 풀이1 Set 집합의 List를 이용해서 국경선 열린 국가들 체크 -> 시간초과
+     * 풀이2 union 연산을 통해 국경선 열린 국가들 체크 -> 틀림
+     * 풀이3 bfs를 사용하여 국경선 열린 국가들을 체크 -> 맞음
+     */
 }
