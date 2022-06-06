@@ -856,4 +856,144 @@ public class DFS_BFS_Questions {
      *
      * 해답지는 bfs를 수행하며 평균값까지 계산했다. 해당 차이점 이외의 풀이과정은 거의 동일했음
      */
+
+    /**
+     * 난이도: 상
+     * 5 <= N <= 100
+     * board[][] == 0 || 1
+     * 시작 지점 가로 두 위치는 0
+     * 제한) 시간: 1초, 메모리: 128MB
+     * https://programmers.co.kr/learn/courses/30/lessons/60063
+     */
+    public int 블록_이동하기(int[][] board) {
+        int n = board.length;
+
+        Stack<Robot> stack = new Stack<>();
+        stack.push(new Robot());
+
+        //dfs
+        while (!isEscape(n, stack.peek())) {
+            Robot robot = stack.pop();
+            // 범위를 벗어났거나 벽에 끼었으면 진행하지 않음
+            if (!robotInRange(n, robot) || isStuck(board, robot) || isVisit(board, robot)) {
+                continue;
+            }
+            // 방문 처리
+            setVisit(board, robot, 2);
+            // 로봇 이동
+            for (int i = 0; i < 4; ++i) {
+                // 상하좌우 이동
+                stack.push(robot.move(i));
+
+                Robot checkRotate = robot.rotate(3 - i);
+                if (robotInRange(n, checkRotate)) {
+                    // leg 축 cw/ccw 회전
+                    int x = checkRotate.x;
+                    int y = checkRotate.y;
+                    // center 축 cw/ccw 회전
+                    if (i > 1) {
+                        x = checkRotate.getLegX();
+                        y = checkRotate.getLegY();
+                    }
+                    // 대각선 위치가 벽이 아니라면
+                    if (board[x][y] != 1) {
+                        // 회전 이동
+                        stack.push(robot.rotate(i));
+                    }
+                }
+            }
+        }
+
+        return stack.peek().depth;
+    }
+
+    public boolean isEscape(int n, Robot robot) {
+        --n;
+        return (robot.x == n && robot.y == n)
+                || (robot.getLegX() == n && robot.getLegY() == n);
+    }
+
+    public boolean isVisit(int[][] board, Robot robot) {
+        return board[robot.x][robot.y] == 2 && board[robot.getLegX()][robot.getLegY()] == 2;
+    }
+
+    public void setVisit(int[][] board, Robot robot, int visit) {
+        if (!robotInRange(board.length, robot) || isStuck(board, robot)) {
+            return;
+        }
+        board[robot.x][robot.y] = visit;
+        board[robot.getLegX()][robot.getLegY()] = visit;
+    }
+
+    public boolean isStuck(int[][] board, Robot robot) {
+        return board[robot.x][robot.y] == 1 || board[robot.getLegX()][robot.getLegY()] == 1;
+    }
+
+    public boolean robotInRange(int n, Robot robot) {
+        return robot.x > -1 && robot.x < n
+                && robot.y > -1 && robot.y < n
+                && robot.getLegX() > -1 && robot.getLegX() < n
+                && robot.getLegY() > -1 && robot.getLegY() < n;
+    }
+
+    static class Robot {
+        int x;
+        int y;
+        int depth;
+        int direction;
+
+        // 0: 우, 1: 하, 2: 좌, 3: 상
+        static final int[] dx = new int[]{0, 1, 0, -1};
+        static final int[] dy = new int[]{1, 0, -1, 0};
+
+        public Robot() {
+            x = 0;
+            y = 0;
+            depth = 0;
+            direction = 0;
+        }
+
+        public Robot(int x, int y, int depth, int direction) {
+            this.x = x;
+            this.y = y;
+            this.depth = depth;
+            this.direction = direction;
+        }
+
+        public Robot move(int code) {
+            return new Robot(x + dx[code], y + dy[code], depth + 1, direction);
+        }
+
+        // 0: cw(center), 1: ccw(center), 2: cw(leg), 3: ccw(leg)
+        public Robot rotate(int code) {
+            int currentLegX = getLegX();
+            int currentLegY = getLegY();
+
+            int newX = x;
+            int newY = y;
+            int newDirection;
+
+            if (code % 2 == 0) {
+                newDirection = (direction + 1) % 4;
+            } else {
+                newDirection = (direction + 3) % 4;
+            }
+
+            if (code == 2 || code == 3) {
+                int reverseDirection = (newDirection + 2) % 4;
+                newX = currentLegX + dx[reverseDirection];
+                newY = currentLegY + dy[reverseDirection];
+            }
+
+            return new Robot(newX, newY, depth + 1, newDirection);
+        }
+
+        public int getLegX() {
+            return x + dx[direction];
+        }
+
+        public int getLegY() {
+            return y + dy[direction];
+        }
+    }
 }

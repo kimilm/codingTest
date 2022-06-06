@@ -209,4 +209,18 @@ class DFS_BFS_QuestionsTest {
                 })
         );
     }
+
+    @Test
+    void 블록_이동하기() {
+        int result = dbq.블록_이동하기(new int[][]{
+                {0, 0, 0, 1, 1},
+                {0, 0, 0, 1, 0},
+                {0, 1, 0, 1, 1},
+                {1, 1, 0, 0, 1},
+                {0, 0, 0, 0, 0}
+        });
+        int answer = 7;
+
+        Assertions.assertThat(result).isEqualTo(answer);
+    }
 }
