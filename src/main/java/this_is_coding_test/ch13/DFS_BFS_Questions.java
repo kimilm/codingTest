@@ -870,10 +870,14 @@ public class DFS_BFS_Questions {
     }
 
     public int robotDfs(int[][] board, Robot robot, int depth) {
-        if (!robotInRange(board.length, robot) || isStuck(board, robot)
-                || isVisit(board, robot) || robot.depth > depth) {
+        if (!robotInRange(board.length, robot) || isStuck(board, robot) || isVisit(board, robot)) {
             return depth;
         }
+
+        if (robot.depth > depth) {
+            return depth;
+        }
+
         if (isEscape(board.length, robot)) {
             return robot.depth;
         }
