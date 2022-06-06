@@ -866,45 +866,41 @@ public class DFS_BFS_Questions {
      * https://programmers.co.kr/learn/courses/30/lessons/60063
      */
     public int 블록_이동하기(int[][] board) {
-        int n = board.length;
+        return robotDfs(board, new Robot(), Integer.MAX_VALUE);
+    }
 
-        Stack<Robot> stack = new Stack<>();
-        stack.push(new Robot());
+    public int robotDfs(int[][] board, Robot robot, int depth) {
+        if (!robotInRange(board.length, robot) || isStuck(board, robot)
+                || isVisit(board, robot) || robot.depth > depth) {
+            return depth;
+        }
+        if (isEscape(board.length, robot)) {
+            return robot.depth;
+        }
+        setVisit(board, robot, 2);
+        for (int i = 0; i < 4; ++i) {
+            // 상하좌우 이동
+            depth = Integer.min(depth, robotDfs(board, robot.move(i), depth));
 
-        //dfs
-        while (!isEscape(n, stack.peek())) {
-            Robot robot = stack.pop();
-            // 범위를 벗어났거나 벽에 끼었으면 진행하지 않음
-            if (!robotInRange(n, robot) || isStuck(board, robot) || isVisit(board, robot)) {
-                continue;
-            }
-            // 방문 처리
-            setVisit(board, robot, 2);
-            // 로봇 이동
-            for (int i = 0; i < 4; ++i) {
-                // 상하좌우 이동
-                stack.push(robot.move(i));
-
-                Robot checkRotate = robot.rotate(3 - i);
-                if (robotInRange(n, checkRotate)) {
-                    // leg 축 cw/ccw 회전
-                    int x = checkRotate.x;
-                    int y = checkRotate.y;
-                    // center 축 cw/ccw 회전
-                    if (i > 1) {
-                        x = checkRotate.getLegX();
-                        y = checkRotate.getLegY();
-                    }
-                    // 대각선 위치가 벽이 아니라면
-                    if (board[x][y] != 1) {
-                        // 회전 이동
-                        stack.push(robot.rotate(i));
-                    }
+            Robot checkRotate = robot.rotate(3 - i);
+            if (robotInRange(board.length, checkRotate)) {
+                // leg 축 cw/ccw 회전
+                int x = checkRotate.x;
+                int y = checkRotate.y;
+                // center 축 cw/ccw 회전
+                if (i > 1) {
+                    x = checkRotate.getLegX();
+                    y = checkRotate.getLegY();
+                }
+                // 대각선 위치가 벽이 아니라면
+                if (board[x][y] != 1) {
+                    // 회전 이동
+                    depth = Integer.min(depth, robotDfs(board, robot.rotate(i), depth));
                 }
             }
         }
-
-        return stack.peek().depth;
+        setVisit(board, robot, 0);
+        return depth;
     }
 
     public boolean isEscape(int n, Robot robot) {
@@ -996,4 +992,12 @@ public class DFS_BFS_Questions {
             return y + dy[direction];
         }
     }
+
+    /**
+     * 풀이1) 스택 / 실패
+     * n, n 까지 도달하는 최소 거리를 구하지 못함, visit 설정의 문제로 판단됨
+     *
+     * 풀이2) 재귀 / 실패
+     * 테스트케이스는 통과하나 역시 visit 설정이 잘못된 것으로 판단됨. 코드 제출시 런타임에러 + 진행중 visit 설정이 제대로 되지 않음
+     */
 }
