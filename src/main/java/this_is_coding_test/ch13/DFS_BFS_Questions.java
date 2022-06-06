@@ -876,7 +876,7 @@ public class DFS_BFS_Questions {
         if (isEscape(board.length, robot)) {
             return robot.depth;
         }
-        setVisit(board, robot, 2);
+        handleVisit(board, robot, true);
         for (int i = 0; i < 4; ++i) {
             Robot checkRobot = robot.move(i);
             if (isRight(board, checkRobot)) {
@@ -904,7 +904,7 @@ public class DFS_BFS_Questions {
                 }
             }
         }
-        setVisit(board, robot, 0);
+        handleVisit(board, robot, false);
         return depth;
     }
 
@@ -915,9 +915,30 @@ public class DFS_BFS_Questions {
                 || (robot.getLegX() == n && robot.getLegY() == n);
     }
 
-    public void setVisit(int[][] board, Robot robot, int visit) {
-        board[robot.x][robot.y] = visit;
-        board[robot.getLegX()][robot.getLegY()] = visit;
+    public void handleVisit(int[][] board, Robot robot, boolean visit) {
+        if(visit) {
+            if (board[robot.x][robot.y] == 0) {
+                board[robot.x][robot.y] = 2;
+            } else {
+                board[robot.x][robot.y] += 1;
+            }
+            if (board[robot.getLegX()][robot.getLegY()] == 0) {
+                board[robot.getLegX()][robot.getLegY()] = 2;
+            } else {
+                board[robot.getLegX()][robot.getLegY()] += 1;
+            }
+        } else {
+            if (board[robot.x][robot.y] == 2) {
+                board[robot.x][robot.y] = 0;
+            } else {
+                board[robot.x][robot.y] -= 1;
+            }
+            if (board[robot.getLegX()][robot.getLegY()] == 2) {
+                board[robot.getLegX()][robot.getLegY()] = 0;
+            } else {
+                board[robot.getLegX()][robot.getLegY()] -= 1;
+            }
+        }
     }
 
     // 3종 체크
@@ -926,19 +947,19 @@ public class DFS_BFS_Questions {
         return robotInRange(board.length, robot) && !isStuck(board, robot) && !isVisit(board, robot);
     }
 
-    public boolean isVisit(int[][] board, Robot robot) {
-        return board[robot.x][robot.y] == 2 && board[robot.getLegX()][robot.getLegY()] == 2;
+    public boolean robotInRange(int n, Robot robot) {
+        return robot.x > -1 && robot.x < n
+                && robot.y > -1 && robot.y < n
+                && robot.getLegX() > -1 && robot.getLegX() < n
+                && robot.getLegY() > -1 && robot.getLegY() < n;
     }
 
     public boolean isStuck(int[][] board, Robot robot) {
         return board[robot.x][robot.y] == 1 || board[robot.getLegX()][robot.getLegY()] == 1;
     }
 
-    public boolean robotInRange(int n, Robot robot) {
-        return robot.x > -1 && robot.x < n
-                && robot.y > -1 && robot.y < n
-                && robot.getLegX() > -1 && robot.getLegX() < n
-                && robot.getLegY() > -1 && robot.getLegY() < n;
+    public boolean isVisit(int[][] board, Robot robot) {
+        return board[robot.x][robot.y] >= 2 && board[robot.getLegX()][robot.getLegY()] >= 2;
     }
 
     static class Robot {

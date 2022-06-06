@@ -213,18 +213,18 @@ class DFS_BFS_QuestionsTest {
     @TestFactory
     Stream<DynamicTest> 블록_이동하기() {
         return Stream.of(
-                DynamicTest.dynamicTest("예제 입력 1", () -> {
-                    int result = dbq.블록_이동하기(new int[][]{
-                            {0, 0, 0, 1, 1},
-                            {0, 0, 0, 1, 0},
-                            {0, 1, 0, 1, 1},
-                            {1, 1, 0, 0, 1},
-                            {0, 0, 0, 0, 0}
-                    });
-                    int answer = 7;
-
-                    Assertions.assertThat(result).isEqualTo(answer);
-                }),
+//                DynamicTest.dynamicTest("예제 입력 1", () -> {
+//                    int result = dbq.블록_이동하기(new int[][]{
+//                            {0, 0, 0, 1, 1},
+//                            {0, 0, 0, 1, 0},
+//                            {0, 1, 0, 1, 1},
+//                            {1, 1, 0, 0, 1},
+//                            {0, 0, 0, 0, 0}
+//                    });
+//                    int answer = 7;
+//
+//                    Assertions.assertThat(result).isEqualTo(answer);
+//                }),
                 DynamicTest.dynamicTest("예제 입력 2", () -> {
                     int result = dbq.블록_이동하기(new int[][]{
                             {0, 0, 0, 0, 0, 0, 1},
