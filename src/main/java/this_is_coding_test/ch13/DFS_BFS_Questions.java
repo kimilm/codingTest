@@ -870,36 +870,37 @@ public class DFS_BFS_Questions {
     }
 
     public int robotDfs(int[][] board, Robot robot, int depth) {
-        if (!robotInRange(board.length, robot) || isStuck(board, robot) || isVisit(board, robot)) {
-            return depth;
-        }
-
         if (robot.depth > depth) {
             return depth;
         }
-
         if (isEscape(board.length, robot)) {
             return robot.depth;
         }
         setVisit(board, robot, 2);
         for (int i = 0; i < 4; ++i) {
-            // 상하좌우 이동
-            depth = Integer.min(depth, robotDfs(board, robot.move(i), depth));
+            Robot checkRobot = robot.move(i);
+            if (isRight(board, checkRobot)) {
+                // 상하좌우 이동
+                depth = Integer.min(depth, robotDfs(board, checkRobot, depth));
+            }
 
-            Robot checkRotate = robot.rotate(3 - i);
-            if (robotInRange(board.length, checkRotate)) {
+            checkRobot = robot.rotate(3 - i);
+            if (robotInRange(board.length, checkRobot)) {
                 // leg 축 cw/ccw 회전
-                int x = checkRotate.x;
-                int y = checkRotate.y;
+                int x = checkRobot.x;
+                int y = checkRobot.y;
                 // center 축 cw/ccw 회전
                 if (i > 1) {
-                    x = checkRotate.getLegX();
-                    y = checkRotate.getLegY();
+                    x = checkRobot.getLegX();
+                    y = checkRobot.getLegY();
                 }
                 // 대각선 위치가 벽이 아니라면
                 if (board[x][y] != 1) {
-                    // 회전 이동
-                    depth = Integer.min(depth, robotDfs(board, robot.rotate(i), depth));
+                    checkRobot = robot.rotate(i);
+                    if (isRight(board, checkRobot)) {
+                        // 회전 이동
+                        depth = Integer.min(depth, robotDfs(board, checkRobot, depth));
+                    }
                 }
             }
         }
@@ -908,21 +909,25 @@ public class DFS_BFS_Questions {
     }
 
     public boolean isEscape(int n, Robot robot) {
+        // 로봇의 양쪽 끝 중 하나라도 도착지점에 도달했다면 true
         --n;
         return (robot.x == n && robot.y == n)
                 || (robot.getLegX() == n && robot.getLegY() == n);
     }
 
-    public boolean isVisit(int[][] board, Robot robot) {
-        return board[robot.x][robot.y] == 2 && board[robot.getLegX()][robot.getLegY()] == 2;
-    }
-
     public void setVisit(int[][] board, Robot robot, int visit) {
-        if (!robotInRange(board.length, robot) || isStuck(board, robot)) {
-            return;
-        }
         board[robot.x][robot.y] = visit;
         board[robot.getLegX()][robot.getLegY()] = visit;
+    }
+
+    // 3종 체크
+    public boolean isRight(int[][] board, Robot robot) {
+        // 범위 안에 있고, 벽에 걸리지 않고, 방문한 적이 없다면 true
+        return robotInRange(board.length, robot) && !isStuck(board, robot) && !isVisit(board, robot);
+    }
+
+    public boolean isVisit(int[][] board, Robot robot) {
+        return board[robot.x][robot.y] == 2 && board[robot.getLegX()][robot.getLegY()] == 2;
     }
 
     public boolean isStuck(int[][] board, Robot robot) {
