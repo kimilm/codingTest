@@ -886,10 +886,10 @@ public class DFS_BFS_Questions {
 
             checkRobot = robot.rotate(3 - i);
             if (robotInRange(board.length, checkRobot)) {
-                // leg 축 cw/ccw 회전
+                // leg 축 cw/ccw 회전 후 xy 위치가 대각선
                 int x = checkRobot.x;
                 int y = checkRobot.y;
-                // center 축 cw/ccw 회전
+                // center 축 cw/ccw 회전 후 legXY 위치가 대각선
                 if (i > 1) {
                     x = checkRobot.getLegX();
                     y = checkRobot.getLegY();
@@ -916,7 +916,7 @@ public class DFS_BFS_Questions {
     }
 
     public void handleVisit(int[][] board, Robot robot, boolean visit) {
-        if(visit) {
+        if (visit) {
             if (board[robot.x][robot.y] == 0) {
                 board[robot.x][robot.y] = 2;
             } else {
@@ -1025,11 +1025,12 @@ public class DFS_BFS_Questions {
 
     /**
      * 풀이1) 스택
-     * n, n 까지 도달하는 최소 거리를 구하지 못함, visit 설정의 문제로 판단됨 / 실패
+     * n, n 까지 도달하는 최소 거리를 구하지 못함, 방문 여부 판단 visit 설정의 문제로 판단됨 / 실패
      *
      * 풀이2) 재귀
-     * 테스트케이스는 통과하나 역시 visit 설정이 잘못된 것으로 판단됨. 코드 제출시 런타임에러 + 진행중 visit 설정이 제대로 되지 않음 / 실패
+     * 테스트케이스는 통과하나 역시 방문 여부 판단 visit 설정이 잘못된 것으로 판단됨.
+     *                              코드 제출시 런타임에러 + 진행중 visit 설정이 제대로 되지 않음 / 실패
      * 재귀 호출 횟수 줄임 / 실패
-     * 방문 설정 세분화 / 런타임에러 모두 없어짐, 시간초과 발생 / (43.3/100)
+     * 방문 여부 판단 visit 설정 세분화 / 런타임에러 모두 없어짐, 시간초과만 발생 / (43.3/100)
      */
 }
