@@ -947,6 +947,11 @@ public class DFS_BFS_Questions {
         return robotInRange(board.length, robot) && !isStuck(board, robot) && !isVisit(board, robot);
     }
 
+    public boolean isRight(int[][] board, Robot robot, Set<Visit> visited) {
+        // 범위 안에 있고, 벽에 걸리지 않고, 방문한 적이 없다면 true
+        return robotInRange(board.length, robot) && !isStuck(board, robot) && !visited.contains(new Visit(robot, board.length));
+    }
+
     public boolean robotInRange(int n, Robot robot) {
         return robot.x > -1 && robot.x < n
                 && robot.y > -1 && robot.y < n
@@ -1032,5 +1037,91 @@ public class DFS_BFS_Questions {
      *                              코드 제출시 런타임에러 + 진행중 visit 설정이 제대로 되지 않음 / 실패
      * 재귀 호출 횟수 줄임 / 실패
      * 방문 여부 판단 visit 설정 세분화 / 런타임에러 모두 없어짐, 시간초과만 발생 / (43.3/100)
+     *
+     * 목표지점까지 도달해야돼서 dfs로 풀었는데..
      */
+
+    /**
+     * 이 문제는 다소 복잡해 보이지만 전형적인 bfs 문제 유형이다.
+     * 로봇이 존재할 수 있는 각 위치를 노드로 보고 인접한 위치와 비용이 1인 간선으로 연결되어 있다고 볼 수 있다.
+     * 간선의 비용이 모두 1로 동일하기 때문에 bfs를 이용하여 최적의 해를 구할 수 있다.
+     * (1,1) 위치의 로봇을 (N,N) 위치로 옮기는 최단거리 문제로 볼 수 있다.
+     * <p>
+     * 다만 로봇이 2칸을 차지하고 회전을 통해 이동할 수 있다는 점이 일반적인 bfs 문제와 다르다.
+     * {(1,1), (1,2)}, {(1,2), (1,1)} 처럼 위치 정보를 집합으로 처리하면 방문 여부를 판단할 수 있다.
+     */
+
+    public int 블록_이동하기_2(int[][] board) {
+        int n = board.length;
+        Queue<Robot> queue = new LinkedList<>();
+        queue.add(new Robot());
+        // 방문 처리
+        Set<Visit> visited = new HashSet<>();
+        visited.add(new Visit(queue.peek(), n));
+
+        while (!queue.isEmpty()) {
+            Robot robot = queue.poll();
+            // 목표 위치에 도달했다면 최단거리임
+            if (isEscape(n, robot)) {
+                return robot.depth;
+            }
+            for (int i = 0; i < 4; ++i) {
+                Robot checkRobot = robot.move(i);
+                // 3종 체크
+                if (isRight(board, checkRobot, visited)) {
+                    // 상하좌우 이동
+                    queue.add(checkRobot);
+                    // 방문 처리
+                    visited.add(new Visit(checkRobot, n));
+                }
+
+                checkRobot = robot.rotate(3 - i);
+                if (robotInRange(board.length, checkRobot)) {
+                    // leg 축 cw/ccw 회전 후 xy 위치가 대각선
+                    int x = checkRobot.x;
+                    int y = checkRobot.y;
+                    // center 축 cw/ccw 회전 후 legXY 위치가 대각선
+                    if (i > 1) {
+                        x = checkRobot.getLegX();
+                        y = checkRobot.getLegY();
+                    }
+                    // 대각선 위치가 벽이 아니라면
+                    if (board[x][y] != 1) {
+                        checkRobot = robot.rotate(i);
+                        // 3종 체크
+                        if (isRight(board, checkRobot, visited)) {
+                            // 회전 이동
+                            queue.add(checkRobot);
+                            // 방문 처리
+                            visited.add(new Visit(checkRobot, n));
+                        }
+                    }
+                }
+            }
+        }
+        return 0;
+    }
+    // 방문 여부 확인용 클래스
+    static class Visit {
+        Set<Integer> points;
+
+        public Visit(Robot robot, int n) {
+            points = new HashSet<>();
+            points.add(robot.x * n + robot.y);
+            points.add(robot.getLegX() * n + robot.getLegY());
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            Visit visit = (Visit) o;
+            return points.containsAll(visit.points);
+        }
+
+        @Override
+        public int hashCode() {
+            return points.hashCode();
+        }
+    }
 }

@@ -5,6 +5,8 @@ import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestFactory;
 
+import java.util.HashSet;
+import java.util.Set;
 import java.util.stream.Stream;
 
 class DFS_BFS_QuestionsTest {
@@ -214,7 +216,7 @@ class DFS_BFS_QuestionsTest {
     Stream<DynamicTest> 블록_이동하기() {
         return Stream.of(
                 DynamicTest.dynamicTest("예제 입력 1", () -> {
-                    int result = dbq.블록_이동하기(new int[][]{
+                    int result = dbq.블록_이동하기_2(new int[][]{
                             {0, 0, 0, 1, 1},
                             {0, 0, 0, 1, 0},
                             {0, 1, 0, 1, 1},
@@ -226,7 +228,7 @@ class DFS_BFS_QuestionsTest {
                     Assertions.assertThat(result).isEqualTo(answer);
                 }),
                 DynamicTest.dynamicTest("예제 입력 2", () -> {
-                    int result = dbq.블록_이동하기(new int[][]{
+                    int result = dbq.블록_이동하기_2(new int[][]{
                             {0, 0, 0, 0, 0, 0, 1},
                             {1, 1, 1, 1, 0, 0, 1},
                             {0, 0, 0, 0, 0, 0, 0},
@@ -240,7 +242,7 @@ class DFS_BFS_QuestionsTest {
                     Assertions.assertThat(result).isEqualTo(answer);
                 }),
                 DynamicTest.dynamicTest("예제 입력 3", () -> {
-                    int result = dbq.블록_이동하기(new int[][]{
+                    int result = dbq.블록_이동하기_2(new int[][]{
                             {0, 0, 0, 0, 0, 0, 1},
                             {1, 1, 1, 1, 0, 0, 1},
                             {0, 0, 0, 0, 0, 0, 0},
@@ -254,7 +256,7 @@ class DFS_BFS_QuestionsTest {
                     Assertions.assertThat(result).isEqualTo(answer);
                 }),
                 DynamicTest.dynamicTest("예제 입력 4", () -> {
-                    int result = dbq.블록_이동하기(new int[][]{
+                    int result = dbq.블록_이동하기_2(new int[][]{
                             {0, 0, 0, 0, 0, 0, 0, 0, 0},
                             {1, 1, 1, 1, 1, 1, 1, 0, 0},
                             {1, 1, 1, 1, 1, 1, 1, 1, 0},
@@ -270,5 +272,19 @@ class DFS_BFS_QuestionsTest {
                     Assertions.assertThat(result).isEqualTo(answer);
                 })
         );
+    }
+
+    @Test
+    void visitTest() {
+        DFS_BFS_Questions.Robot robot1 = new DFS_BFS_Questions.Robot(0, 0, 0, 0);
+        DFS_BFS_Questions.Robot robot2 = new DFS_BFS_Questions.Robot(0, 1, 0, 2);
+
+        DFS_BFS_Questions.Visit visit1 = new DFS_BFS_Questions.Visit(robot1, 5);
+        DFS_BFS_Questions.Visit visit2 = new DFS_BFS_Questions.Visit(robot2, 5);
+
+        Set<DFS_BFS_Questions.Visit> set = new HashSet<>();
+        set.add(visit1);
+
+        Assertions.assertThat(set).contains(visit2);
     }
 }
