@@ -1049,6 +1049,17 @@ public class DFS_BFS_Questions {
      * <p>
      * 다만 로봇이 2칸을 차지하고 회전을 통해 이동할 수 있다는 점이 일반적인 bfs 문제와 다르다.
      * {(1,1), (1,2)}, {(1,2), (1,1)} 처럼 위치 정보를 집합으로 처리하면 방문 여부를 판단할 수 있다.
+     * <p>
+     * 로봇이 회전하는 경우 나는 대각선 위치를 계산하기 위해 반대로 돌려서 해당 대각선 위치를 확인했지만
+     * 0 0
+     * 1 0
+     * 여기서 center를 기준으로 시계방향 회전은 가능하지만 벽에 의해서 막힌다
+     * 0 0
+     * 0 1
+     * 여기서 center를 기준으로 시계방향 회전은 불가능하다
+     * 즉 회전하는 방향 두 칸중에 한 칸이라도 벽이 존재하면 회전이 되지 않는다. 간단하게 체크하는 방법이 있었다.
+     * <p>
+     * 추가로 맵의 외곽에 벽을 한칸씩 더 두르면 1 ~ N 범위를 +- 계산 없이도 수월하게 진행할 수 있다.
      */
 
     public int 블록_이동하기_2(int[][] board) {
@@ -1101,6 +1112,7 @@ public class DFS_BFS_Questions {
         }
         return 0;
     }
+
     // 방문 여부 확인용 클래스
     static class Visit {
         Set<Integer> points;
@@ -1122,6 +1134,153 @@ public class DFS_BFS_Questions {
         @Override
         public int hashCode() {
             return points.hashCode();
+        }
+    }
+
+    /**
+     * 해설지 풀이
+     */
+    public int 블록_이동하기_3(int[][] board) {
+        int n = board.length;
+        // 맵의 외곽에 벽 두르기
+        int[][] map = wideMap(board);
+        // 너비 우선 탐색 수행
+        Queue<Node> queue = new LinkedList<>();
+        List<Node> visited = new ArrayList<>();
+        // 시작 위치 삽입
+        queue.offer(new Node(1, 1, 1, 2, 0));
+        // 방문 처리
+        visited.add(queue.peek());
+
+        while (!queue.isEmpty()) {
+            Node pos = queue.poll();
+            // (n,n) 위치에 도달했다면 최단 거리 리턴
+            if (pos.pos_1_x == n && pos.pos_1_y == n || pos.pos_2_x == n && pos.pos_2_y == n) {
+                return pos.distance;
+            }
+
+            // 다음 거리들에 대해서
+            List<Node> nextPos = getNextPos(pos, map);
+            for (Node next : nextPos) {
+                boolean check = true;
+                // 방문 여부 체크
+                for (Node visit : visited) {
+                    if (visit.equals(next)) {
+                        check = false;
+                        break;
+                    }
+                }
+                // 방문하지 않았다면 큐에 삽입하고 방문처리
+                if (check) {
+                    queue.offer(next);
+                    visited.add(next);
+                }
+            }
+        }
+        return 0;
+    }
+
+    public int[][] wideMap(int[][] board) {
+        int n = board.length + 2;
+        int[][] map = new int[n][n];
+
+        for (int i = 0; i < map.length; i++) {
+            for (int j = 0; j < map.length; j++) {
+                if (i != 0 && j != 0 && i != n - 1 && j != n - 1) {
+                    map[i][j] = board[i - 1][j - 1];
+                } else {
+                    map[i][j] = 1;
+                }
+            }
+        }
+
+//        for (int i = 0; i < n; ++i) {
+//            Arrays.fill(map[i], 1);
+//        }
+//
+//        for (int i = 0; i < board.length; i++) {
+//            for (int j = 0; j < board.length; j++) {
+//                map[i + 1][j + 1] = board[i][j];
+//            }
+//        }
+
+        return map;
+    }
+
+    public List<Node> getNextPos(Node pos, int[][] board) {
+        // 이동 가능한 위치들
+        List<Node> nextPos = new ArrayList<>();
+
+        int next_distance = pos.distance + 1;
+        // 상하좌우 이동
+        for (int i = 0; i < 4; ++i) {
+            int next_pos_1_x = pos.pos_1_x + dx[i];
+            int next_pos_1_y = pos.pos_1_y + dy[i];
+            int next_pos_2_x = pos.pos_2_x + dx[i];
+            int next_pos_2_y = pos.pos_2_y + dy[i];
+
+            // 이동하고자 하는 두 칸이 모두 벽이 아니라면 이동 가능 위치에 추가
+            if (board[next_pos_1_x][next_pos_1_y] == 0 && board[next_pos_2_x][next_pos_2_y] == 0) {
+                nextPos.add(new Node(next_pos_1_x, next_pos_1_y, next_pos_2_x, next_pos_2_y, next_distance));
+            }
+
+            int[] rotates = new int[]{-1, 1};
+
+            // 로봇이 가로로 놓여있는 경우
+            if (pos.pos_1_x == pos.pos_2_x) {
+                // 시계 / 반시계 회전
+                for (int rotate : rotates) {
+                    // 회전 반경 모두 1이 아니라면
+                    if (board[pos.pos_1_x + rotate][pos.pos_1_y] == 0 && board[pos.pos_2_x + rotate][pos.pos_2_y] == 0) {
+                        // pos_1 축 회전
+                        nextPos.add(new Node(pos.pos_1_x, pos.pos_1_y, pos.pos_1_x + rotate, pos.pos_1_y, next_distance));
+                        // pos_2 축 회전
+                        nextPos.add(new Node(pos.pos_2_x + rotate, pos.pos_2_y, pos.pos_2_x, pos.pos_2_y, next_distance));
+                    }
+                }
+            }
+            // 로봇이 세로로 놓여있는 경우
+            if (pos.pos_1_y == pos.pos_2_y) {
+                // 시계 / 반시계 회전
+                for (int rotate : rotates) {
+                    // 회전 반경 모두 1이 아니라면
+                    if (board[pos.pos_1_x][pos.pos_1_y + rotate] == 0 && board[pos.pos_2_x][pos.pos_2_y + rotate] == 0) {
+                        // pos_1 축 회전
+                        nextPos.add(new Node(pos.pos_1_x, pos.pos_1_y, pos.pos_1_x, pos.pos_1_y + rotate, next_distance));
+                        // pos_2 축 회전
+                        nextPos.add(new Node(pos.pos_2_x, pos.pos_2_y + rotate, pos.pos_2_x, pos.pos_2_y, next_distance));
+                    }
+                }
+            }
+        }
+
+        return nextPos;
+    }
+
+    static class Node {
+        private final int pos_1_x;
+        private final int pos_1_y;
+        private final int pos_2_x;
+        private final int pos_2_y;
+        private final int distance;
+
+        public Node(int pos_1_x, int pos_1_y, int pos_2_x, int pos_2_y, int distance) {
+            this.pos_1_x = pos_1_x;
+            this.pos_1_y = pos_1_y;
+            this.pos_2_x = pos_2_x;
+            this.pos_2_y = pos_2_y;
+            this.distance = distance;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            Node node = (Node) o;
+            return (pos_1_x == node.pos_1_x && pos_1_y == node.pos_1_y
+                    && pos_2_x == node.pos_2_x && pos_2_y == node.pos_2_y)
+                    || (pos_1_x == node.pos_2_x && pos_1_y == node.pos_2_y
+                    && pos_2_x == node.pos_1_x && pos_2_y == node.pos_1_y);
         }
     }
 }
