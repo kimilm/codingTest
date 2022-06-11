@@ -1,6 +1,7 @@
 package this_is_coding_test.ch13;
 
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestFactory;
@@ -10,6 +11,7 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Stream;
 
+@Disabled
 class DFS_BFS_QuestionsTest {
 
     private final DFS_BFS_Questions dbq = new DFS_BFS_Questions();
