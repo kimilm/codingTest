@@ -1,6 +1,7 @@
 package this_is_coding_test.ch14;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -59,5 +60,35 @@ public class SortingQuestions {
             // 이름 사전 오름차순
             return this.name.compareTo(o.name);
         }
+    }
+
+    /**
+     * 난이도: 하
+     * 1 <= N <= 200_000
+     * 1 <= 집의_위치 <= 100_000
+     * 제한) 시간: 1초, 메모리: 256MB
+     * https://www.acmicpc.net/problem/18310
+     */
+    public int 안테나(String[] inputs) {
+        int n = Integer.parseInt(inputs[0]);
+        int[] houses = Arrays.stream(inputs[1].split(" "))
+                .mapToInt(Integer::parseInt)
+                .sorted()
+                .toArray();
+
+        int antenna = 0;
+        int distance = Integer.MAX_VALUE;
+
+        for (int i = 0; i < n; i++) {
+            int location = houses[i];
+            int sum = Arrays.stream(houses).map(house -> Math.abs(house - location)).sum();
+
+            if (sum < distance) {
+                antenna = location;
+                distance = sum;
+            }
+        }
+
+        return antenna;
     }
 }
