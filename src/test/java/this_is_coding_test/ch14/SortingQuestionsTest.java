@@ -1,10 +1,13 @@
 package this_is_coding_test.ch14;
 
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestFactory;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Stream;
 
 class SortingQuestionsTest {
     private final SortingQuestions sq = new SortingQuestions();
@@ -51,5 +54,21 @@ class SortingQuestionsTest {
         int result = sq.안테나2(new String[]{"4", "5 1 7 9"});
         int answer = 5;
         Assertions.assertThat(result).isEqualTo(answer);
+    }
+
+    @TestFactory
+    Stream<DynamicTest> 실패율() {
+        return Stream.of(
+                DynamicTest.dynamicTest("예제 입력 1", () -> {
+                    int[] result = sq.실패율(5, new int[]{2, 1, 2, 6, 2, 4, 3, 3});
+                    int[] answer = {3, 4, 2, 1, 5};
+                    Assertions.assertThat(result).containsExactly(answer);
+                }),
+                DynamicTest.dynamicTest("예제 입력 2", () -> {
+                    int[] result = sq.실패율(4, new int[]{4, 4, 4, 4, 4});
+                    int[] answer = {4, 1, 2, 3};
+                    Assertions.assertThat(result).containsExactly(answer);
+                })
+        );
     }
 }

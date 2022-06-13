@@ -621,4 +621,53 @@ public class L1 {
             index %= length;
         }
     }
+
+    public int[] 실패율(int N, int[] stages) {
+        int[] answer = new int [N];
+        double [] reach = new double [N];
+        double [] nonClear = new double [N];
+        Map <Integer, Double> map = new LinkedHashMap<>();
+
+        for (int stage : stages) {
+            if (stage > N) {
+                --stage;
+                for (int i = 0; i < stage; ++i) {
+                    ++reach[i];
+                }
+            }
+            else {
+                for (int i = 0; i < stage; ++i) {
+                    ++reach[i];
+                }
+                ++nonClear[stage - 1];
+            }
+        }
+
+        for (int i = 0; i < N; ++i) {
+            if (reach[i] != 0) {
+                map.put(i + 1, nonClear[i] / reach[i]);
+            }
+            else {
+                map.put(i + 1, 0.0);
+            }
+        }
+
+        List<Map.Entry<Integer, Double>> entries = new LinkedList<>(map.entrySet());
+        Collections.sort(entries, new Comparator<Map.Entry<Integer, Double>> () {
+            @Override
+            public int compare(Map.Entry<Integer, Double> o1, Map.Entry<Integer, Double> o2) {
+                int cmp = o2.getValue().compareTo(o1.getValue());
+                if (cmp == 0)
+                    return o1.getKey().compareTo(o2.getKey());
+                else
+                    return cmp;
+            }
+        });
+
+        for (int i = 0; i < N; ++i) {
+            answer[i] = entries.get(i).getKey();
+        }
+
+        return answer;
+    }
 }

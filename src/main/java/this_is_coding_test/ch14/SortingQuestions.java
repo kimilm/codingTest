@@ -105,4 +105,80 @@ public class SortingQuestions {
                 .toArray();
         return houses[(n - 1) / 2];
     }
+
+    /**
+     * 난이도: 하
+     * 1 <= N <= 500
+     * 1 <= stages.length <= 200_000
+     * 1 <= stages[i] <= N + 1 (현재 사용자가 도전중인 스테이지, N + 1은 전부 다 깬 사람)
+     * 제한) 시간: 1초, 메모리: 128MB
+     * https://programmers.co.kr/learn/courses/30/lessons/42889
+     */
+    public int[] 실패율(int N, int[] stages) {
+        List<Stage> stageList = new ArrayList<>();
+        // 스테이지 생성
+        for (int i = 1; i <= N ; i++) {
+            stageList.add(new Stage(i));
+        }
+        // 각 스테이지에 대해서
+        for(int stage : stages) {
+            // 전부 클리어한 경우(N+1)를 제외하고 해당 스테이지 도착
+            if (stage != N + 1) {
+                stageList.get(stage - 1).arrive();
+            }
+            // 전부 클리어한 경우에는 인덱스 조절
+            else {
+                --stage;
+            }
+            // 해당 스테이지 이전까지 클리어
+            for(int i = 0; i < stage; ++i) {
+                stageList.get(i).clear();
+            }
+        }
+        // 실패율 내림차순, 번호 오름차순 정렬 후 리턴
+        return stageList.stream().sorted().mapToInt(stage -> stage.number).toArray();
+    }
+
+    static class Stage implements Comparable<Stage> {
+        int number;
+        int clear;
+        int arrive;
+
+        public Stage(int number) {
+            this.number = number;
+            this.clear = 0;
+            this.arrive = 0;
+        }
+
+        public void arrive() {
+            ++this.arrive;
+        }
+
+        public void clear() {
+            ++this.arrive;
+            ++this.clear;
+        }
+
+        public float fail() {
+            if (arrive != 0) {
+                return (arrive - clear) / (float)arrive;
+            }
+            return 0f;
+        }
+
+        @Override
+        public int compareTo(Stage o) {
+            // 내림차순
+            int compare = Float.compare(o.fail(), this.fail());
+            if (compare != 0) {
+                return compare;
+            }
+            // 실패율이 같으면 번호 오름차순
+            return this.number - o.number;
+        }
+    }
+
+    /**
+     * level_1.L1.실패율, 이전에는 Map을 사용해서 풀었는데 그게 더 빠르지만 코드가 직관적이지 못했다.
+     */
 }
