@@ -91,4 +91,18 @@ public class SortingQuestions {
 
         return antenna;
     }
+
+    /**
+     * 집들의 중간에 설치하면 당연히 거리가 최소가 됨
+     * 정렬해서 중간값을 리턴하면됨
+     * 해당 코드로 제출했는데 틀린것은 정렬을 빼먹어서 그랬음
+     */
+    public int 안테나2(String[] inputs) {
+        int n = Integer.parseInt(inputs[0]);
+        int[] houses = Arrays.stream(inputs[1].split(" "))
+                .mapToInt(Integer::parseInt)
+                .sorted()
+                .toArray();
+        return houses[(n - 1) / 2];
+    }
 }

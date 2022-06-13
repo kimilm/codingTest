@@ -48,7 +48,7 @@ class SortingQuestionsTest {
 
     @Test
     void 안테나() {
-        int result = sq.안테나(new String[]{"4", "5 1 7 9"});
+        int result = sq.안테나2(new String[]{"4", "5 1 7 9"});
         int answer = 5;
         Assertions.assertThat(result).isEqualTo(answer);
     }
