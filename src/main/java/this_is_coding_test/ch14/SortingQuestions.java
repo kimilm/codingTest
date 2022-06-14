@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public class SortingQuestions {
     /**
@@ -117,11 +118,11 @@ public class SortingQuestions {
     public int[] 실패율(int N, int[] stages) {
         List<Stage> stageList = new ArrayList<>();
         // 스테이지 생성
-        for (int i = 1; i <= N ; i++) {
+        for (int i = 1; i <= N; i++) {
             stageList.add(new Stage(i));
         }
         // 각 스테이지에 대해서
-        for(int stage : stages) {
+        for (int stage : stages) {
             // 전부 클리어한 경우(N+1)를 제외하고 해당 스테이지 도착
             if (stage != N + 1) {
                 stageList.get(stage - 1).arrive();
@@ -131,7 +132,7 @@ public class SortingQuestions {
                 --stage;
             }
             // 해당 스테이지 이전까지 클리어
-            for(int i = 0; i < stage; ++i) {
+            for (int i = 0; i < stage; ++i) {
                 stageList.get(i).clear();
             }
         }
@@ -161,7 +162,7 @@ public class SortingQuestions {
 
         public float fail() {
             if (arrive != 0) {
-                return (arrive - clear) / (float)arrive;
+                return (arrive - clear) / (float) arrive;
             }
             return 0f;
         }
@@ -180,5 +181,44 @@ public class SortingQuestions {
 
     /**
      * level_1.L1.실패율, 이전에는 Map을 사용해서 풀었는데 그게 더 빠르지만 코드가 직관적이지 못했다.
+     */
+
+    /**
+     * 난이도: 중
+     * 1 <= N <= 100_000
+     * 제한) 시간: 2초, 메모리: 128MB
+     * https://www.acmicpc.net/problem/1715
+     */
+    public int 카드_정렬하기(String[] inputs) {
+        int n = Integer.parseInt(inputs[0]);
+        int[] card = Arrays.stream(Arrays.copyOfRange(inputs, 1, inputs.length))
+                .mapToInt(Integer::parseInt)
+                .sorted()
+                .toArray();
+
+        if (n == 1) {
+            return 0;
+        }
+
+        int answer = 0;
+        int bunch = card[0];
+
+        for (int i = 1; i < card.length; ++i) {
+            bunch += card[i];
+            answer += bunch;
+        }
+
+        return answer;
+    }
+
+    /**
+     * 작은 값 부터 더해나가는 방식은 틀렸다고 나온다.
+     *
+     * 매 순간 가장 작은 카드뭉치들을 더해나가야 한다.
+     * 1. 10 20 40 50 60
+     * 2. 30 40 50 60
+     * 3. 70 50 60
+     * 4. 70 110
+     * 5. 180
      */
 }

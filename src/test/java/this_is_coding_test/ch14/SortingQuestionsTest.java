@@ -71,4 +71,11 @@ class SortingQuestionsTest {
                 })
         );
     }
+
+    @Test
+    void 카드_정렬하기() {
+        int result = sq.카드_정렬하기(new String[]{"3", "10", "20", "40"});
+        int answer = 120;
+        Assertions.assertThat(result).isEqualTo(answer);
+    }
 }
