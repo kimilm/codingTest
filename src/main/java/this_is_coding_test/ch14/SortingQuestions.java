@@ -3,8 +3,8 @@ package this_is_coding_test.ch14;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.PriorityQueue;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 public class SortingQuestions {
     /**
@@ -213,12 +213,31 @@ public class SortingQuestions {
 
     /**
      * 작은 값 부터 더해나가는 방식은 틀렸다고 나온다.
-     *
+     * <p>
      * 매 순간 가장 작은 카드뭉치들을 더해나가야 한다.
      * 1. 10 20 40 50 60
      * 2. 30 40 50 60
      * 3. 70 50 60
      * 4. 70 110
      * 5. 180
+     * 우선순위 큐를 사용한다
      */
+    public int 카드_정렬하기_2(String[] inputs) {
+        int n = Integer.parseInt(inputs[0]);
+        PriorityQueue<Integer> pq = new PriorityQueue<>();
+
+        for (int i = 1; i < inputs.length; i++) {
+            pq.add(Integer.parseInt(inputs[i]));
+        }
+
+        int answer = 0;
+
+        while (pq.size() != 1) {
+            int sum = pq.poll() + pq.poll();
+            answer += sum;
+            pq.offer(sum);
+        }
+
+        return answer;
+    }
 }
