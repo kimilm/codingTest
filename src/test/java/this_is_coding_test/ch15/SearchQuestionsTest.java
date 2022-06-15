@@ -76,27 +76,27 @@ class SearchQuestionsTest {
     @TestFactory
     Stream<DynamicTest> 공유기_설치() {
         return Stream.of(
-//                DynamicTest.dynamicTest("예제 입력 1", () -> {
-//                    int result = sq.공유기_설치(new String[]{"5 3", "1 2 8 4 9"});
-//                    int answer = 3;
-//
-//                    Assertions.assertThat(result).isEqualTo(answer);
-//                }),
-//                DynamicTest.dynamicTest("예제 입력 2", () -> {
-//                    int result = sq.공유기_설치(new String[]{"13 4", "0 1 2 3 4 5 6 7 8 9 10 11 12"});
-//                    int answer = 4;
-//
-//                    Assertions.assertThat(result).isEqualTo(answer);
-//                }),
-//                DynamicTest.dynamicTest("예제 입력 3", () -> {
-//                    int result = sq.공유기_설치(new String[]{"12 4", "2 3 4 5 6 7 8 9 10 11 12 100"});
-//                    int answer = 5;
-//
-//                    Assertions.assertThat(result).isEqualTo(answer);
-//                }),
-                DynamicTest.dynamicTest("예제 입력 3", () -> {
-                    int result = sq.공유기_설치(new String[]{"11 4", "1 91 92 93 94 95 96 97 98 99 100"});
+                DynamicTest.dynamicTest("예제 입력 1", () -> {
+                    int result = sq.공유기_설치_2(new String[]{"5 3", "1 2 8 4 9"});
                     int answer = 3;
+
+                    Assertions.assertThat(result).isEqualTo(answer);
+                }),
+                DynamicTest.dynamicTest("예제 입력 2", () -> {
+                    int result = sq.공유기_설치_2(new String[]{"13 4", "0 1 2 3 4 5 6 7 8 9 10 11 12"});
+                    int answer = 4;
+
+                    Assertions.assertThat(result).isEqualTo(answer);
+                }),
+                DynamicTest.dynamicTest("예제 입력 3", () -> {
+                    int result = sq.공유기_설치_2(new String[]{"12 4", "2 3 4 5 6 7 8 9 10 11 12 100"});
+                    int answer = 5;
+
+                    Assertions.assertThat(result).isEqualTo(answer);
+                }),
+                DynamicTest.dynamicTest("예제 입력 3", () -> {
+                    int result = sq.공유기_설치_2(new String[]{"11 4", "1 91 92 93 94 95 96 97 98 99 100"});
+                    int answer = 4;
 
                     Assertions.assertThat(result).isEqualTo(answer);
                 })

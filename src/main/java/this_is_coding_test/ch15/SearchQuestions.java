@@ -182,6 +182,7 @@ public class SearchQuestions {
      * 난이도: 중
      * 2 <= N <= 200_000
      * 2 <= C <= N
+     * 1 <= x <= 1_000_000_000
      * 제한) 시간: 2초, 메모리: 128MB
      * https://www.acmicpc.net/problem/2110
      */
@@ -229,5 +230,77 @@ public class SearchQuestions {
         else {
             return binSearch(array, target, start, mid);
         }
+    }
+
+    /**
+     * '가장 인접한 두 공유기 사이의 거리' 의 최댓값을 탐색해야 하는 문제
+     * 각 집의 좌표가 최대 10억, 이진 탐색 사용
+     * 이진 탐색으로 가장 인접한 두 공유기 사이의 거리를 조절해가며
+     * 매 순간 실제로 공유기를 설치하여 c보다 많은 개수로 공유기를 설치할 수 있는지 체크
+     *
+     * C보다 많은 갯수의 공유기를 설치할 수 있다면 가장 인접한 두 공유기 사이의 거리 값을 증가시켜서
+     * 더 큰 값에 대해서도 성립하는지를 체크하기 위해 다시 탐색을 수행
+     * 7장에서 다룬 '떡볶이 떡 만들기' 문제와 유사하게 이진 탐색을 이용해 해결할 수 있는 파라메트릭 서치 유형의 문제
+     *
+     * [1, 2, 4, 8, 9] 수열에서 C가 3일때
+     * 공유기 사이의 거리 gap 은 최소 1, 최대 8
+     * 공유기를 앞에서부터 순서대로 설치한다고 할때
+     * 절반 크기인 4 gap 으로 공유기를 설치하면
+     * 1 2 4 8 9
+     * O X X O X
+     * 의 형태로 2개의 공유기가 설치됨 < C, 범위를 최소 1, 최대 3으로 수정
+     * 1 - 3 범위의 gap 중 절반인 2로 공유기를 설치하면
+     * 1 2 4 8 9
+     * O X O O X
+     * 의 형태로 3개의 공유기가 설치됨 == C, 현재의 gap 을 저장하고 더 큰 범위 탐색, 범위 최소 3, 최대 3으로 수정
+     * 1 2 4 8 9
+     * O X O O X
+     * 의 형태로 3개의 공유기가 설치됨 == C, 범위가 최소 3, 최대 3이므로 더이상 gap 을 증가시킬 수 없음
+     * 최적의 값은 3
+     *
+     * 거리 에 대해서 이진탐색을 적용해야 함
+     * 배열의 원소 갯수는 20만개
+     * 원소의 최댓값은 10억, 탐색 범위가 10억 -> 이걸 줄이기 위해 이진탐색을 사용
+     * 조건을 주의깊게 읽자
+     */
+    public int 공유기_설치_2(String[] input) {
+        String[] nc = input[0].split(" ");
+        int n = Integer.parseInt(nc[0]);
+        int c = Integer.parseInt(nc[1]);
+
+        int[] house = Arrays.stream(input[1].split(" ")).mapToInt(Integer::parseInt).sorted().toArray();
+        // 가능한 최소 거리
+        int start = 1;
+        // 가능한 최대 거리
+        int end = house[n - 1] - house[0];
+        int result = 0;
+
+        while(start <= end) {
+            int mid = (start + end) / 2;
+            int value = house[0];
+            int count = 1;
+            // 현재의 mid 값을 이용해 공유기 설치
+            for (int i = 1; i < n; i++) {
+                // 앞에서부터 하나씩 설치
+                if (house[i] >= value + mid) {
+                    value = house[i];
+                    ++count;
+                }
+            }
+            // C개 이상의 공유기를 설치할 수 있다면
+            if (count >= c) {
+                // 설치 가능 최소 거리 증가 조정
+                start = mid + 1;
+                // 현재 상태에서 최적의 결과 저장
+                result = mid;
+            }
+            // 없다면
+            else {
+                // 설치 가능 최대 거리 감소 조정
+                end = mid - 1;
+            }
+        }
+
+        return result;
     }
 }
