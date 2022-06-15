@@ -6,7 +6,7 @@ public class SearchQuestions {
     /**
      * 난이도: 중
      * 1 <= N <= 1_000_000
-     * -10^9 <= ㅌ <= 10^9
+     * -10^9 <= x <= 10^9
      * 제한) 시간: 1초, 메모리: 128MB
      */
     public int 정렬된_배열에서_특정_수의_개수_구하기(String[] input) {
@@ -141,4 +141,40 @@ public class SearchQuestions {
             return findLast(array, target, mid + 1, end);
         }
     }
+
+    /**
+     * 난이도: 중하
+     * 1 <= N <= 1_000_000
+     * -10^9 <= x <= 10^9
+     * 제한) 시간: 1초, 메모리: 128MB
+     */
+    public int 고정점(String[] input) {
+        int n = Integer.parseInt(input[0]);
+        int[] array = Arrays.stream(input[1].split(" ")).mapToInt(Integer::parseInt).toArray();
+
+        return binSearch(array, 0, n - 1);
+    }
+
+    public int binSearch(int[] array, int start, int end) {
+        if (start > end) {
+            return -1;
+        }
+
+        int mid = (start + end) / 2;
+
+        if (array[mid] == mid) {
+            return mid;
+        }
+
+        if (array[mid] > mid) {
+            return binSearch(array, start, mid - 1);
+        }
+        else {
+            return binSearch(array, mid + 1, end);
+        }
+    }
+
+    /**
+     * O(logN) 의 알고리즘을 설계하지 못하면 시간초과
+     */
 }

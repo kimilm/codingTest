@@ -48,4 +48,28 @@ class SearchQuestionsTest {
                 })
         );
     }
+
+    @TestFactory
+    Stream<DynamicTest> 고정점() {
+        return Stream.of(
+                DynamicTest.dynamicTest("예제 입력 1", () -> {
+                    int result = sq.고정점(new String[] {"5", "-15 -6 1 3 7"});
+                    int answer = 3;
+
+                    Assertions.assertThat(result).isEqualTo(answer);
+                }),
+                DynamicTest.dynamicTest("예제 입력 2", () -> {
+                    int result = sq.고정점(new String[] {"7", "-15 -4 2 8 9 13 15"});
+                    int answer = 2;
+
+                    Assertions.assertThat(result).isEqualTo(answer);
+                }),
+                DynamicTest.dynamicTest("예제 입력 3", () -> {
+                    int result = sq.고정점(new String[] {"7", "-15 -4 3 8 9 13 15"});
+                    int answer = -1;
+
+                    Assertions.assertThat(result).isEqualTo(answer);
+                })
+        );
+    }
 }
