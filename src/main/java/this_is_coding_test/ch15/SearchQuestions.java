@@ -177,4 +177,57 @@ public class SearchQuestions {
     /**
      * O(logN) 의 알고리즘을 설계하지 못하면 시간초과
      */
+
+    /**
+     * 난이도: 중
+     * 2 <= N <= 200_000
+     * 2 <= C <= N
+     * 제한) 시간: 2초, 메모리: 128MB
+     * https://www.acmicpc.net/problem/2110
+     */
+    public int 공유기_설치(String[] input) {
+        String[] nc = input[0].split(" ");
+        int n = Integer.parseInt(nc[0]);
+        int c = Integer.parseInt(nc[1]) - 1;
+
+        int[] house = Arrays.stream(input[1].split(" ")).mapToInt(Integer::parseInt).sorted().toArray();
+        int start = 0;
+        int end = n - 1;
+        int answer = house[end] - house[start];
+
+        for (int i = c; i > 1; i--) {
+            int next = binSearch(house, (house[start] + house[end]) / i, start, end);
+
+            int left = house[next] - house[start];
+            int right = house[end] - house[next];
+            answer = Integer.min(left, right);
+
+            // 다음으로 나누려면 원소의 개수가 많아야 함
+            if (next - start < end - next) {
+                start = next;
+            } else {
+                end = next;
+            }
+        }
+
+        return answer;
+    }
+
+    public int binSearch(int[] array, int target, int start, int end) {
+        if (end - start == 1) {
+            return Math.abs(target - array[start]) < Math.abs(target - array[end]) ? start : end;
+        }
+
+        int mid = (start + end) / 2;
+
+        if (array[mid] == target) {
+            return mid;
+        }
+        if (array[mid] < target) {
+            return binSearch(array, target, mid, end);
+        }
+        else {
+            return binSearch(array, target, start, mid);
+        }
+    }
 }
