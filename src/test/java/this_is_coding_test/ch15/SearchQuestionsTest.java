@@ -7,8 +7,6 @@ import org.junit.jupiter.api.TestFactory;
 
 import java.util.stream.Stream;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 class SearchQuestionsTest {
 
     private final SearchQuestions sq = new SearchQuestions();
@@ -101,5 +99,32 @@ class SearchQuestionsTest {
                     Assertions.assertThat(result).isEqualTo(answer);
                 })
         );
+    }
+
+//    @Test
+//    void treeSetTest() {
+//        Integer[] result = sq.treeSet(new Integer[]{2, 4, 1, 5, 3});
+//        Integer[] answer = {1, 2, 3, 4, 5};
+//
+//        Assertions.assertThat(result).containsExactly(answer);
+//    }
+//
+//    @Test
+//    void compareToTest() {
+//        String call = "fro";
+//        String param = "fra";
+//
+//        Assertions.assertThat(param.compareTo(call)).isLessThan(0);
+//    }
+
+    @Test
+    void 가사_검색() {
+        int[] result = sq.가사_검색(
+                new String[]{"frodo", "front", "frost", "frozen", "frame", "kakao"},
+                new String[]{"fro??", "????o", "fr???", "fro???", "pro?"}
+        );
+        int[] answer = {3, 2, 4, 1, 0};
+
+        Assertions.assertThat(result).containsExactly(answer);
     }
 }
