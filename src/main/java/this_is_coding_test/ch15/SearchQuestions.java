@@ -1,6 +1,7 @@
 package this_is_coding_test.ch15;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.TreeSet;
 import java.util.stream.Collectors;
 
 public class SearchQuestions {
@@ -382,18 +383,150 @@ public class SearchQuestions {
         public int compareTo(String string) {
             // 와일드카드가 접두사
             if (wildCardStartIdx == 0) {
-                int i = postfix.compareTo(string.substring(wildCardEndIdx + 1));
-                return i;
+                return postfix.compareTo(string.substring(wildCardEndIdx + 1));
             }
             // 와일드카드가 접미사
             else {
-                int i = prefix.compareTo(string.substring(0, wildCardStartIdx));
-                return i;
+                return prefix.compareTo(string.substring(0, wildCardStartIdx));
             }
+        }
+    }
+
+    public int[] 가사_검색_2(String[] words, String[] queries) {
+        int n = queries.length;
+        int[] answer = new int[n];
+        TempString[] array = Arrays.stream(words)
+                .map(TempString::new)
+                .sorted().toArray(TempString[]::new);
+        TempString[] reverseArray = Arrays.stream(words)
+                .map(string -> new StringBuilder(string).reverse().toString())
+                .map(TempString::new)
+                .sorted().toArray(TempString[]::new);
+
+        for (int i = 0; i < n; i++) {
+            Query query = new Query(queries[i]);
+            TempString[] search;
+
+            // 와일드카드가 접두사
+            if (query.flag == 0) {
+                search = reverseArray;
+            }
+            // 와일드카드가 접미사
+            else {
+                search = array;
+            }
+
+            // 탐색
+            int first = findFirst(search, query, 0, search.length - 1);
+            if (first == -1) {
+                continue;
+            }
+            int last = findLast(search, query, 0, search.length - 1);
+
+            answer[i] = last - first + 1;
+        }
+
+        return answer;
+    }
+
+    public int findFirst(TempString[] array, Query target, int start, int end) {
+        if (start > end) {
+            return -1;
+        }
+
+        int mid = (start + end) / 2;
+        // 일치하는 범위의 왼쪽 끝 찾기
+        if (target.compareTo(array[mid].str) == 0
+                && (mid == 0 || target.compareTo(array[mid - 1].str) > 0)) {
+            return mid;
+        }
+        // 찾고자 하는 값이 중간값보다 사전순 왼쪽에 있다면 왼쪽 탐색
+        else if (target.compareTo(array[mid].str) <= 0) {
+            return findFirst(array, target, start, mid - 1);
+        }
+        // 사전순 오른쪽에 있다면 오른쪽 탐색
+        else {
+            return findFirst(array, target, mid + 1, end);
+        }
+    }
+
+    public int findLast(TempString[] array, Query target, int start, int end) {
+        if (start > end) {
+            return -1;
+        }
+
+        int mid = (start + end) / 2;
+        // 일치하는 범위의 오른쪽 끝 찾기
+        if (target.compareTo(array[mid].str) == 0
+                && (mid == array.length - 1 || target.compareTo(array[mid + 1].str) < 0)) {
+            return mid;
+        }
+        // 찾고자 하는 값이 중간값보다 사전순 왼쪽에 있다면 왼쪽 탐색
+        else if (target.compareTo(array[mid].str) < 0) {
+            return findLast(array, target, start, mid - 1);
+        }
+        // 사전순 오른쪽에 있다면 오른쪽 탐색
+        else {
+            return findLast(array, target, mid + 1, end);
+        }
+    }
+
+    static class TempString implements Comparable<TempString> {
+        String str;
+
+        public TempString(String str) {
+            this.str = str;
+        }
+
+        @Override
+        public int compareTo(TempString o) {
+            if (this.str.length() != o.str.length()) {
+                return this.str.length() - o.str.length();
+            }
+            return this.str.compareTo(o.str);
+        }
+    }
+
+    static class Query {
+        int flag;
+        int length;
+        int wildCardStartIdx;
+        String query;
+
+        public Query(String string) {
+            this.length = string.length();
+            this.wildCardStartIdx = string.indexOf("?");
+
+            // 와일드카드가 접두사
+            if (wildCardStartIdx == 0) {
+                String reverse = new StringBuilder(string).reverse().toString();
+                this.wildCardStartIdx = reverse.indexOf("?");
+                this.query = reverse.substring(0, wildCardStartIdx);
+                this.flag = 0;
+            }
+            // 와일드카드가 접미사
+            else {
+                this.query = string.substring(0, wildCardStartIdx);
+                flag = 1;
+            }
+        }
+
+        public int compareTo(String string) {
+            if (this.length != string.length()) {
+                return this.length - string.length();
+            }
+            return query.compareTo(string.substring(0, wildCardStartIdx));
         }
     }
 
     /**
      * 이진 탐색 문제에서 이진 탐색을 사용하지 않음 -> 시간초과
+     *
+     * 사전순 뿐만 아니라 길이를 기준으로 정렬하도록 String 클래스를 포장한 TempString 클래스 구현
+     * 먼저 정렬된_배열에서_특정_수_개수_구하기 문제처럼 findFirst, findLast 이진탐색 메서드를 구현
+     * 검색 단어의 와일드 카드 위치에 따른 구분을 주기 위한 Query 클래스 구현
+     * 접두/접미 와일드카드 위치에 따라 탐색을 달리하기 위해 검색 배열을 그대로 정렬하여 저장하고 단어순서를 뒤집어서 저장함
+     *
+     *
      */
 }
