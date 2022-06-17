@@ -1,7 +1,6 @@
 package this_is_coding_test.ch15;
 
-import java.util.Arrays;
-import java.util.TreeSet;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class SearchQuestions {
@@ -521,12 +520,114 @@ public class SearchQuestions {
 
     /**
      * 이진 탐색 문제에서 이진 탐색을 사용하지 않음 -> 시간초과
-     *
+     * <p>
      * 사전순 뿐만 아니라 길이를 기준으로 정렬하도록 String 클래스를 포장한 TempString 클래스 구현
      * 먼저 정렬된_배열에서_특정_수_개수_구하기 문제처럼 findFirst, findLast 이진탐색 메서드를 구현
      * 검색 단어의 와일드 카드 위치에 따른 구분을 주기 위한 Query 클래스 구현
      * 접두/접미 와일드카드 위치에 따라 탐색을 달리하기 위해 검색 배열을 그대로 정렬하여 저장하고 단어순서를 뒤집어서 저장함
-     *
-     *
+     * <p>
+     * 해설에서는 각 단어 길이별로 나누어 리스트를 저장하고 각각 정렬함 -> 중간에 같은 풀이를 떠올리긴 했음
+     * 또한 접미 와일드카드를 고려하여 단어 순서를 뒤집은 리스트도 저장함
+     * 풀이과정은 비슷한데 해설은
+     * 1. 파이썬의 bisect 라이브러리를 사용했고
+     * 2. 와일드카드 탐색시 ?를 a와 z로 바꿔서 bisect_left, bisect_right 에 이용했음
+     * ex) query: fro??, count_by_range(List list, String leftValue, String rightValue)
+     * count_by_range(array[len], query.replace("?", "a") ,query.replace("?", "z"))
+     * bisect_left(list, leftValue)
+     * bisect_right(list, rightValue)
      */
+
+    // 모든 단어를 길이별로 나누어 저장
+    private Map<Integer, List<String>> arr = new HashMap<>();
+    // 모든 단어를 길이별로 나누어 뒤집어 저장
+    private Map<Integer, List<String>> reversedArr = new HashMap<>();
+
+    public int[] 가사_검색_3(String[] words, String[] queries) {
+        List<Integer> answer = new ArrayList<>();
+
+        // 단어를 길이별로 분류하여 저장
+        for (String word : words) {
+            // 단어의 길이를 키값으로 이용
+            int key = word.length();
+            String reversed = new StringBuilder(word).reverse().toString();
+
+            if (arr.containsKey(key)) {
+                // 길이별로 저장
+                arr.get(key).add(word);
+                reversedArr.get(key).add(reversed);
+            } else {
+                // 초기화 이후
+                arr.put(key, new ArrayList<>());
+                reversedArr.put(key, new ArrayList<>());
+                // 길이별로 저장
+                arr.get(key).add(word);
+                reversedArr.get(key).add(reversed);
+            }
+        }
+
+        // 이진 탐색 수행을 위해 각 단어 리스트를 정렬
+        arr.values().forEach(Collections::sort);
+        reversedArr.values().forEach(Collections::sort);
+
+        // 쿼리를 하나씩 확인하여 처리
+        for (String query : queries) {
+            int result = 0;
+            // 접미사가 와일드카드라면 정방향 리스트 탐색
+            if (query.charAt(0) != '?') {
+                result = countByRange(arr.get(query.length()), query);
+            }
+            // 접두사가 와일드카드라면 역방향 리스트 탐색
+            else {
+                query = new StringBuilder(query).reverse().toString();
+                result = countByRange(reversedArr.get(query.length()), query);
+            }
+            // 결과 저장
+            answer.add(result);
+        }
+
+        return answer.stream().mapToInt(Integer::intValue).toArray();
+    }
+
+    // 값이 [leftValue, rightValue] 인 데이터의 개수를 반환
+    public int countByRange(List<String> arr, String query) {
+        if (arr == null) {
+            return 0;
+        }
+
+        String leftValue = query.replaceAll("\\?", "a");
+        String rightValue = query.replaceAll("\\?", "z");
+
+        int leftIndex = lowerBound(arr, leftValue, 0, arr.size());
+        int rightIndex = upperBound(arr, rightValue, 0, arr.size());
+
+        return rightIndex - leftIndex;
+    }
+
+    public int lowerBound(List<String> arr, String target, int start, int end) {
+        // target 의 wildCard 는 a 로 변환됨
+        while (start < end) {
+            int mid = (start + end) / 2;
+            // arr.get(mid) 가 target 보다 사전순 같거나 뒤에 있다면 이전 범위 탐색
+            if (arr.get(mid).compareTo(target) >= 0) {
+                end = mid;
+            } else {
+                start = mid + 1;
+            }
+        }
+        return end;
+    }
+
+    public int upperBound(List<String> arr, String target, int start, int end) {
+        // target 의 wildCard 는 z 로 변환됨
+        while (start < end) {
+            int mid = (start + end) / 2;
+            // arr.get(mid) 가 target 보다 사전순 뒤에 있다면 이전 범위 탐색
+            if (arr.get(mid).compareTo(target) > 0) {
+                end = mid;
+            } else {
+                start = mid + 1;
+            }
+        }
+        return end;
+    }
 }

@@ -119,7 +119,7 @@ class SearchQuestionsTest {
 
     @Test
     void 가사_검색() {
-        int[] result = sq.가사_검색_2(
+        int[] result = sq.가사_검색_3(
                 new String[]{"frodo", "front", "frost", "frozen", "frame", "kakao"},
                 new String[]{"fro??", "????o", "fr???", "fro???", "pro?"}
         );
