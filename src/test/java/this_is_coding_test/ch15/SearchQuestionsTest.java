@@ -1,12 +1,14 @@
 package this_is_coding_test.ch15;
 
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestFactory;
 
 import java.util.stream.Stream;
 
+@Disabled
 class SearchQuestionsTest {
 
     private final SearchQuestions sq = new SearchQuestions();
