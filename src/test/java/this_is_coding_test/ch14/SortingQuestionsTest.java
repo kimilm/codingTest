@@ -1,6 +1,7 @@
 package this_is_coding_test.ch14;
 
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestFactory;
@@ -9,6 +10,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Stream;
 
+@Disabled
 class SortingQuestionsTest {
     private final SortingQuestions sq = new SortingQuestions();
 
