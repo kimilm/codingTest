@@ -22,4 +22,19 @@ class DynamicQuestionsTest {
 
         Assertions.assertThat(result).containsExactly(answer);
     }
+
+    @Test
+    void 정수_삼각형() {
+        int result = dq.정수_삼각형(new String[]{
+                "5",
+                "7",
+                "3 8",
+                "8 1 0",
+                "2 7 4 4",
+                "4 5 2 6 5"
+        });
+        int answer = 30;
+
+        Assertions.assertThat(result).isEqualTo(answer);
+    }
 }

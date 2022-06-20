@@ -22,7 +22,7 @@ public class DynamicQuestions {
         // 갈 수 있는 이전 위치
         int[] dx = {-1, 0, 1};
 
-        for(int i = 0; i < t; ++i) {
+        for (int i = 0; i < t; ++i) {
             String[] nm = read.poll().split(" ");
             int n = Integer.parseInt(nm[0]);
             int m = Integer.parseInt(nm[1]);
@@ -68,5 +68,38 @@ public class DynamicQuestions {
         }
 
         return array;
+    }
+
+    /**
+     * 풀이과정은 해설과 동일했음. 해설에서는 패딩을 주지 않고 갈 수 있는 범위를 체크함
+     * 점화식: dp[i][j] = array[i][j] + max(dp[i - 1][j - 1], dp[i][j - 1], dp[i + 1][j - 1])
+     * 현재 위치의 값 + 왼쪽 (위에서 오는 경우, 옆에서 오는경우, 아래에서 오는 경우) 의 최댓값
+     */
+
+    /**
+     * 난이도: 중하
+     * 1 <= n <= 500
+     * 1 <= 각 위치에 매장된 금의 개수 <= 100
+     * 제한) 시간: 2초, 메모리: 128MB
+     * https://www.acmicpc.net/problem/1932
+     */
+    public int 정수_삼각형(String[] input) {
+        int n = Integer.parseInt(input[0]);
+        int[][] triangle = new int[n][];
+
+        for(int i = 1; i < input.length; ++i) {
+            triangle[i - 1] = Arrays.stream(input[i].split(" ")).mapToInt(Integer::parseInt).toArray();
+        }
+
+        for(int i = 1; i < n; ++i) {
+            for (int j = 0; j < triangle[i].length; j++) {
+                int prevLeftValue = j - 1 == -1 ? 0 : triangle[i - 1][j - 1];
+                int prevRightValue = j == triangle[i - 1].length ? 0 : triangle[i - 1][j];
+
+                triangle[i][j] += Integer.max(prevLeftValue, prevRightValue);
+            }
+        }
+
+        return Arrays.stream(triangle[n - 1]).max().orElseThrow();
     }
 }
