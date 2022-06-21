@@ -79,7 +79,6 @@ public class DynamicQuestions {
     /**
      * 난이도: 중하
      * 1 <= n <= 500
-     * 1 <= 각 위치에 매장된 금의 개수 <= 100
      * 제한) 시간: 2초, 메모리: 128MB
      * https://www.acmicpc.net/problem/1932
      */
@@ -87,11 +86,11 @@ public class DynamicQuestions {
         int n = Integer.parseInt(input[0]);
         int[][] triangle = new int[n][];
 
-        for(int i = 1; i < input.length; ++i) {
+        for (int i = 1; i < input.length; ++i) {
             triangle[i - 1] = Arrays.stream(input[i].split(" ")).mapToInt(Integer::parseInt).toArray();
         }
 
-        for(int i = 1; i < n; ++i) {
+        for (int i = 1; i < n; ++i) {
             for (int j = 0; j < triangle[i].length; j++) {
                 int prevLeftValue = j - 1 == -1 ? 0 : triangle[i - 1][j - 1];
                 int prevRightValue = j == triangle[i - 1].length ? 0 : triangle[i - 1][j];
@@ -101,5 +100,46 @@ public class DynamicQuestions {
         }
 
         return Arrays.stream(triangle[n - 1]).max().orElseThrow();
+    }
+
+    /**
+     * 난이도: 중
+     * 1 <= n <= 15
+     * 1 <= T(i) <= 5
+     * 1 <= P(i) <= 1_000
+     * 제한) 시간: 2초, 메모리: 512MB
+     * https://www.acmicpc.net/problem/14501
+     */
+    public int 퇴사(String[] input) {
+        int n = Integer.parseInt(input[0]);
+        int[] t = new int[n];
+        int[] p = new int[n];
+        int[] dp = new int[n];
+
+        for (int i = 1; i < n + 1; ++i) {
+            String[] split = input[i].split(" ");
+            t[i - 1] = Integer.parseInt(split[0]);
+            p[i - 1] = Integer.parseInt(split[1]);
+        }
+
+        // 첫날 일해서 퇴사일을 넘기면 안 됨
+        if (t[0] < n) {
+            dp[t[0] - 1] = p[0];
+        }
+        // 퇴사 전까지
+        for (int i = 1; i < n; i++) {
+            // 어제까지 일해서 번 돈 + 오늘 일하면 받을 수 있는 돈
+            int pay = dp[i - 1] + p[i];
+            // 돈 받는날 = 오늘 + 걸리는 시간 t[i] - 1일
+            int idx = i + t[i] - 1;
+            // 퇴사일 전까지
+            if (idx < n) {
+                // 더 많이 받게 되는날로 교체
+                dp[idx] = Integer.max(dp[idx], pay);
+            }
+            dp[i] = Integer.max(dp[i], dp[i - 1]);
+        }
+
+        return dp[n - 1];
     }
 }
