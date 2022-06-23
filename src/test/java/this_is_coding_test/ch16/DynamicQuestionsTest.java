@@ -155,4 +155,11 @@ class DynamicQuestionsTest {
         int answer = 2;
         Assertions.assertThat(result).isEqualTo(answer);
     }
+
+    @Test
+    void 못생긴_수() {
+        int result = dq.못생긴_수(10);
+        int answer = 12;
+        Assertions.assertThat(result).isEqualTo(answer);
+    }
 }

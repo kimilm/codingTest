@@ -234,4 +234,39 @@ public class DynamicQuestions {
         // 열외시켜야 하는 병사의 최소 수
         return n - Arrays.stream(dp).max().orElseThrow();
     }
+
+    /**
+     * 난이도: 중
+     * 1 <= n <= 1_000
+     * 제한) 시간: 1초, 메모리: 128MB
+     */
+    public int 못생긴_수(int n) {
+        // 소수를 계산함
+        boolean[] primes = new boolean[1001];
+        for(int i = 2; i < 1001; ++i) {
+            for (int j = 2; j * i < 1001; ++j) {
+                primes[j * i] = true;
+            }
+        }
+        // 7 이상의 소수에 대해서 해당 소수의 배수에 해당하는 수를 지움
+        boolean[] numbers = new boolean[1001];
+        for (int i = 7; i < 1001; i++) {
+            if (!primes[i]) {
+                for (int j = 1; j * i < 1001; j++) {
+                    numbers[i * j] = true;
+                }
+            }
+        }
+        // n번째 못생긴 수 리턴
+        int count = 0;
+        for (int i = 1; i < 1001; i++) {
+            if(!numbers[i]) {
+                ++count;
+            }
+            if (count == n) {
+                return i;
+            }
+        }
+        return 0;
+    }
 }
