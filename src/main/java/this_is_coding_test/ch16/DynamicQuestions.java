@@ -139,7 +139,47 @@ public class DynamicQuestions {
             }
             dp[i] = Integer.max(dp[i], dp[i - 1]);
         }
-
         return dp[n - 1];
+    }
+
+    /**
+     * 뒤쪽 날짜부터 거꾸로 확인하는 방식으로 접근하여 해결하는 다이나믹 프로그래밍 아이디어를 적용할 수 있다.
+     * day  1일  2일  3일  4일  5일  6일  7일
+     * T    3일  5일  1일  1일  2일  4일  2일
+     * P    10만 20만 10만 20만 15만 40만 200만
+     * 1일 차에 상담을 진행, 4일부터 다시 상담 진행 가능
+     * -> 1일차의 상담 금액 + 4일부터의 최대 상담 금액
+     * 현재 상담 일자의 이윤(p[i]) + 현재 상담을 마친 일자부터의 최대 이윤(dp[t[i] + i])
+     * 계산된 각각의 값 중에서 최댓값 출력
+     * dp[i] = i번째 날부터 마지막 날까지 낼 수 있는 최대 이익
+     * 점화식: dp[i] = max(p[i] + dp[t[i] + i], max_value)
+     */
+
+    public int 퇴사_2(String[] input) {
+        int n = Integer.parseInt(input[0]);
+        int[] t = new int[n];
+        int[] p = new int[n];
+
+        for (int i = 1; i < n + 1; ++i) {
+            String[] split = input[i].split(" ");
+            t[i - 1] = Integer.parseInt(split[0]);
+            p[i - 1] = Integer.parseInt(split[1]);
+        }
+
+        int[] dp = new int[n + 1];
+        int max_value = 0;
+        // 리스트를 뒤에서부터 확인
+        for (int i = n - 1; i > -1; --i) {
+            int time = t[i] + i;
+            // 상담이 기간 안에 끝나는 경우
+            if (time <= n) {
+                // 점화식에 맞게, 현재까지의 최고 이익 계산
+                dp[i] = Integer.max(p[i] + dp[time], max_value);
+                max_value = dp[i];
+            }
+            // 상담이 기간을 벗어나는 경우
+            dp[i] = max_value;
+        }
+        return max_value;
     }
 }

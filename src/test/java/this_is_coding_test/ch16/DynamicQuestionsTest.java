@@ -7,8 +7,6 @@ import org.junit.jupiter.api.TestFactory;
 
 import java.util.stream.Stream;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 class DynamicQuestionsTest {
 
     private final DynamicQuestions dq = new DynamicQuestions();
@@ -61,7 +59,7 @@ class DynamicQuestionsTest {
                     Assertions.assertThat(result).isEqualTo(answer);
                 }),
                 DynamicTest.dynamicTest("예제 입력 2", () -> {
-                    int result = dq.퇴사(new String[]{
+                    int result = dq.퇴사_2(new String[]{
                             "10",
                             "5 50",
                             "4 40",
@@ -75,6 +73,42 @@ class DynamicQuestionsTest {
                             "5 50"
                     });
                     int answer = 90;
+
+                    Assertions.assertThat(result).isEqualTo(answer);
+                }),
+                DynamicTest.dynamicTest("예제 입력 3", () -> {
+                    int result = dq.퇴사_2(new String[]{
+                            "10",
+                            "1 1",
+                            "1 2",
+                            "1 3",
+                            "1 4",
+                            "1 5",
+                            "1 6",
+                            "1 7",
+                            "1 8",
+                            "1 9",
+                            "1 10"
+                    });
+                    int answer = 55;
+
+                    Assertions.assertThat(result).isEqualTo(answer);
+                }),
+                DynamicTest.dynamicTest("예제 입력 4", () -> {
+                    int result = dq.퇴사_2(new String[]{
+                            "10",
+                            "5 10",
+                            "5 9",
+                            "5 8",
+                            "5 7",
+                            "5 6",
+                            "5 10",
+                            "5 9",
+                            "5 8",
+                            "5 7",
+                            "5 6"
+                    });
+                    int answer = 20;
 
                     Assertions.assertThat(result).isEqualTo(answer);
                 })
