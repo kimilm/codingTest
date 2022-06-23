@@ -182,4 +182,56 @@ public class DynamicQuestions {
         }
         return max_value;
     }
+
+    /**
+     * 난이도: 중하
+     * 1 <= n <= 2_000
+     * 1 <= 전투력 <= 10_000_000
+     * 제한) 시간: 1초, 메모리: 256MB
+     * https://www.acmicpc.net/problem/18353
+     */
+
+    /**
+     * 이 문제의 기본 아이디어는
+     * '가장 긴 증가하는 부분수열 (Longest Increasing Subsequence), 전형적인 DP 문제
+     * 하나의 수열이 주어졌을 때 값들이 증가하는 형태의 가장 긴 부분수열을 찾는 문제
+     * array = {10, 20, 10, 30, 20, 50} 에서
+     * 가장 긴 증가하는 부분수열은 {10, 20, 30, 50}
+     * 'D[i] = array[i]를 마지막 원소로 가지는 부분 수열의 최대 길이' 라고 정의하면
+     * 점화식: 모든 0 <= j < i에 대하여, D[i] = max(D[i], D[j] + 1) if array[j] < array[i]
+     * 초기값이 1인 dp 테이블을 대상으로
+     * array    10  20  10  30  20  50
+     * dp       1   1   1   1   1   1   초기상태
+     * dp       1   2   1   1   1   1   i = 1
+     * dp       1   2   1   1   1   1   i = 2
+     * dp       1   2   1   3   1   1   i = 3
+     * dp       1   2   1   3   2   1   i = 4
+     * dp       1   2   1   3   2   4   i = 5
+     * 최종적으로 남은 값 중 가장 큰 값이 가장 긴 증가하는 부분수열의 길이
+     * 입력으로 주어진 원소의 순서를 뒤집어 그대로 적용하면 된다.
+     */
+    public int 병사_배치하기(String[] input) {
+        int n = Integer.parseInt(input[0]);
+        // 순서를 뒤집어서 저장
+        int[] array = Arrays.stream(new StringBuilder(input[1])
+                        .reverse()
+                        .toString()
+                        .split(" "))
+                .mapToInt(Integer::parseInt)
+                .toArray();
+
+        int[] dp = new int[n];
+        // 다이나믹 프로그래밍을 위해 1로 초기화
+        Arrays.fill(dp, 1);
+        // LIS 알고리즘 수행
+        for (int i = 1; i < n; i++) {
+            for (int j = 0; j < i; j++) {
+                if (array[j] < array[i]) {
+                    dp[i] = Integer.max(dp[i], dp[j] + 1);
+                }
+            }
+        }
+        // 열외시켜야 하는 병사의 최소 수
+        return n - Arrays.stream(dp).max().orElseThrow();
+    }
 }

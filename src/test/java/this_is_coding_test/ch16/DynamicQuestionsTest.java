@@ -145,4 +145,14 @@ class DynamicQuestionsTest {
                 })
         );
     }
+
+    @Test
+    void 병사_배치하기() {
+        int result = dq.병사_배치하기(new String[]{
+                "7",
+                "15 11 4 8 5 2 4"
+        });
+        int answer = 2;
+        Assertions.assertThat(result).isEqualTo(answer);
+    }
 }
