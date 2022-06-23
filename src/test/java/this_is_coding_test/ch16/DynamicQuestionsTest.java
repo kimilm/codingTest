@@ -59,7 +59,7 @@ class DynamicQuestionsTest {
                     Assertions.assertThat(result).isEqualTo(answer);
                 }),
                 DynamicTest.dynamicTest("예제 입력 2", () -> {
-                    int result = dq.퇴사_2(new String[]{
+                    int result = dq.퇴사(new String[]{
                             "10",
                             "5 50",
                             "4 40",
@@ -77,7 +77,7 @@ class DynamicQuestionsTest {
                     Assertions.assertThat(result).isEqualTo(answer);
                 }),
                 DynamicTest.dynamicTest("예제 입력 3", () -> {
-                    int result = dq.퇴사_2(new String[]{
+                    int result = dq.퇴사(new String[]{
                             "10",
                             "1 1",
                             "1 2",
@@ -95,7 +95,7 @@ class DynamicQuestionsTest {
                     Assertions.assertThat(result).isEqualTo(answer);
                 }),
                 DynamicTest.dynamicTest("예제 입력 4", () -> {
-                    int result = dq.퇴사_2(new String[]{
+                    int result = dq.퇴사(new String[]{
                             "10",
                             "5 10",
                             "5 9",
@@ -109,6 +109,37 @@ class DynamicQuestionsTest {
                             "5 6"
                     });
                     int answer = 20;
+
+                    Assertions.assertThat(result).isEqualTo(answer);
+                }),
+                DynamicTest.dynamicTest("예제 입력 5", () -> {
+                    int result = dq.퇴사(new String[]{
+                            "4",
+                            "5 10",
+                            "5 9",
+                            "5 8",
+                            "5 7"
+                    });
+                    int answer = 0;
+
+                    Assertions.assertThat(result).isEqualTo(answer);
+                }),
+                DynamicTest.dynamicTest("예제 입력 6", () -> {
+                    int result = dq.퇴사(new String[]{
+                            "11",
+                            "5 10",
+                            "5 10",
+                            "5 200",
+                            "5 10",
+                            "5 10",
+                            "5 10",
+                            "5 10",
+                            "5 10",
+                            "5 10",
+                            "5 10",
+                            "5 10"
+                    });
+                    int answer = 200;
 
                     Assertions.assertThat(result).isEqualTo(answer);
                 })

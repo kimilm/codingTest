@@ -123,17 +123,17 @@ public class DynamicQuestions {
         }
 
         // 첫날 일해서 퇴사일을 넘기면 안 됨
-        if (t[0] < n) {
+        if (t[0] <= n) {
             dp[t[0] - 1] = p[0];
         }
         // 퇴사 전까지
         for (int i = 1; i < n; i++) {
-            // 어제까지 일해서 번 돈 + 오늘 일하면 받을 수 있는 돈
-            int pay = dp[i - 1] + p[i];
             // 돈 받는날 = 오늘 + 걸리는 시간 t[i] - 1일
             int idx = i + t[i] - 1;
             // 퇴사일 전까지
             if (idx < n) {
+                // 어제까지 일해서 번 돈 + 오늘 일하면 받을 수 있는 돈
+                int pay = dp[i - 1] + p[i];
                 // 더 많이 받게 되는날로 교체
                 dp[idx] = Integer.max(dp[idx], pay);
             }
