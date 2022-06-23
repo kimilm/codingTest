@@ -269,4 +269,51 @@ public class DynamicQuestions {
         }
         return 0;
     }
+
+    /**
+     * 1, 2, 3, 4, 5, 6, 8, 9, 10, 12, 15, ...
+     * 못생긴 수에 2, 3 혹은 5를 곱한 수 또한 못생긴 수
+     * 2의 배수의 변수, 3의 배수의 변수, 5의 배수의 변수에 대해서 각각 '가장 작은 못생긴 수' 부터 오름차순으로 하나씩 확인
+     * 각 배수를 곱한 값도 '못생긴 수' 가 될 수 있도록 처리
+     * 1에 대해서
+     * *2 = 2, *3 = 3, *5 = 5
+     * 2에 대해서
+     * *2 = 4, *3 = 6, *5 = 10
+     */
+
+    public int 못생긴_수_2(int n) {
+        int[] ugly = new int[n];
+        ugly[0] = 1;
+
+        // 배수를 위한 인덱스
+        int i2 = 0;
+        int i3 = 0;
+        int i5 = 0;
+
+        // 처음 곱셈값을 초기화
+        int next2 = 2;
+        int next3 = 3;
+        int next5 = 5;
+
+        // 1부터 n까지 못생긴 수 찾기
+        for (int i = 1; i < n; i++) {
+            // 가능한 곱셈 결과 중에서 가장 작은 수를 선택
+            ugly[i] = Integer.min(Integer.min(next2, next3), next5);
+            // 인덱스에 따라서 곱셈 결과를 증가
+            if (ugly[i] == next2) {
+                ++i2;
+                next2 = ugly[i2] * 2;
+            }
+            if (ugly[i] == next3) {
+                ++i3;
+                next3 = ugly[i3] * 3;
+            }
+            if (ugly[i] == next5) {
+                ++i5;
+                next5 = ugly[i5] * 5;
+            }
+        }
+
+        return ugly[n - 1];
+    }
 }
