@@ -357,4 +357,70 @@ public class DynamicQuestions {
 
         return map;
     }
+
+    /**
+     * 최소 편집 거리를 담을 2차원 배열을 초기화, 계산하여 테이블에 저장
+     * 각 칸의 왼쪽은 삽입, 위쪽은 삭제, 왼쪽 위는 교체를 의미
+     *      ∅   s   a   t   u   r   d   a   y
+     * ∅    0   1   2   3   4   5   6   7   8
+     * s    1
+     * u    2
+     * n    3
+     * d    4
+     * a    5
+     * y    6
+     * 위의 dp 테이블에서 점화식은
+     * 1. 두 문자가 같은 경우
+     *  dp[i][j] = dp[i - 1][j - 1]
+     *  행과 열에 해당하는 글자가 같다면, 왼쪽 위를 그대로 대입
+     * 2. 두 문자가 다른 경우
+     *  dp[i][j] = 1 + min(dp[i][j - 1], dp[i - 1][j], dp[i - 1][j - 1])
+     *  행과 열에 해당하는 글자가 다르다면, 왼쪽(삽입), 위쪽(삭제), 왼쪽 위(교체) 중에서 가장 작은 값에 1을 더하여 대입
+     * 테이블의 가장 오른쪽 하단의 값이 구하고자 하는 값
+     *      ∅   s   a   t   u   r   d   a   y
+     * ∅    0   1   2   3   4   5   6   7   8
+     * s    1   0   1   2   3   4   5   6   7
+     * u    2   1   1   2   2   3   4   5   6
+     * n    3   2   2   2   3   3   4   5   6
+     * d    4   3   3   3   3   4   3   4   5
+     * a    5   4   3   4   4   4   4   3   4
+     * y    6   5   4   4   5   5   5   4   3
+     */
+
+    public int 편집_거리_2(String[] args) {
+        int n = args[0].length();
+        int m = args[1].length();
+
+        // 2차원 dp 테이블 초기화
+        int[][] dp = new int[n + 1][m + 1];
+
+        // dp 테이블 초기 설정
+        for (int i = 1; i < n + 1; i++) {
+            dp[i][0] = i;
+        }
+        for (int j = 1; j < m + 1; j++) {
+            dp[0][j] = j;
+        }
+
+        // 최소 편집 거리 계산
+        for (int i = 1; i < n + 1; i++) {
+            for (int j = 1; j < m + 1; j++) {
+                // 문자가 같다면 왼쪽 위의 수 그대로 대입
+                if (args[0].charAt(i - 1) == args[1].charAt(j - 1)) {
+                    dp[i][j] = dp[i - 1][j - 1];
+                }
+                // 다르다면 3가지 경우 중에서 최솟값 찾기
+                else {
+                    // 삽입(왼쪽), 삭제(위쪽), 교체(왼쪽 위) 중에서 최소 비용을 찾아 대입
+                    dp[i][j] = 1 + min(dp[i][j - 1], dp[i - 1][j], dp[i - 1][j - 1]);
+                }
+            }
+        }
+
+        return dp[n][m];
+    }
+
+    public int min(int a, int b, int c) {
+        return Integer.min(Integer.min(a, b), c);
+    }
 }

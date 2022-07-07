@@ -1,12 +1,14 @@
 package this_is_coding_test.ch16;
 
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestFactory;
 
 import java.util.stream.Stream;
 
+@Disabled
 class DynamicQuestionsTest {
 
     private final DynamicQuestions dq = new DynamicQuestions();
@@ -165,11 +167,11 @@ class DynamicQuestionsTest {
 
     @Test
     void 편집_거리() {
-        int result = dq.편집_거리(new String[]{"sunday", "saturday"});
+        int result = dq.편집_거리_2(new String[]{"sunday", "saturday"});
         int answer = 3;
         Assertions.assertThat(result).isEqualTo(answer);
 
-        result = dq.편집_거리(new String[]{"cat", "cut"});
+        result = dq.편집_거리_2(new String[]{"cat", "cut"});
         answer = 1;
         Assertions.assertThat(result).isEqualTo(answer);
     }
