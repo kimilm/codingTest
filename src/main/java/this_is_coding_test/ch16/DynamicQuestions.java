@@ -1,8 +1,6 @@
 package this_is_coding_test.ch16;
 
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.Queue;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -243,7 +241,7 @@ public class DynamicQuestions {
     public int 못생긴_수(int n) {
         // 소수를 계산함
         boolean[] primes = new boolean[1001];
-        for(int i = 2; i < 1001; ++i) {
+        for (int i = 2; i < 1001; ++i) {
             for (int j = 2; j * i < 1001; ++j) {
                 primes[j * i] = true;
             }
@@ -260,7 +258,7 @@ public class DynamicQuestions {
         // n번째 못생긴 수 리턴
         int count = 0;
         for (int i = 1; i < 1001; i++) {
-            if(!numbers[i]) {
+            if (!numbers[i]) {
                 ++count;
             }
             if (count == n) {
@@ -315,5 +313,48 @@ public class DynamicQuestions {
         }
 
         return ugly[n - 1];
+    }
+
+    /**
+     * 난이도: 중하
+     * 1 <= 각 문자열의 길이 <= 5_000
+     * 제한) 시간: 2초, 메모리: 128MB
+     */
+    public int 편집_거리(String[] args) {
+        String[] shortLong = detectLength(args);
+
+        char[] chars = shortLong[0].toCharArray();
+        Map<Character, Integer> map = init(shortLong[1]);
+
+        for (char c : chars) {
+            map.put(c, map.getOrDefault(c, 1) - 1);
+        }
+
+        return map.values().stream()
+                .filter(value -> value > 0)
+                .mapToInt(Integer::intValue)
+                .sum();
+    }
+
+    public String[] detectLength(String[] args) {
+        // 먼저 들어온게 더 길면
+        if (args[0].length() > args[1].length()) {
+            // 자리 바꾸기
+            String temp = args[0];
+            args[0] = args[1];
+            args[1] = temp;
+        }
+        return args;
+    }
+
+    public Map<Character, Integer> init(String str) {
+        Map<Character, Integer> map = new HashMap<>();
+        char[] chars = str.toCharArray();
+
+        for (char c : chars) {
+            map.put(c, map.getOrDefault(c, 0) + 1);
+        }
+
+        return map;
     }
 }

@@ -162,4 +162,15 @@ class DynamicQuestionsTest {
         int answer = 12;
         Assertions.assertThat(result).isEqualTo(answer);
     }
+
+    @Test
+    void 편집_거리() {
+        int result = dq.편집_거리(new String[]{"sunday", "saturday"});
+        int answer = 3;
+        Assertions.assertThat(result).isEqualTo(answer);
+
+        result = dq.편집_거리(new String[]{"cat", "cut"});
+        answer = 1;
+        Assertions.assertThat(result).isEqualTo(answer);
+    }
 }
