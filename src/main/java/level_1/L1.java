@@ -1,6 +1,9 @@
 package level_1;
 
 import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public class L1 {
     // 01 27
@@ -668,6 +671,42 @@ public class L1 {
             answer[i] = entries.get(i).getKey();
         }
 
+        return answer;
+    }
+
+    // https://school.programmers.co.kr/learn/courses/30/lessons/92334
+    public int[] 신고_결과_받기(String[] id_list, String[] report, int k) {
+        // 유저 배열 사이즈
+        int n = id_list.length;
+        // 유저의 인덱스 저장
+        Map<String, Integer> userIndex = IntStream.range(0, n)
+                .boxed()
+                .collect(Collectors.toMap(i -> id_list[i], Function.identity()));
+        // 유저가 받을 메일 저장
+        int[] answer = new int[id_list.length];
+        // 유저가 어떤 유저에게 신고당했는지 저장
+        Map<String, Set<String>> reportMap = new HashMap<>();
+        for (String id : id_list) {
+            reportMap.put(id, new HashSet<>());
+        }
+
+        for (String rep : report) {
+            // 신고 내역 분리, 0이 1을 신고함
+            String[] users = rep.split(" ");
+            reportMap.get(users[1]).add(users[0]);
+        }
+
+        // 2. 신고한 유저에게 메일 발송
+        for (Map.Entry<String, Set<String>> entry : reportMap.entrySet()) {
+            Set<String> reporterSet = entry.getValue();
+            // k번 이상 신고당했다면
+            if (reporterSet.size() >= k) {
+                for (String reported : reporterSet) {
+                    // 메일 발송
+                    ++answer[userIndex.get(reported)];
+                }
+            }
+        }
         return answer;
     }
 }
