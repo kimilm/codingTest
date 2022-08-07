@@ -736,4 +736,15 @@ public class L1 {
 
         return answer;
     }
+
+    // https://school.programmers.co.kr/learn/courses/30/lessons/86051
+    public int 없는_숫자_더하기(int[] numbers) {
+        int answer = 45;
+
+        for(int number : numbers) {
+            answer -= number;
+        }
+
+        return answer;
+    }
 }
