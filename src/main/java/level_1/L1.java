@@ -747,4 +747,17 @@ public class L1 {
 
         return answer;
     }
+
+    // https://school.programmers.co.kr/learn/courses/30/lessons/82612
+    public long 부족한_금액_계산하기(int price, int money, int count) {
+        long answer = 0;
+
+        for (int i = 1; i <= count; ++i) {
+            answer += (price * i);
+        }
+
+        long result = answer - money;
+
+        return result < 0 ? 0 : result;
+    }
 }
