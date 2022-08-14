@@ -626,10 +626,10 @@ public class L1 {
     }
 
     public int[] 실패율(int N, int[] stages) {
-        int[] answer = new int [N];
-        double [] reach = new double [N];
-        double [] nonClear = new double [N];
-        Map <Integer, Double> map = new LinkedHashMap<>();
+        int[] answer = new int[N];
+        double[] reach = new double[N];
+        double[] nonClear = new double[N];
+        Map<Integer, Double> map = new LinkedHashMap<>();
 
         for (int stage : stages) {
             if (stage > N) {
@@ -637,8 +637,7 @@ public class L1 {
                 for (int i = 0; i < stage; ++i) {
                     ++reach[i];
                 }
-            }
-            else {
+            } else {
                 for (int i = 0; i < stage; ++i) {
                     ++reach[i];
                 }
@@ -649,14 +648,13 @@ public class L1 {
         for (int i = 0; i < N; ++i) {
             if (reach[i] != 0) {
                 map.put(i + 1, nonClear[i] / reach[i]);
-            }
-            else {
+            } else {
                 map.put(i + 1, 0.0);
             }
         }
 
         List<Map.Entry<Integer, Double>> entries = new LinkedList<>(map.entrySet());
-        Collections.sort(entries, new Comparator<Map.Entry<Integer, Double>> () {
+        Collections.sort(entries, new Comparator<Map.Entry<Integer, Double>>() {
             @Override
             public int compare(Map.Entry<Integer, Double> o1, Map.Entry<Integer, Double> o2) {
                 int cmp = o2.getValue().compareTo(o1.getValue());
@@ -730,7 +728,7 @@ public class L1 {
     public int 내적(int[] a, int[] b) {
         int answer = 0;
 
-        for (int i = 0; i <a.length; i++) {
+        for (int i = 0; i < a.length; i++) {
             answer += a[i] * b[i];
         }
 
@@ -741,7 +739,7 @@ public class L1 {
     public int 없는_숫자_더하기(int[] numbers) {
         int answer = 45;
 
-        for(int number : numbers) {
+        for (int number : numbers) {
             answer -= number;
         }
 
