@@ -4,13 +4,11 @@ import com.navercorp.fixturemonkey.FixtureMonkey;
 import level_2.fixture.두_큐_합_같게_만들기_fixture;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
 import java.util.Random;
 
-@Disabled
 class 두_큐_합_같게_만들기Test {
     private Random random = new Random(System.currentTimeMillis());
 
@@ -40,10 +38,20 @@ class 두_큐_합_같게_만들기Test {
 
     @Test
     void solution() {
-        int[] queue1 = { 1, 1, 1, 1, 1, 1, 1, 1, 1, 10 };
-        int[] queue2 = { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 };
+        int[] queue1 = { 1, 1 };
+        int[] queue2 = { 1, 5 };
 
-        int result = queueSame.solution(queue1, queue2);
+        int result = queueSame.solution2(queue1, queue2);
+
+        Assertions.assertThat(result).isEqualTo(-1);
+    }
+
+    @Test
+    void solution1() {
+        int[] queue1 = { 1, 5 };
+        int[] queue2 = { 1, 1 };
+
+        int result = queueSame.solution2(queue1, queue2);
 
         Assertions.assertThat(result).isEqualTo(-1);
     }
@@ -53,7 +61,7 @@ class 두_큐_합_같게_만들기Test {
         int[] queue1 = {3, 2};
         int[] queue2 = {3};
 
-        int result = queueSame.solution(queue1, queue2);
+        int result = queueSame.solution2(queue1, queue2);
 
         Assertions.assertThat(result).isEqualTo(-1);
     }
@@ -63,7 +71,7 @@ class 두_큐_합_같게_만들기Test {
         int[] queue1 = {1, 2, 1, 2};
         int[] queue2 = {1, 10, 1, 2};
 
-        int result = queueSame.solution(queue1, queue2);
+        int result = queueSame.solution2(queue1, queue2);
 
         Assertions.assertThat(result).isEqualTo(7);
     }
