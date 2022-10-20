@@ -13,4 +13,11 @@ class 롤케이크_자르기Test {
         int answer = 2;
         Assertions.assertThat(result).isEqualTo(2);
     }
+
+    @Test
+    void solution2() {
+        int result = r.solution2(new int[]{1, 2, 1, 3, 1, 4, 1, 2});
+        int answer = 2;
+        Assertions.assertThat(result).isEqualTo(2);
+    }
 }
